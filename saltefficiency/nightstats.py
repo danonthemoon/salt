@@ -59,6 +59,8 @@ def getnightstats(sdb, obsdate):
           nighttargetacq+=bvstats[0][2]
           nightinstracq+=bvstats[0][3]
           nightscitrack+=bvstats[0][4]
-
-   nightstats = [nightslew/count,nighttrslew/count,nighttargetacq/count,nightinstracq/count,nightscitrack/count]
+   if count == 0:
+       nightstats = []
+   else:
+       nightstats = [nightslew/count,nighttrslew/count,nighttargetacq/count,nightinstracq/count,nightscitrack/count]
    return nightstats

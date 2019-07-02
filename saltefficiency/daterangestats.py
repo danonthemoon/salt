@@ -53,8 +53,11 @@ if __name__=='__main__':
           targetacqtotal+=nightstats[2]
           instracqtotal+=nightstats[3]
           scitracktotal+=nightstats[4]
-
-   rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqtotal/count,scitracktotal/count]
+   if count == 0:
+       print("No observation nights within this range")
+       rangestats=[0]
+   else:
+       rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqtotal/count,scitracktotal/count]
 
    # Create the PdfPages object to which we will save the pages:
    # The with statement makes sure that the PdfPages object is closed properly at
