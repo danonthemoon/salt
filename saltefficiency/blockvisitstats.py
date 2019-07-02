@@ -1,4 +1,6 @@
 """
+Updated July 2019 by Danny Sallurday
+
 For a given block visit, calculate the slew time, acquisition time, and science time based on
 data in the SDB
 """
@@ -51,7 +53,7 @@ def blockvisitstats(sdb, obsdate, update=True):
 
    #sort the list by the datetimes
    event_list.sort(key=lambda e:e[1])
-   
+
    #get the list of accepted blocks
    selcmd='BlockVisit_Id, BlockVisitStatus_Id, Proposal_Code, Block_Id'
    tabcmd='Block join BlockVisit using (Block_Id) join Proposal using (Proposal_Id) join ProposalCode on (Proposal.ProposalCode_Id = ProposalCode.ProposalCode_Id)'
@@ -66,7 +68,7 @@ def blockvisitstats(sdb, obsdate, update=True):
           pid_list.append(b[2])
        else:
           rej_list.append(b[2])
-   
+
    #print(pid_list)
    #print(rej_list)
 

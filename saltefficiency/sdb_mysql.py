@@ -134,16 +134,3 @@ class mysql:
 
        except Exception:
            raise Exception(str(e) + exec_command)
-
-  # def addstatcols(self):
-   #   cursor=self.db.cursor()
-    #  exec_command=""
-     # exec_command+="ALTER TABLE NightInfo "
-     # exec_command+="ADD TotalNonSciTimes INT NOT NULL, "
-     # exec_command+="ADD TotalSlewTimes INT NOT NULL, "
-      #exec_command+="ADD TotalGuideTimes INT NOT NULL, "
-      #exec_command+="ADD TotalAcqTimes INT NOT NULL, "
-      #exec_command+="ADD TotalSciTimes INT NOT NULL, "
-      #exec_command+="ADD TotalIdleTimes INT NOT NULL;"
-      #cursor.execute(exec_command)
-      #cursor.execute("COMMIT")
