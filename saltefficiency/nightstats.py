@@ -52,7 +52,7 @@ def getnightstats(sdb, obsdate):
        bvstats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        if None in bvstats: continue
        else:
-          count=0
+          count+=1
           nightslew+=bvstats[0]
           nighttrslew+=bvstats[1]
           nighttargetacq+=bvstats[2]
