@@ -14,6 +14,7 @@ import numpy as np
 import sdb_mysql as mysql
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 
 import run_blockvisitstats
 from nightstats import getnightstats
