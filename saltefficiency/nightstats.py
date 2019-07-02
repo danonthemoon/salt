@@ -50,7 +50,9 @@ def getnightstats(sdb, obsdate):
        selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime, ScienceTrackTime'
        tabcmd='BlockVisit'
        bvstats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       print(bvstats)
        bvstats=list(bvstats)
+       print(bvstats)
        if len(bvstats) == 0: continue
        else:
           count=0
