@@ -33,16 +33,16 @@ if __name__=='__main__':
 
    sdate = sys.argv[1]
    edate = sys.argv[2]
-   sdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))
-   edate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
-   date = sdate
+   startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))
+   enddate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
+   date = startdate
    slewtotal=0
    trslewtotal=0
    targetacqtotal=0
    instracqtotal=0
    scitracktotal=0
    count=0
-   while date <= edate:
+   while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
        nightstats=getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
