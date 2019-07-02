@@ -54,7 +54,7 @@ if __name__=='__main__':
           instracqtotal+=nightstats[3]
           scitracktotal+=nightstats[4]
 
-   rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqttotal/count,scitracktotal/count]
+   rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqtotal/count,scitracktotal/count]
 
    # Create the PdfPages object to which we will save the pages:
    # The with statement makes sure that the PdfPages object is closed properly at
