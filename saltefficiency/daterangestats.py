@@ -60,12 +60,10 @@ if __name__=='__main__':
    else:
        rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqtotal/count,scitracktotal/count]
 
-   # Create the PdfPages object to which we will save the pages:
-   # The with statement makes sure that the PdfPages object is closed properly at
-   # the end of the block, even if an Exception occurs.
-   with PdfPages('multipage_pdf.pdf') as pdf:
-       plt.figure(figsize=(3, 3))
-       plt.plot(rangestats)
-       plt.title('Page One')
+   #Produce a pdf with the relevant stats
+   with PdfPages('overheadstats.pdf') as pdf:
+       plt.figure(figsize=(2, 2))
+       plt.barplot(rangestats)
+       plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
        pdf.savefig()  # saves the current figure into a pdf page
        plt.close()
