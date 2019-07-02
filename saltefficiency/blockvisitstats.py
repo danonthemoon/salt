@@ -1,8 +1,16 @@
 """
 Updated July 2019 by Danny Sallurday
 
-For a given block visit, calculate the slew time, acquisition time, and science time based on
-data in the SDB
+For a given block visit, calculate:
+
+Slew Time (Point Command - Track Start)
+Tracker Slew Time (Track Start - On Target)
+Target Acquisition Time (On Target - First Salticam Image)
+Instrument Acquisition Time (First Salticam Image - First Science Image)
+Science Track Time (First Science Image - Track End)
+
+Then update these values in the BlockVisit table according to BlockVisit_Id
+
 """
 import sys
 import time
@@ -40,6 +48,7 @@ def blockvisitstats(sdb, obsdate, update=True):
    stime=record[0][0]
    etime=record[0][1]
    totaltime=(etime-stime).seconds
+
    #From the sdb, get the SoLogEvent table
    record=sdb.select('EventType_Id, EventTime', 'SoLogEvent', 'NightInfo_Id=%i' % nid)
    event_list=[]
@@ -68,7 +77,6 @@ def blockvisitstats(sdb, obsdate, update=True):
           pid_list.append(b[2])
        else:
           rej_list.append(b[2])
-
    #print(pid_list)
    #print(rej_list)
 
@@ -131,7 +139,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            guidestart=findguidingstart(starttime, event_list)
            slewtime=guidestart-starttime
 
-           #determine the time between TrackStart and ontarget
+           #determine the time between TrackStart and OnTarget
            ontarget=findontarget(starttime, event_list)
            trackerslewtime=ontarget-guidestart
 
@@ -146,27 +154,25 @@ def blockvisitstats(sdb, obsdate, update=True):
 
            acqtime=sciencestart-ontarget
 
-           #determine the science and non-science time
+           #determine the science tracking time
            guidestop=findguidingstop(starttime, event_list)
            scitime=guidestop-sciencestart
-           nonsciencetime=tottime-scitime
 
-           #determine the idle time
-           idletime=endtime-guidestop
 
            #determine the block visit
            bvid=getblockvisit(blocks_orig, bid)
-           #print bvid
-           #print starttime, endtime, propcode, target, bid, bvid, slewtime, acqtime, scitime, tottime
-           #upload results to sdb
-           #print propcode, bvid, slewtime, acqtime, scitime
+           #print(bvid, starttime, endtime, propcode, target, bid, slewtime, acqtime, scitime, tottime)
+
+           #update results in sdb
            if bvid is not None and update:
-               inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds, acqtime.seconds, scitime.seconds)
+               inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
                inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
                inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (acqtime.seconds, scitime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+
+
        elif propcode is not None and bid is not None:
            #deal with rejected block
            pass
@@ -176,8 +182,6 @@ def blockvisitstats(sdb, obsdate, update=True):
        else:
            #otherwise ignore
            pass
-
-
 
    return block_list
 

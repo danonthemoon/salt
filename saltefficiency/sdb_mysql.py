@@ -1,3 +1,7 @@
+"""
+Updated July 2019 by Danny Sallurday
+
+"""
 import mysql.connector as MySQLdb
 
 class mysql:
