@@ -61,9 +61,9 @@ if __name__=='__main__':
        rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqtotal/count,scitracktotal/count]
 
    #Produce a pdf with the relevant stats
-   with PdfPages('overheadstats.pdf') as pdf:
+   with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        plt.figure(figsize=(2, 2))
-       plt.barplot(rangestats)
+       plt.plot(rangestats)
        plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
        pdf.savefig()  # saves the current figure into a pdf page
        plt.close()
