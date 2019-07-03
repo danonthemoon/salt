@@ -12,8 +12,9 @@ import sys, time, datetime, string
 import struct
 import numpy as np
 import sdb_mysql as mysql
-from matplotlib.backends.backend_pdf import PdfPages
+import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 plt.switch_backend('agg')
 
 import run_blockvisitstats
