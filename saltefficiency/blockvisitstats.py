@@ -106,6 +106,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        #and the data and times
        propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
        bvid = get_blockvisitfrompointtime(sdb, starttime, propcode)
+       if bvid==0: continue
        #print(propcode, target, bid, instr, obsmode, detmode, exptime, nexposure)
        #print(starttime, endtime, propcode, target)
        if propcode in pid_list and not (propcode in rej_list):
@@ -199,9 +200,12 @@ def get_blockvisitfrompointtime(sdb, starttime, propcode=None):
         logic += ' and Proposal_Code="{}"'.format(propcode)
    # print sdb.select('BlockVisit_Id', table, logic)
    # print starttime, propcode
-    return sdb.select('BlockVisit_Id', table, logic)[0][0]
-
-
+    try:
+        bvid = sdb.select('BlockVisit_Id', table, logic)[0][0]
+    except IndexError:
+        bvid = 0
+    return bvid
+ 
 def getblockrejectreason(sdb, propcode, blocks):
     """Get the reason for the block rejection"""
     for b in blocks:
