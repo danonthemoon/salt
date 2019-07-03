@@ -66,15 +66,11 @@ if __name__=='__main__':
 
    #Produce a pdf with the relevant stats
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
-       #fig = plt.figure(figsize=(8.27, 11.69))
        df = pd.DataFrame([rangestats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
-        # set individual bar lables using above list
        heights = []
-       for i in ax.patches:
-           heights.insert(0,i.get_height())
-           # get_x pulls left or right; get_height pushes up or down
-       #print(heights)
+       for patch in ax.patches:
+           heights.insert(0, patch.get_height())
        i = 0
        while i < len(heights):
            if i+1 < len(heights):
@@ -93,13 +89,7 @@ if __name__=='__main__':
        ax.set_yticks(np.arange(0,1050,50))
        ax.set_xticklabels(['Average Overheads'], rotation='horizontal')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate))
-       #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-       #df.plot.bar(stacked=True)
-       #plt.bar(range(len(rangestats)), list(rangestats.values()), stack = True, align='center')
-       #plt.ylabel("Time (s)")
-       #plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
-       #plt.yticks(np.arange(0, 300, 30))
-       #plt.xticks(range(len(rangestats)), list(rangestats.keys()))
+       plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
