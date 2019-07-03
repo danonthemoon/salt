@@ -83,12 +83,12 @@ if __name__=='__main__':
            else:
                rest = 0
            ax.text(0, heights[i]+rest-25, \
-                    str(heights[i]), fontsize=14, horizontalalignment='center',
-                        color='white')
+                    str(round(heights[i],1)), fontsize=14, horizontalalignment='center',
+                        color='white', fontweight='bold')
            i+=1
-       ax.text(0, sum(heights)+25, \
-                    str(sum(heights)), fontsize=14, horizontalalignment='center',
-                        color='black')
+       ax.text(0, sum(heights)+5, \
+                    str(round(sum(heights),1)), fontsize=14, horizontalalignment='center',
+                        color='black', fontweight='bold')
        ax.set_ylabel("Time (s)")
        ax.set_yticks(np.arange(0,1050,50))
        ax.set_xticklabels(['Average Overheads'], rotation='horizontal')
