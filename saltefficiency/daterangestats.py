@@ -74,11 +74,18 @@ if __name__=='__main__':
        for i in ax.patches:
            heights.insert(0,i.get_height())
            # get_x pulls left or right; get_height pushes up or down
-       print(heights)
-       for h in heights:
-           ax.text(.2, h, \
-                    str(round(h, 0)), fontsize=18,
+       #print(heights)
+       i = 0
+       while i < len(heights):
+           if i+1 < len(heights):
+               a = heights[i+1:]
+               rest = sum(a)
+           else:
+               rest = 0
+           ax.text(.2, heights[i]+rest, \
+                    str(round(heights[i], 0)), fontsize=18,
                         color='black')
+           i+=1
        ax.set_ylabel("Time (s)")
        ax.set_xticklabels(['Average Overheads'], rotation='horizontal')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate))
