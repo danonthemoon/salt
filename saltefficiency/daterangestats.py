@@ -82,8 +82,8 @@ if __name__=='__main__':
                rest = sum(a)
            else:
                rest = 0
-           ax.text(-0.5, heights[i]+rest, \
-                    str(round(heights[i], 0)), fontsize=18,
+           ax.text(0, heights[i]+rest-5, \
+                    str(round(heights[i], 0)), fontsize=12,
                         color='black')
            i+=1
        ax.set_ylabel("Time (s)")
