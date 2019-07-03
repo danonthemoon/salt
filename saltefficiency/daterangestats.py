@@ -70,9 +70,12 @@ if __name__=='__main__':
        df = pd.DataFrame([rangestats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
         # set individual bar lables using above list
+       heights = []
        for i in ax.patches:
+           heights.insert(0,i.get_height())
            # get_x pulls left or right; get_height pushes up or down
-           ax.text(i.get_x()-.2, i.get_height(), \
+       for h in heights:
+           ax.text(i.get_x()-.2, h, \
                     str(round(i.get_height(), 0)), fontsize=18,
                         color='black')
        ax.set_ylabel("Time (s)")
