@@ -61,8 +61,8 @@ if __name__=='__main__':
    else:
        rangestats = {}
        rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
-       rangestats.update({'TargetAcquisitionTime':targetacqtotal/count, 'InstrumentAcquisitionTime':instracqtotal/count})
-       #rangestats.update({'ScienceTrackTime': scitracktotal/count})
+       rangestats.update({'TargetAcquisitionTime':targetacqtotal/count})
+       #rangestats.update({'InstrumentAcquisitionTime':instracqtotal/count, 'ScienceTrackTime': scitracktotal/count})
 
    #Produce a pdf with the relevant stats
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
@@ -70,6 +70,8 @@ if __name__=='__main__':
        df = pd.DataFrame([rangestats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
        ax.set_ylabel("Time (s)")
+       ax.set_xticklabels(['Average Overheads'])
+       ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate))
        #df.plot.bar(stacked=True)
        #plt.bar(range(len(rangestats)), list(rangestats.values()), stack = True, align='center')
        #plt.ylabel("Time (s)")
