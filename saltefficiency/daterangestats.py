@@ -67,7 +67,7 @@ if __name__=='__main__':
    #Produce a pdf with the relevant stats
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        fig = plt.figure(figsize=(8.27, 11.69))
-       df = pd.DataFrame(rangestats)
+       df = pd.DataFrame([rangestats])
        df.plot(kind="bar", stacked=True)
        #plt.bar(range(len(rangestats)), list(rangestats.values()), align='center')
        plt.ylabel("Time (s)")
