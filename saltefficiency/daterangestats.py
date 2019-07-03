@@ -87,7 +87,7 @@ if __name__=='__main__':
                         color='white', fontweight='bold')
            i+=1
        ax.text(0, sum(heights)+5, \
-                    str(round(sum(heights),1)), fontsize=14, horizontalalignment='center',
+                   'Total Time '+str(round(sum(heights),1)), fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)")
        ax.set_yticks(np.arange(0,1050,50))
