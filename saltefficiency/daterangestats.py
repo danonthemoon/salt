@@ -82,14 +82,15 @@ if __name__=='__main__':
                rest = sum(a)
            else:
                rest = 0
-           ax.text(0.5, heights[i]+rest-25, \
+           ax.text(-0.1, heights[i]+rest-25, \
                     str(round(heights[i], 0)), fontsize=14, horizontalalignment='center',
                         color='white')
            i+=1
        ax.set_ylabel("Time (s)")
+       ax.set_yticks(np.arange(0,1000,20))
        ax.set_xticklabels(['Average Overheads'], rotation='horizontal')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate))
-       ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+       #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
        #df.plot.bar(stacked=True)
        #plt.bar(range(len(rangestats)), list(rangestats.values()), stack = True, align='center')
        #plt.ylabel("Time (s)")
