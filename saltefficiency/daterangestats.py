@@ -86,7 +86,7 @@ if __name__=='__main__':
                    str(round(sum(heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)", fontweight='bold')
-       ax.set_yticks(np.arange(0,1050,50))
+       ax.set_yticks(np.arange(0,1300,50))
        ax.set_xticklabels(['Average Overhead Time per Block'], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        pdf.savefig() # saves the current figure into a pdf page
