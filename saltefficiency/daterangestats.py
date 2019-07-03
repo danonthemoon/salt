@@ -62,19 +62,20 @@ if __name__=='__main__':
        rangestats = {}
        rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
        rangestats.update({'TargetAcquisitionTime':targetacqtotal/count, 'InstrumentAcquisitionTime':instracqtotal/count})
-       rangestats.update({'ScienceTrackTime': scitracktotal/count})
+       #rangestats.update({'ScienceTrackTime': scitracktotal/count})
 
    #Produce a pdf with the relevant stats
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
-       fig = plt.figure(figsize=(8.27, 11.69))
+       #fig = plt.figure(figsize=(8.27, 11.69))
        df = pd.DataFrame([rangestats])
-       #df.plot(kind="bar", stacked=True)
-       df.plot.bar(stacked=True)
-       #plt.bar(range(len(rangestats)), list(rangestats.values()), align='center')
-       plt.ylabel("Time (s)")
-       plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
+       ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
+       ax.set_ylabel("Time (s)")
+       #df.plot.bar(stacked=True)
+       #plt.bar(range(len(rangestats)), list(rangestats.values()), stack = True, align='center')
+       #plt.ylabel("Time (s)")
+       #plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
        #plt.yticks(np.arange(0, 300, 30))
        #plt.xticks(range(len(rangestats)), list(rangestats.keys()))
+       pdf.savefig() # saves the current figure into a pdf page
        plt.show()
-       pdf.savefig(fig) # saves the current figure into a pdf page
        plt.close()
