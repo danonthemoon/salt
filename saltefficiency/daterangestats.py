@@ -72,7 +72,7 @@ if __name__=='__main__':
         # set individual bar lables using above list
        for i in ax.patches:
            # get_x pulls left or right; get_height pushes up or down
-           ax.text(i.get_height()-0.5,
+           ax.text(i.get_x(), i.get_height()-0.5, \
                     str(round(i.get_height(), 2)), fontsize=18,
                         color='white')
        ax.set_ylabel("Time (s)")
