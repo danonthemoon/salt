@@ -68,12 +68,13 @@ if __name__=='__main__':
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        fig = plt.figure(figsize=(8.27, 11.69))
        df = pd.DataFrame([rangestats])
-       df.plot(kind="bar", stacked=True)
+       #df.plot(kind="bar", stacked=True)
+       df.plot.bar(stacked=True)
        #plt.bar(range(len(rangestats)), list(rangestats.values()), align='center')
        plt.ylabel("Time (s)")
        plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
        #plt.yticks(np.arange(0, 300, 30))
        #plt.xticks(range(len(rangestats)), list(rangestats.keys()))
-       plt.show()  
+       plt.show()
        pdf.savefig(fig) # saves the current figure into a pdf page
        plt.close()
