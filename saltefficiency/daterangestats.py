@@ -74,9 +74,10 @@ if __name__=='__main__':
        for i in ax.patches:
            heights.insert(0,i.get_height())
            # get_x pulls left or right; get_height pushes up or down
+       print(heights)
        for h in heights:
-           ax.text(i.get_x()-.2, h, \
-                    str(round(i.get_height(), 0)), fontsize=18,
+           ax.text(.2, h, \
+                    str(round(h, 0)), fontsize=18,
                         color='black')
        ax.set_ylabel("Time (s)")
        ax.set_xticklabels(['Average Overheads'], rotation='horizontal')
