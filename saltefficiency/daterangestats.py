@@ -69,13 +69,12 @@ if __name__=='__main__':
        #fig = plt.figure(figsize=(8.27, 11.69))
        df = pd.DataFrame([rangestats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
-       
         # set individual bar lables using above list
        for i in ax.patches:
            # get_x pulls left or right; get_height pushes up or down
-           ax.text(i.get_height()-0.5, \
+           ax.text(i.get_height()-0.5,
                     str(round((i.get_height(), 2)), fontsize=22,
-                        color='white')
+                        color='white'))
        ax.set_ylabel("Time (s)")
        ax.set_xticklabels(['Average Overheads'], rotation='horizontal')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate))
