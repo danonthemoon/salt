@@ -58,12 +58,19 @@ if __name__=='__main__':
        print("No observation nights within this range")
        rangestats=[0]
    else:
-       rangestats = [slewtotal/count,trslewtotal/count,targetacqtotal/count,instracqtotal/count,scitracktotal/count]
+       rangestats = {}
+       rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
+       rangestats.update({'TargetAcquisitionTime':targetacqtotal/count, 'InstrumentAcquisitionTime':instracqtotal/count})
+       rangestats.update({'ScienceTrackTime': scitracktotal/count})
 
    #Produce a pdf with the relevant stats
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
-       plt.figure(figsize=(2, 2))
-       plt.plot(rangestats)
+       fig = plt.figure(figsize=(8.27, 11.69))
+       plt.bar(range(len(rangestats)), list(rangestats.values()), align='center')
+       plt.xticks(range(len(rangestats)), list(rangestats.keys()))
+       plt.ylabel("Time (s)")
        plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
-       pdf.savefig()  # saves the current figure into a pdf page
+       plt.yticks(np.arange(0, 300, 30))
+       pdf.savefig(fig)
+       plt.show()  # saves the current figure into a pdf page
        plt.close()
