@@ -82,7 +82,7 @@ if __name__=='__main__':
                rest = sum(a)
            else:
                rest = 0
-           ax.text(.2, heights[i]+rest, \
+           ax.text(-0.5, heights[i]+rest, \
                     str(round(heights[i], 0)), fontsize=18,
                         color='black')
            i+=1
