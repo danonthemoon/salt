@@ -74,6 +74,6 @@ if __name__=='__main__':
        plt.title('Overhead Statistics for %s to %s' % (sdate,edate))
        #plt.yticks(np.arange(0, 300, 30))
        #plt.xticks(range(len(rangestats)), list(rangestats.keys()))
-       pdf.savefig(fig)
-       plt.show()  # saves the current figure into a pdf page
+       plt.show()  
+       pdf.savefig(fig) # saves the current figure into a pdf page
        plt.close()
