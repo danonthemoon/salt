@@ -84,8 +84,9 @@ def blockvisitstats(sdb, obsdate, update=True):
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, Block_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
-   logic_state="FileName like '%"+formatteddate+"%' order by FileName"
+   logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
    img_list=sdb.select(select_state, table_state, logic_state)
+   for i in img_list: print(i[5],i[4],i[10])
 
    #now create a list of all pointing commands
    point_list=[]
@@ -147,6 +148,7 @@ def blockvisitstats(sdb, obsdate, update=True):
 
            #determine the acquisition time after being on target
            instr, primary_mode=getprimarymode(img_list, bid)
+           print(instr, primary_mode)
            scamstart=getfirstimage(img_list, starttime, 'SCAM', primary_mode)
            #if instr=='HRS': continue
 

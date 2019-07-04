@@ -1,0 +1,15 @@
+
+*** These modified files were found in JOE when it aborted on Wed Jul  3 16:37:25 2019
+*** JOE was aborted because the terminal closed
+
+*** File '(Unnamed)'
+/home/danny/salteff/.git/MERGE_MSG
+
+*** File '/home/danny/salteff/.git/MERGE_MSG'
+Merge branch 'master' of https://github.com/danonthemoon/saltoverheads
+ah
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message abh
+:wq
