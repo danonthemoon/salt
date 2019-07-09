@@ -37,11 +37,11 @@ if __name__=='__main__':
    startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))
    enddate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
    date = startdate
-   slewtotal=0
-   trslewtotal=0
-   targetacqtotal=0
-   instracqtotal=0
-   scitracktotal=0
+   slewtotal=[]
+   trslewtotal=[]
+   targetacqtotal=[]
+   instracqtotal=[]
+   scitracktotal=[]
    count=0
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
