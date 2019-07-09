@@ -61,8 +61,10 @@ if __name__=='__main__':
        rangestats=[0]
    else:
        rangestats = {}
-       rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
-       rangestats.update({'TargetAcquisitionTime':targetacqtotal/count})
+       #rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
+       #rangestats.update({'TargetAcquisitionTime':targetacqtotal/count})
+       rangestats.update({'SlewTime' : slewtotal.median(), 'TrackerSlewTime' : trslewtotal.median()})
+       rangestats.update({'TargetAcquisitionTime':targetacqtotal.median()})
        #rangestats.update({'InstrumentAcquisitionTime':instracqtotal/count, 'ScienceTrackTime': scitracktotal/count})
 
    #Produce a pdf with the relevant stats
