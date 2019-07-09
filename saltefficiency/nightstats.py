@@ -40,11 +40,11 @@ def getnightstats(sdb, obsdate):
    blockvisits=list(blockvisits)
 
    # iterate through blockvisits to accumulate & average over the number of accepted blockvisits
-   nightslew=0
-   nighttrslew=0
-   nighttargetacq=0
-   nightinstracq=0
-   nightscitrack=0
+   nightslew=[]
+   nighttrslew=[]
+   nighttargetacq=[]
+   nightinstracq=[]
+   nightscitrack=[]
    count=0
    for bvid in blockvisits:
        selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime, ScienceTrackTime'
@@ -54,11 +54,11 @@ def getnightstats(sdb, obsdate):
            continue
        else:
           count+=1
-          nightslew+=bvstats[0][0]
-          nighttrslew+=bvstats[0][1]
-          nighttargetacq+=bvstats[0][2]
-          nightinstracq+=bvstats[0][3]
-          nightscitrack+=bvstats[0][4]
+          nightslew.append(bvstats[0][0])
+          nighttrslew.append(bvstats[0][1])
+          nighttargetacq.append(bvstats[0][2])
+          nightinstracq.append(bvstats[0][3])
+          nightscitrack.append(bvstats[0][4])
    if count == 0:
        nightstats = []
    else:

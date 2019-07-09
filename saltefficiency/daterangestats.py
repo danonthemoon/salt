@@ -51,11 +51,11 @@ if __name__=='__main__':
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
           count+=numberofblocks
-          slewtotal+=nightstats[0]
-          trslewtotal+=nightstats[1]
-          targetacqtotal+=nightstats[2]
-          instracqtotal+=nightstats[3]
-          scitracktotal+=nightstats[4]
+          slewtotal=nightstats[0]
+          trslewtotal=nightstats[1]
+          targetacqtotal=nightstats[2]
+          instracqtotal=nightstats[3]
+          scitracktotal=nightstats[4]
    if count == 0:
        print("No observation nights within this range")
        rangestats=[0]
