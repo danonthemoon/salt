@@ -93,20 +93,41 @@ if __name__=='__main__':
        heights = []
        for patch in ax.patches:
            heights.insert(0, patch.get_height())
-       print(heights)
-       i = 0
+       rss_heights=[]
+       hrs_heights=[]
+       i=0
        while i < len(heights):
-           if i+1 < len(heights):
-               a = heights[i+1:]
+           if (i % 2 == 0):
+              rss_heights.append(heights[i])
+           else:
+              hrs_heights.append(heights[i])
+       j=0
+       while j < len(rss_heights):
+           if j+1 < len(rss_heights):
+               a = rss_heights[j+1:]
                rest = sum(a)
            else:
                rest = 0
-           ax.text(0, heights[i]+rest-25, \
-                    str(round(heights[i],1)), fontsize=14, horizontalalignment='center',
+           ax.text(0, rss_heights[j]+rest-25, \
+                    str(round(rss_heights[j],1)), fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
-           i+=1
-       ax.text(0, sum(heights)+5, \
-                   str(round(sum(heights),1))+' (total)', fontsize=14, horizontalalignment='center',
+           j+=1
+       ax.text(0, sum(rss_heights)+5, \
+                   str(round(sum(rss_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
+                        color='black', fontweight='bold')
+       k=0
+       while k < len(hrs_heights):
+           if k+1 < len(hrs_heights):
+               b = heights[k+1:]
+               rest = sum(b)
+           else:
+               rest = 0
+           ax.text(0, hrs_heights[k]+rest-25, \
+                    str(round(heights[k],1)), fontsize=14, horizontalalignment='center',
+                        color='black', fontweight='bold')
+           k+=1
+       ax.text(0, sum(hrs_heights)+5, \
+                   str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1550,50))
