@@ -63,9 +63,9 @@ if __name__=='__main__':
        rangestats = {}
        #rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
        #rangestats.update({'TargetAcquisitionTime':targetacqtotal/count})
-       rangestats.update({'SlewTime' : slewtotal.median(), 'TrackerSlewTime' : trslewtotal.median()})
-       rangestats.update({'TargetAcquisitionTime':targetacqtotal.median()})
-       #rangestats.update({'InstrumentAcquisitionTime':instracqtotal/count, 'ScienceTrackTime': scitracktotal/count})
+       rangestats.update({'SlewTime' : median(slewtotal), 'TrackerSlewTime' : median(trslewtotal)})
+       rangestats.update({'TargetAcquisitionTime':median(targetacqtotal)})
+       #rangestats.update({'InstrumentAcquisitionTime':median(instracqtotal), 'ScienceTrackTime': median(scitracktotal)})
 
    #Produce a pdf with the relevant stats
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
