@@ -95,7 +95,7 @@ if __name__=='__main__':
                rest = 0
            ax.text(0, heights[i]+rest-25, \
                     str(round(heights[i],1)), fontsize=14, horizontalalignment='center',
-                        color='white', fontweight='bold')
+                        color='black', fontweight='bold')
            i+=1
        ax.text(0, sum(heights)+5, \
                    str(round(sum(heights),1))+' (total)', fontsize=14, horizontalalignment='center',
@@ -104,7 +104,7 @@ if __name__=='__main__':
        ax.set_yticks(np.arange(0,1050,50))
        ax.set_xticklabels(['Average Overhead Time per Block'], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
-       ax.legend(loc=3, fontsize=11)
+       ax.legend(loc=0, fontsize=9)
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
