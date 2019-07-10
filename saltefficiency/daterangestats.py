@@ -119,12 +119,12 @@ if __name__=='__main__':
        k=0
        while k < len(hrs_heights):
            if k+1 < len(hrs_heights):
-               b = heights[k+1:]
+               b = hrs_heights[k+1:]
                rest = sum(b)
            else:
                rest = 0
-           ax.text(0, hrs_heights[k]+rest-25, \
-                    str(round(heights[k],1)), fontsize=14, horizontalalignment='center',
+           ax.text(0.5, hrs_heights[k]+rest-25, \
+                    str(round(hrs_heights[k],1)), fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
            k+=1
        ax.text(0, sum(hrs_heights)+5, \
