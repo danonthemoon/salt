@@ -72,16 +72,16 @@ if __name__=='__main__':
        print("No valid observation nights within this range")
    else:
        rss_stats = {}
-       rss_stats.update({'Slew' : median(rss_slewtimes)})
-       rss_stats.update({'Tracker Slew' : median(rss_trslewtimes)})
-       rss_stats.update({'Target Acquisition': median(rss_targetacqtimes)})
-       rss_stats.update({'Instrument Acquisition': median(rss_instracqtimes)})
+       rss_stats.update({'4. Slew' : median(rss_slewtimes)})
+       rss_stats.update({'3. Tracker Slew' : median(rss_trslewtimes)})
+       rss_stats.update({'2. Target Acquisition': median(rss_targetacqtimes)})
+       rss_stats.update({'1. Instrument Acquisition': median(rss_instracqtimes)})
        #rss_stats.update({'Science Track': median(rss_scitracktimes)})
        hrs_stats = {}
-       hrs_stats.update({'Instrument Acquisition': median(hrs_instracqtimes)})
-       hrs_stats.update({'Target Acquisition': median(hrs_targetacqtimes)})
-       hrs_stats.update({'Tracker Slew' : median(hrs_trslewtimes)})
-       hrs_stats.update({'Slew' : median(hrs_slewtimes)})
+       hrs_stats.update({'1. Instrument Acquisition': median(hrs_instracqtimes)})
+       hrs_stats.update({'2. Target Acquisition': median(hrs_targetacqtimes)})
+       hrs_stats.update({'3. Tracker Slew' : median(hrs_trslewtimes)})
+       hrs_stats.update({'4. Slew' : median(hrs_slewtimes)})
        #hrs_stats.update({'Science Track': median(hrs_scitracktimes)})
 
    #Produce a pdf with the relevant stats
