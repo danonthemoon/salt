@@ -98,9 +98,9 @@ if __name__=='__main__':
        i=0
        while i < len(heights):
            if (i % 2 == 0):
-              rss_heights.append(heights[i])
-           else:
               hrs_heights.append(heights[i])
+           else:
+              rss_heights.append(heights[i])
            i+=1
        j=0
        while j < len(rss_heights):
@@ -123,11 +123,11 @@ if __name__=='__main__':
                rest = sum(b)
            else:
                rest = 0
-           ax.text(0.5, hrs_heights[k]+rest-25, \
+           ax.text(1, hrs_heights[k]+rest-25, \
                     str(round(hrs_heights[k],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            k+=1
-       ax.text(0.5, sum(hrs_heights)+5, \
+       ax.text(1, sum(hrs_heights)+5, \
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)", fontweight='bold')
