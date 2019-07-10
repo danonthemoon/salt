@@ -234,7 +234,7 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bid):
     for img in image_list:
         if img[4]>stime and img[5]==instr and img[6]==primary_mode and img[10]==bid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
-   return None
+    return None
 
 
 def getprimarymode(image_list, bid):

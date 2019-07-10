@@ -65,6 +65,7 @@ def getnightstats(sdb, obsdate):
        selcmd='INSTRUME'
        tabcmd='FileData'
        bv_ins=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       if len(bv_ins)==0: continue
        if bv_ins[0][0]=='RSS':
           rss_targetacq.append(scistats[0][0])
           rss_instracq.append(scistats[0][1])

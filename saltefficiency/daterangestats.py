@@ -14,6 +14,7 @@ import numpy as np
 import sdb_mysql as mysql
 import pandas as pd
 import matplotlib.pyplot as plt
+from statistics import median
 from matplotlib.backends.backend_pdf import PdfPages
 plt.switch_backend('agg')
 
@@ -37,14 +38,14 @@ if __name__=='__main__':
    startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))
    enddate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
    date = startdate
-   slewtotal=[]
-   trslewtotal=[]
-   rss_targetacqtotal=[]
-   rss_instracqtotal=[]
-   rss_scitracktotal=[]
-   hrs_targetacqtotal=[]
-   hrs_instracqtotal=[]
-   hrs_scitracktotal=[]
+   slewtimes=[]
+   trslewtimes=[]
+   rss_targetacqtimes=[]
+   rss_instracqtimes=[]
+   rss_scitracktimes=[]
+   hrs_targetacqtimes=[]
+   hrs_instracqtimes=[]
+   hrs_scitracktimes=[]
    nights=0
    blocks=0
    while date <= enddate:
@@ -53,20 +54,21 @@ if __name__=='__main__':
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
-          slewtimes.append(nightstats[0])
-          trslewtimes.append(nightstats[1])
-          rss_targetacqttimes.append(nightstats[2])
-          rss_instracqtimes.append(nightstats[3])
-          rss_scitracktimes.append(nightstats[4])
-          hrs_targetacqtimes.append(nightstats[5])
-          hrs_instracqtimes.append(nightstats[6])
-          hrs_scitracktimes.append(nightstats[7])
+          slewtimes.append(t for t in nightstats[0])
+          trslewtimes.append(t for t in nightstats[1])
+          rss_targetacqtimes.append(t for t in nightstats[2])
+          rss_instracqtimes.append(t for t in nightstats[3])
+          rss_scitracktimes.append(t for t in nightstats[4])
+          hrs_targetacqtimes.append(t for t in nightstats[5])
+          hrs_instracqtimes.append(t for t in nightstats[6])
+          hrs_scitracktimes.extend(nightstats[7])
        blocks+=numberofblocks
        nights+=1
    if nights == 0:
        print("No valid observation nights within this range")
    else:
        slewstats = {}
+       print(slewtimes)
        slewstats.update({'SlewTime' : median(slewtimes), 'TrackerSlewTime' : median(trslewtimes)})
        rss_stats = {}
        rss_stats.update({'RSS_TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS_InstrumentAcquisitionTime': median(rss_instracqtimes)})
