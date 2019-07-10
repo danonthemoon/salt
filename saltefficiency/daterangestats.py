@@ -54,13 +54,13 @@ if __name__=='__main__':
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
-          slewtimes.append(t for t in nightstats[0])
-          trslewtimes.append(t for t in nightstats[1])
-          rss_targetacqtimes.append(t for t in nightstats[2])
-          rss_instracqtimes.append(t for t in nightstats[3])
-          rss_scitracktimes.append(t for t in nightstats[4])
-          hrs_targetacqtimes.append(t for t in nightstats[5])
-          hrs_instracqtimes.append(t for t in nightstats[6])
+          slewtimes.extend(nightstats[0])
+          trslewtimes.extend(nightstats[1])
+          rss_targetacqtimes.extend(nightstats[2])
+          rss_instracqtimes.extend(nightstats[3])
+          rss_scitracktimes.extend(nightstats[4])
+          hrs_targetacqtimes.extend(nightstats[5])
+          hrs_instracqtimes.extend(nightstats[6])
           hrs_scitracktimes.extend(nightstats[7])
        blocks+=numberofblocks
        nights+=1
