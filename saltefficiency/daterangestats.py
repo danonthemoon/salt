@@ -110,7 +110,7 @@ if __name__=='__main__':
            else:
                rest = 0
            ax.text(0, rss_heights[j]+rest-25, \
-                    str(round(rss_heights[j],1)), fontsize=14, horizontalalignment='center',
+                    str(round(rss_heights[j],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            j+=1
        ax.text(0, sum(rss_heights)+5, \
@@ -123,11 +123,11 @@ if __name__=='__main__':
                rest = sum(b)
            else:
                rest = 0
-           ax.text(0.5, hrs_heights[k]+rest-25, \
-                    str(round(hrs_heights[k],1)), fontsize=14, horizontalalignment='center',
+           ax.text(0.1, hrs_heights[k]+rest-25, \
+                    str(round(hrs_heights[k],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            k+=1
-       ax.text(0, sum(hrs_heights)+5, \
+       ax.text(1, sum(hrs_heights)+5, \
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)", fontweight='bold')
