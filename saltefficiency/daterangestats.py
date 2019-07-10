@@ -70,11 +70,11 @@ if __name__=='__main__':
        slewstats = {}
        slewstats.update({'SlewTime' : median(slewtimes), 'TrackerSlewTime' : median(trslewtimes)})
        rss_stats = {}
-       rss_stats.update({'RSS_TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS_InstrumentAcquisitionTime': median(rss_instracqtimes)})
-       rss_stats.update({'RSS_ScienceTrackTime': median(rss_scitracktimes)})
+       rss_stats.update({'RSS TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS InstrumentAcquisitionTime': median(rss_instracqtimes)})
+       rss_stats.update({'RSS ScienceTrackTime': median(rss_scitracktimes)})
        hrs_stats = {}
-       hrs_stats.update({'HRS_TargetAcquisitionTime': median(hrs_targetacqtimes), 'HRS_InstrumentAcquisitionTime': median(hrs_instracqtimes)})
-       hrs_stats.update({'HRS_ScienceTrackTime': median(hrs_scitracktimes)})
+       hrs_stats.update({'HRS TargetAcquisitionTime': median(hrs_targetacqtimes), 'HRS InstrumentAcquisitionTime': median(hrs_instracqtimes)})
+       hrs_stats.update({'HRS ScienceTrackTime': median(hrs_scitracktimes)})
 
    #Produce a pdf with the relevant stats
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
@@ -101,9 +101,10 @@ if __name__=='__main__':
                    str(round(sum(heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)", fontweight='bold')
-       ax.set_yticks(np.arange(0,1550,50))
+       ax.set_yticks(np.arange(0,3600,100))
        ax.set_xticklabels(['Average Overhead Time per Block'], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
+       ax.legend(loc=3, fontsize=11)
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
