@@ -39,37 +39,48 @@ if __name__=='__main__':
    date = startdate
    slewtotal=[]
    trslewtotal=[]
-   targetacqtotal=[]
-   instracqtotal=[]
-   scitracktotal=[]
-   count=0
+   rss_targetacqtotal=[]
+   rss_instracqtotal=[]
+   rss_scitracktotal=[]
+   hrs_targetacqtotal=[]
+   hrs_instracqtotal=[]
+   hrs_scitracktotal=[]
+   nights=0
+   blocks=0
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
-       #nightstats=getnightstats(sdb, obsdate)
        nightstats, numberofblocks = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
-          count+=numberofblocks
-          slewtotal=nightstats[0]
-          trslewtotal=nightstats[1]
-          targetacqtotal=nightstats[2]
-          instracqtotal=nightstats[3]
-          scitracktotal=nightstats[4]
-   if count == 0:
-       print("No observation nights within this range")
-       rangestats=[0]
+          slewtimes.append(nightstats[0])
+          trslewtimes.append(nightstats[1])
+          rss_targetacqttimes.append(nightstats[2])
+          rss_instracqtimes.append(nightstats[3])
+          rss_scitracktimes.append(nightstats[4])
+          hrs_targetacqtimes.append(nightstats[5])
+          hrs_instracqtimes.append(nightstats[6])
+          hrs_scitracktimes.append(nightstats[7])
+       blocks+=numberofblocks
+       nights+=1
+   if nights == 0:
+       print("No valid observation nights within this range")
    else:
-       rangestats = {}
-       #rangestats.update({'SlewTime' : slewtotal/count, 'TrackerSlewTime' : trslewtotal/count})
-       #rangestats.update({'TargetAcquisitionTime':targetacqtotal/count})
-       rangestats.update({'SlewTime' : median(slewtotal), 'TrackerSlewTime' : median(trslewtotal)})
-       rangestats.update({'TargetAcquisitionTime':median(targetacqtotal)})
-       #rangestats.update({'InstrumentAcquisitionTime':median(instracqtotal), 'ScienceTrackTime': median(scitracktotal)})
+       slewstats = {}
+       slewstats.update({'SlewTime' : median(slewtimes), 'TrackerSlewTime' : median(trslewtimes)})
+       rss_stats = {}
+       rss_stats.update({'RSS_TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS_InstrumentAcquisitionTime': median(rss_instracqtimes)})
+       rss_stats.update({'RSS_ScienceTrackTime': median(rss_scitracktimes)})
+       hrs_stats = {}
+       hrs_stats.update({'HRS_TargetAcquisitionTime': median(hrs_targetacqtimes), 'HRS_InstrumentAcquisitionTime': median(hrs_instracqtimes)})
+       hrs_stats.update({'HRS_ScienceTrackTime': median(hrs_scitracktimes)})
 
    #Produce a pdf with the relevant stats
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
-       df = pd.DataFrame([rangestats])
+       stats = [slewstats, rss_stats, hrs_stats]
+       df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
+       df.index = ['Slew Stats', 'RSS Stats', 'HRS Stats']
+       #df = pd.DataFrame([slewstats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
        heights = []
        for patch in ax.patches:
