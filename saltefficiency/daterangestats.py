@@ -68,7 +68,6 @@ if __name__=='__main__':
        print("No valid observation nights within this range")
    else:
        slewstats = {}
-       print(slewtimes)
        slewstats.update({'SlewTime' : median(slewtimes), 'TrackerSlewTime' : median(trslewtimes)})
        rss_stats = {}
        rss_stats.update({'RSS_TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS_InstrumentAcquisitionTime': median(rss_instracqtimes)})
