@@ -82,9 +82,9 @@ if __name__=='__main__':
 
    #Produce a pdf with the relevant stats
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
-       stats = [slewstats, rss_stats, hrs_stats]
+       stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
-       df.index = ['Slew Stats', 'RSS Stats', 'HRS Stats']
+       df.index = ['RSS Stats', 'HRS Stats']
        #df = pd.DataFrame([slewstats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
        heights = []
