@@ -72,20 +72,19 @@ if __name__=='__main__':
        print("No valid observation nights within this range")
    else:
        rss_stats = {}
-       rss_stats.update({'SlewTime' : median(rss_slewtimes), 'TrackerSlewTime' : median(rss_trslewtimes)})
-       rss_stats.update({'RSS TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS InstrumentAcquisitionTime': median(rss_instracqtimes)})
-       #rss_stats.update({'RSS ScienceTrackTime': median(rss_scitracktimes)})
+       rss_stats.update({'Slew' : median(rss_slewtimes), 'Tracker Slew' : median(rss_trslewtimes)})
+       rss_stats.update({'Target Acquisition': median(rss_targetacqtimes), 'Instrument Acquisition': median(rss_instracqtimes)})
+       #rss_stats.update({'Science Track': median(rss_scitracktimes)})
        hrs_stats = {}
-       hrs_stats.update({'SlewTime' : median(hrs_slewtimes), 'TrackerSlewTime' : median(hrs_trslewtimes)})
-       hrs_stats.update({'HRS TargetAcquisitionTime': median(hrs_targetacqtimes), 'HRS InstrumentAcquisitionTime': median(hrs_instracqtimes)})
-       #hrs_stats.update({'HRS ScienceTrackTime': median(hrs_scitracktimes)})
+       hrs_stats.update({'Slew' : median(hrs_slewtimes), 'Tracker Slew' : median(hrs_trslewtimes)})
+       hrs_stats.update({'Target Acquisition': median(hrs_targetacqtimes), 'Instrument Acquisition': median(hrs_instracqtimes)})
+       #hrs_stats.update({'Science Track': median(hrs_scitracktimes)})
 
    #Produce a pdf with the relevant stats
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
        df.index = ['RSS Stats', 'HRS Stats']
-       #df = pd.DataFrame([slewstats])
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
        heights = []
        for patch in ax.patches:
@@ -105,10 +104,10 @@ if __name__=='__main__':
                    str(round(sum(heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.set_ylabel("Time (s)", fontweight='bold')
-       ax.set_yticks(np.arange(0,1050,50))
+       ax.set_yticks(np.arange(0,1550,50))
        ax.set_xticklabels(['Average Overhead Time per Block'], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
-       ax.legend(loc=0, fontsize=9)
+       ax.legend(loc=2, fontsize=9)
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
