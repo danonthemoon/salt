@@ -101,6 +101,7 @@ if __name__=='__main__':
               rss_heights.append(heights[i])
            else:
               hrs_heights.append(heights[i])
+           i+=1
        j=0
        while j < len(rss_heights):
            if j+1 < len(rss_heights):
