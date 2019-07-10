@@ -42,26 +42,40 @@ def getnightstats(sdb, obsdate):
    # iterate through blockvisits to accumulate & average over the number of accepted blockvisits
    nightslew=[]
    nighttrslew=[]
-   nighttargetacq=[]
-   nightinstracq=[]
-   nightscitrack=[]
+   rss_targetacq=[]
+   rss_instracq=[]
+   rss_scitrack=[]
+   hrs_targetacq=[]
+   hrs_instracq=[]
+   hrs_scitrack=[]
    count=0
    for bvid in blockvisits:
-       selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime, ScienceTrackTime'
+       selcmd='SlewTime, TrackerSlewTime'
        tabcmd='BlockVisit'
-       bvstats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
-       if not all(bvstats[0]):
+       slewstats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       if not all(slewstats[0]):
            continue
-       else:
-          count+=1
-          nightslew.append(bvstats[0][0])
-          nighttrslew.append(bvstats[0][1])
-          nighttargetacq.append(bvstats[0][2])
-          nightinstracq.append(bvstats[0][3])
-          nightscitrack.append(bvstats[0][4])
+       nightslew.append(slewstats[0][0])
+       nighttrslew.append(slewstats[0][1])
+       selcmd='TargetAcquisitionTime, InstrumentAcquisitionTime, ScienceTrackTime'
+       tabcmd='BlockVisit'
+       scistats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       if not all(scistats[0]):
+           continue
+       selcmd='INSTRUME'
+       tabcmd='FileData'
+       bv_ins=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       if bv_ins[0][0]=='RSS':
+          rss_targetacq.append(scistats[0][0])
+          rss_instracq.append(scistats[0][1])
+          rss_scitrack.append(scistats[0][2])
+       elif bv_ins[0][0]=='HRS':
+          hrs_targetacq.append(scistats[0][0])
+          hrs_instracq.append(scistats[0][1])
+          hrs_scitrack.append(scistats[0][2])
+       count+=1
    if count == 0:
        nightstats = []
    else:
-       #nightstats = [nightslew/count,nighttrslew/count,nighttargetacq/count,nightinstracq/count,nightscitrack/count]
-       nightstats = [nightslew,nighttrslew,nighttargetacq,nightinstracq,nightscitrack]
+       nightstats = [nightslew,nighttrslew,rss_targetacq,rss_instracq,rss_scitrack,hrs_targetacq,hrs_instracq,hrs_scitrack]
    return nightstats, count
