@@ -40,24 +40,19 @@ def getnightstats(sdb, obsdate):
    blockvisits=list(blockvisits)
 
    # iterate through blockvisits to accumulate & average over the number of accepted blockvisits
-   nightslew=[]
-   nighttrslew=[]
+   rss_slew=[]
+   rss_trslew=[]
    rss_targetacq=[]
    rss_instracq=[]
    rss_scitrack=[]
+   hrs_slew=[]
+   hrs_trslew=[]
    hrs_targetacq=[]
    hrs_instracq=[]
    hrs_scitrack=[]
    count=0
    for bvid in blockvisits:
-       selcmd='SlewTime, TrackerSlewTime'
-       tabcmd='BlockVisit'
-       slewstats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
-       if not all(slewstats[0]):
-           continue
-       nightslew.append(slewstats[0][0])
-       nighttrslew.append(slewstats[0][1])
-       selcmd='TargetAcquisitionTime, InstrumentAcquisitionTime, ScienceTrackTime'
+       selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime, ScienceTrackTime'
        tabcmd='BlockVisit'
        scistats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        if not all(scistats[0]):
@@ -67,16 +62,21 @@ def getnightstats(sdb, obsdate):
        bv_ins=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        if len(bv_ins)==0: continue
        if bv_ins[0][0]=='RSS':
-          rss_targetacq.append(scistats[0][0])
-          rss_instracq.append(scistats[0][1])
-          rss_scitrack.append(scistats[0][2])
+          rss_slew.append(scistats[0][0])
+          rss_trslew.append(scistats[0][1])
+          rss_targetacq.append(scistats[0][2])
+          rss_instracq.append(scistats[0][3])
+          rss_scitrack.append(scistats[0][4])
        elif bv_ins[0][0]=='HRS':
-          hrs_targetacq.append(scistats[0][0])
-          hrs_instracq.append(scistats[0][1])
-          hrs_scitrack.append(scistats[0][2])
+          hrs_slew.append(scistats[0][0])
+          hrs_trslew.append(scistats[0][1])
+          hrs_targetacq.append(scistats[0][2])
+          hrs_instracq.append(scistats[0][3])
+          hrs_scitrack.append(scistats[0][4])
+       else: continue
        count+=1
    if count == 0:
        nightstats = []
    else:
-       nightstats = [nightslew,nighttrslew,rss_targetacq,rss_instracq,rss_scitrack,hrs_targetacq,hrs_instracq,hrs_scitrack]
+       nightstats = [rss_slew,rss_trslew,rss_targetacq,rss_instracq,rss_scitrack,hrs_slew,hrs_trslew,hrs_targetacq,hrs_instracq,hrs_scitrack]
    return nightstats, count

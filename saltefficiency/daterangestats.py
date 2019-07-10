@@ -38,11 +38,13 @@ if __name__=='__main__':
    startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))
    enddate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
    date = startdate
-   slewtimes=[]
-   trslewtimes=[]
+   rss_slewtimes=[]
+   rss_trslewtimes=[]
    rss_targetacqtimes=[]
    rss_instracqtimes=[]
    rss_scitracktimes=[]
+   hrs_slewtimes=[]
+   hrs_trslewtimes=[]
    hrs_targetacqtimes=[]
    hrs_instracqtimes=[]
    hrs_scitracktimes=[]
@@ -54,25 +56,27 @@ if __name__=='__main__':
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
-          slewtimes.extend(nightstats[0])
-          trslewtimes.extend(nightstats[1])
+          rss_slewtimes.extend(nightstats[0])
+          rss_trslewtimes.extend(nightstats[1])
           rss_targetacqtimes.extend(nightstats[2])
           rss_instracqtimes.extend(nightstats[3])
           rss_scitracktimes.extend(nightstats[4])
-          hrs_targetacqtimes.extend(nightstats[5])
-          hrs_instracqtimes.extend(nightstats[6])
-          hrs_scitracktimes.extend(nightstats[7])
+          hrs_slewtimes.extend(nightstats[5])
+          hrs_trslewtimes.extend(nightstats[6])
+          hrs_targetacqtimes.extend(nightstats[7])
+          hrs_instracqtimes.extend(nightstats[8])
+          hrs_scitracktimes.extend(nightstats[9])
        blocks+=numberofblocks
        nights+=1
    if nights == 0:
        print("No valid observation nights within this range")
    else:
-       slewstats = {}
-       slewstats.update({'SlewTime' : median(slewtimes), 'TrackerSlewTime' : median(trslewtimes)})
        rss_stats = {}
+       rss_stats.update({'SlewTime' : median(rss_slewtimes), 'TrackerSlewTime' : median(rss_trslewtimes)})
        rss_stats.update({'RSS TargetAcquisitionTime': median(rss_targetacqtimes), 'RSS InstrumentAcquisitionTime': median(rss_instracqtimes)})
        #rss_stats.update({'RSS ScienceTrackTime': median(rss_scitracktimes)})
        hrs_stats = {}
+       hrs_stats.update({'SlewTime' : median(hrs_slewtimes), 'TrackerSlewTime' : median(hrs_trslewtimes)})
        hrs_stats.update({'HRS TargetAcquisitionTime': median(hrs_targetacqtimes), 'HRS InstrumentAcquisitionTime': median(hrs_instracqtimes)})
        #hrs_stats.update({'HRS ScienceTrackTime': median(hrs_scitracktimes)})
 
