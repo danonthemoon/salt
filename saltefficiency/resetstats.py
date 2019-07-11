@@ -2,19 +2,19 @@ import os
 import sys, time, datetime, string
 import struct
 import numpy as np
-import sdb_mysql as mysql
+import mysql
 
 from blockvisitstats import getnightinfo
 
 def resetstats(sdb, obsdate):
    #for a given obsdate get the night info
    nid=getnightinfo(sdb, obsdate)
-
    selcmd='BlockVisit_Id, BlockVisitStatus_Id, Proposal_Code, Block_Id'
    tabcmd='Block join BlockVisit using (Block_Id) join Proposal using (Proposal_Id) join ProposalCode on (Proposal.ProposalCode_Id = ProposalCode.ProposalCode_Id)'
    blocks=sdb.select(selcmd, tabcmd, 'NightInfo_Id=%i' % nid)
    bvid_list=[]
    for b in blocks:
+      print('22')
       bvid_list.append(b[0])
    print(bvid_list)
    for bvid in bvid_list:
@@ -31,7 +31,7 @@ if __name__=='__main__':
   # elspassword=os.environ['SDBPASS']
    sdbhost='sdb.salt'
    sdbname='sdb'
-   sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
+   sdb=mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
 
    sdate = sys.argv[1]
    edate=sys.argv[2]
