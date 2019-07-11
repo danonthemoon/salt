@@ -82,7 +82,7 @@ def blockvisitstats(sdb, obsdate, update=True):
    rej_list=[]
    for b in blocks:
       if b[1]==1:
-         bvid_list.append(b[2])
+         pid_list.append(b[2])
       else:
          rej_list.append(b[2])
 
@@ -123,14 +123,14 @@ def blockvisitstats(sdb, obsdate, update=True):
        starttime=pointtime
        #print(starttime)
        endtime=findguidingstop(starttime, event_list)
-       if endtime is None: 
+       if endtime is None:
            print('no end')
            continue
 
        #determine total time
        tottime=endtime-starttime
        #some limit to avoid crazy stats
-       if tottime.seconds > 10000: 
+       if tottime.seconds > 10000:
            print('total too long')
            continue
 
@@ -154,13 +154,13 @@ def blockvisitstats(sdb, obsdate, update=True):
 
        #determine the slew time
        guidestart=findguidingstart(starttime, event_list)
-       if guidestart is None: 
+       if guidestart is None:
            print('no trackstart')
            continue
        slewtime=guidestart-starttime
        if slewtime.seconds > 600:
            print('slew too long')
-           continue 
+           continue
 
        #determine the time between TrackStart and OnTarget
        ontarget=findontarget(starttime, event_list)
@@ -168,7 +168,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            print('no acq')
            continue
        trackerslewtime=ontarget-guidestart
-       if trackerslewtime.seconds > 300: 
+       if trackerslewtime.seconds > 300:
            print('trackslew too long')
            continue
 
