@@ -292,7 +292,7 @@ def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
     for img in image_list:
         #print(img[4], img[5],img[6],img[10])
         #print(stime, instr, primary_mode, bid)
-        if img[4]>stime and img[5]==inst: #img[6]==primary_mode and img[10]==bid:
+        if img[4]>stime and img[5]==instr: #img[6]==primary_mode and img[10]==bid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
 
