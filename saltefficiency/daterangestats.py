@@ -56,6 +56,7 @@ if __name__=='__main__':
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
        nightstats, numberofblocks = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
+       print(nightstats, numberofblocks)
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
           rss_slewtimes.extend(nightstats[0])
@@ -71,14 +72,6 @@ if __name__=='__main__':
    if nights == 0:
        print("No valid observation nights within this range")
    else:
-       print(rss_slewtimes)
-       print(rss_trslewtimes)
-       print(rss_targetacqtimes)
-       print(rss_instracqtimes)
-       print(hrs_slewtimes)
-       print(hrs_trslewtimes)
-       print(hrs_targetacqtimes)
-       print(hrs_instracqtimes)
        rss_stats = {}
        rss_stats.update({'1. Slew' : median(rss_slewtimes)})
        rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
