@@ -122,7 +122,7 @@ def blockvisitstats(sdb, obsdate, update=True):
                   block_list.append([bvid, starttime, endtime, status, propcode])
                   #blocks = removepropcode(blocks, propcode)
 
-      
+
        #determine statistics associated with accepted block
        if propcode in pid_list and bid is not None:
 
@@ -147,6 +147,8 @@ def blockvisitstats(sdb, obsdate, update=True):
            if scamstart is None:
                #print("Did not find SCAM image")
                continue
+           print(ontarget)
+           print(scamstart)
            acqtime=scamstart-ontarget
 
            #determine the time between acquisition and first science image
@@ -154,6 +156,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            if sciencestart is None:
                #print("Did not find science image")
                continue
+           print(sciencestart)
            sciacqtime=sciencestart-scamstart
 
            #determine the science tracking time
@@ -168,8 +171,8 @@ def blockvisitstats(sdb, obsdate, update=True):
            #update results in sdb
            if bvid is not None and update:
                bvs_updated+=1
-               inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
-               sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+               #inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
+               #sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
                inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
                inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
