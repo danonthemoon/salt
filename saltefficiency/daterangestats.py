@@ -89,7 +89,7 @@ if __name__=='__main__':
        stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
        df.index = ['RSS Stats', 'HRS Stats']
-       ax = df.plot(kind="bar", stacked=True, colormap='Reds', figsize=(8.27,11.69))
+       ax = df.plot(kind="bar", stacked=True, colormap='RdBu', figsize=(8.27,11.69))
        heights = []
        for patch in ax.patches:
            heights.insert(0, patch.get_height())
