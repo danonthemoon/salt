@@ -77,38 +77,80 @@ def blockvisitstats(sdb, obsdate, update=True):
           bvid_list.append(b[0])
        else:
           rej_list.append(b[0])
+    #list of accepted blocks
+   pid_list=[]
+   rej_list=[]
+   for b in blocks:
+      if b[1]==1:
+         bvid_list.append(b[2])
+      else:
+         rej_list.append(b[0])
 
    #get a list of all data from the night
-   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, Block_Id'
+   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
    logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
+
+   #deal with accepted blocks
+   block_list=[]
    for bvid in bvid_list:
+
        #print('in')
-       #deal with accepted blocks
-       pointcmd = findpointcommand(bvid, event_list)
+       select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
+       table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
+       point_list=sdb.select(select_state, table_state, 'NightInfo_Id=%i' % nid)
+
+      #determine start time (point) and end time (track end)
+       pointtime = findpointcommand(bvid, point_list)
+       if pointtime is None: continue
        starttime=pointcmd
        endtime=findguidingstop(starttime, event_list)
+       if endtime is None: continue
 
        #determine total time
        tottime=endtime-starttime
+       #some limit to avoid crazy stats
+       if tottime > 10000: continue
+
+       propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
+       if propcode in pid_list and not (propcode in rej_list):
+           blocks = removepropcode(blocks, propcode)
+           block_list.append([bvid, starttime, endtime, 0, propcode])
+       elif propcode in rej_list and not (propcode in pid_list):
+           status = getblockrejectreason(sdb, propcode, blocks)
+           block_list.append([bvid, starttime, endtime, status, propcode])
+       elif propcode in pid_list and propcode in rej_list:
+           #get the first block with the propcode
+           for b in blocks:
+               if b[0]==bvid:
+                  if b[1]==1:
+                     status=0
+                  else:
+                     status = getblockrejectreason(sdb, propcode, blocks)
+                  block_list.append([bvid, starttime, endtime, status, propcode])
+                  blocks = removepropcode(blocks, propcode)
 
        #determine the slew time
        guidestart=findguidingstart(starttime, event_list)
+       if guidestart is None: continue
        slewtime=guidestart-starttime
+       if slewtime > 600: continue
 
        #determine the time between TrackStart and OnTarget
        ontarget=findontarget(starttime, event_list)
+       if ontarget is None: continue
        trackerslewtime=ontarget-guidestart
+       if trackerslewtime > 300: continue
 
 
        #determine the acquisition time after being on target
-       instr, primary_mode=getprimarymode(img_list, bid)
+       instr, primary_mode=getprimarymode(img_list, bvid)
        #print(instr, primary_mode)
-       scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bid)
+       scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
        if scamstart is None:
            #print("Did not find SCAM image")
            continue
@@ -117,7 +159,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        acqtime=scamstart-ontarget
 
        #determine the time between acquisition and first science image
-       sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bid)
+       sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bvid)
        if sciencestart is None:
            #print("Did not find science image")
            continue
@@ -125,16 +167,15 @@ def blockvisitstats(sdb, obsdate, update=True):
        sciacqtime=sciencestart-scamstart
 
        #determine the science tracking time
-       guidestop=findguidingstop(starttime, event_list)
-       scitime=guidestop-sciencestart
+       scitime=endtime-sciencestart
 
 
        #determine the block visit
-       bvid=getblockvisit(blocks_orig, bid)
-       print(bvid, starttime, endtime, propcode, bid, slewtime, trackerslewtime, acqtime, sciacqtime, scitime)
+       #bvid=getblockvisit(blocks_orig, bid)
+       #print(bvid, starttime, endtime, propcode, bid, slewtime, trackerslewtime, acqtime, sciacqtime, scitime)
 
        #update results in sdb
-       if bvid is not None and update:
+       if update:
            bvs_updated+=1
            #inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
            #sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
@@ -142,17 +183,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
            inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-
-
-       elif propcode is not None and bid is not None:
-           #deal with rejected block
-           pass
-       elif propcode is not None and bid is None:
-           #deal with commissioning blocks
-           pass
-       else:
-           #otherwise ignore
-           pass
+           
    #print(bvs_updated)
    #print(len(pid_list))
    return block_list
@@ -234,7 +265,7 @@ def getblockvisit(blocks, bid, accept=1):
     return None
 
 
-def getfirstimage(image_list, starttime, instr, primary_mode, bid):
+def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
     """Determine the first image of a list that has that
        mode in use
 
@@ -243,19 +274,19 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bid):
     if instr=='RSS':
         blockscams=[]
         for img in image_list:
-           if img[10]==bid and img[5]=='SALTICAM':
+           if img[10]==bvid and img[5]=='SALTICAM':
               blockscams.append(img)
         if len(blockscams)<2:
            return None
     for img in image_list:
         #print(img[4], img[5],img[6],img[10])
         #print(stime, instr, primary_mode, bid)
-        if img[4]>stime and img[5]==instr and img[10]==bid: #img[6]==primary_mode and img[10]==bid:
+        if img[4]>stime and img[5]==instr and img[10]==bvid: #img[6]==primary_mode and img[10]==bid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
 
 
-def getprimarymode(image_list, bid):
+def getprimarymode(image_list, bvid):
    """Determine the primary mode of the science frame for the block
 
    """
@@ -264,7 +295,7 @@ def getprimarymode(image_list, bid):
    obsmode=[]
    detmode=[]
    for img in image_list:
-       if img[10]==bid:
+       if img[10]==bvid:
           instr.append(img[5])
           obsmode.append(img[6])
           detmode.append(img[7])
@@ -294,6 +325,15 @@ def getprimarymode(image_list, bid):
          primary_mode='NORMAL'
 
    return instr, primary_mode
+
+def findpointcommand(bvid, event_list):
+   """The next pointing occurs either when the next point to target
+      command happens
+   """
+   for r in event_list:
+       if r[0]==bvid:
+           return r[1]
+   return None
 
 def findguidingstart(starttime, event_list):
    """Determine when guiding starts from the next guiding command
