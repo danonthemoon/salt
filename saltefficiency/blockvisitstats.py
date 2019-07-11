@@ -128,7 +128,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        #determine statistics associated with accepted block
        #if propcode in pid_list and bid is not None:
        if bvid in bvid_list: """
-       for bvid in bvid_list:
+   for bvid in bvid_list:
            #print('in')
            #deal with accepted blocks
            pointcmd = findpointcommand(bvid, event_list)
