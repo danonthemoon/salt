@@ -112,21 +112,27 @@ def blockvisitstats(sdb, obsdate, update=True):
    block_list=[]
    for bvid in bvid_list:
 
-       #print('in')
+       print('in')
 
 
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
-       if pointtime is None: continue
+       if pointtime is None:
+           print('no point')
+           continue
        starttime=pointtime
-       print(starttime)
+       #print(starttime)
        endtime=findguidingstop(starttime, event_list)
-       if endtime is None: continue
+       if endtime is None: 
+           print('no end')
+           continue
 
        #determine total time
        tottime=endtime-starttime
        #some limit to avoid crazy stats
-       if tottime.seconds > 10000: continue
+       if tottime.seconds > 10000: 
+           print('total too long')
+           continue
 
        propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
        if propcode in pid_list and not (propcode in rej_list):
@@ -148,15 +154,23 @@ def blockvisitstats(sdb, obsdate, update=True):
 
        #determine the slew time
        guidestart=findguidingstart(starttime, event_list)
-       if guidestart is None: continue
+       if guidestart is None: 
+           print('no trackstart')
+           continue
        slewtime=guidestart-starttime
-       if slewtime.seconds > 600: continue
+       if slewtime.seconds > 600:
+           print('slew too long')
+           continue 
 
        #determine the time between TrackStart and OnTarget
        ontarget=findontarget(starttime, event_list)
-       if ontarget is None: continue
+       if ontarget is None:
+           print('no acq')
+           continue
        trackerslewtime=ontarget-guidestart
-       if trackerslewtime.seconds > 300: continue
+       if trackerslewtime.seconds > 300: 
+           print('trackslew too long')
+           continue
 
 
        #determine the acquisition time after being on target
@@ -164,18 +178,18 @@ def blockvisitstats(sdb, obsdate, update=True):
        #print(instr, primary_mode)
        scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
        if scamstart is None:
-           #print("Did not find SCAM image")
+           print("Did not find SCAM image")
            continue
-       print(ontarget)
-       print(scamstart)
+       #print(ontarget)
+       #print(scamstart)
        acqtime=scamstart-ontarget
 
        #determine the time between acquisition and first science image
        sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bvid)
        if sciencestart is None:
-           #print("Did not find science image")
+           print("Did not find science image")
            continue
-       print(sciencestart)
+       #print(sciencestart)
        sciacqtime=sciencestart-scamstart
 
        #determine the science tracking time
@@ -196,8 +210,8 @@ def blockvisitstats(sdb, obsdate, update=True):
            inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
-   #print(bvs_updated)
-   #print(len(pid_list))
+   print(bvs_updated)
+   print(len(bvid_list))
    return block_list
 
 
@@ -360,7 +374,7 @@ def findguidingstop(starttime, event_list):
       in the event list
    """
    for r in event_list:
-       print(r[1], type(r[1]), starttime, type(starttime))
+       #print(r[1], type(r[1]), starttime, type(starttime))
        if r[0]==6 and r[1]+datetime.timedelta(seconds=0)>starttime: return r[1]
    return None
 
