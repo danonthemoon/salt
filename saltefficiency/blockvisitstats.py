@@ -144,6 +144,9 @@ def blockvisitstats(sdb, obsdate, update=True):
            instr, primary_mode=getprimarymode(img_list, bid)
            print(instr, primary_mode)
            scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bid)
+           if scamstart is None:
+               print("Did not find SCAM image")
+               continue
            acqtime=scamstart-ontarget
 
            #determine the time between acquisition and first science image
