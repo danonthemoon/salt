@@ -80,7 +80,9 @@ def getnightstats(sdb, obsdate):
           hrs_trslew.append(scistats[0][1])
           hrs_targetacq.append(scistats[0][2])
           hrs_instracq.append(scistats[0][3])
-       else: continue
+       else:
+           print('cant find instr')
+           continue
        count+=1
    if count == 0:
        nightstats = []
