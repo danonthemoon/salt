@@ -62,29 +62,33 @@ if __name__=='__main__':
           rss_trslewtimes.extend(nightstats[1])
           rss_targetacqtimes.extend(nightstats[2])
           rss_instracqtimes.extend(nightstats[3])
-          rss_scitracktimes.extend(nightstats[4])
-          hrs_slewtimes.extend(nightstats[5])
-          hrs_trslewtimes.extend(nightstats[6])
-          hrs_targetacqtimes.extend(nightstats[7])
-          hrs_instracqtimes.extend(nightstats[8])
-          hrs_scitracktimes.extend(nightstats[9])
+          hrs_slewtimes.extend(nightstats[4])
+          hrs_trslewtimes.extend(nightstats[5])
+          hrs_targetacqtimes.extend(nightstats[6])
+          hrs_instracqtimes.extend(nightstats[7])
        blocks+=numberofblocks
        nights+=1
    if nights == 0:
        print("No valid observation nights within this range")
    else:
+       print(rss_slewtimes)
+       print(rss_trslewtimes)
+       print(rss_targetacqtimes)
+       print(rss_instracqtimes)
+       print(hrs_slewtimes)
+       print(hrs_trslewtimes)
+       print(hrs_targetacqtimes)
+       print(hrs_instracqtimes)
        rss_stats = {}
        rss_stats.update({'1. Slew' : median(rss_slewtimes)})
        rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
        rss_stats.update({'3. Target Acquisition': median(rss_targetacqtimes)})
-       rss_stats.update({'4. RSS Instrument Acquisition': median(rss_instracqtimes)})
-       #rss_stats.update({'Science Track': median(rss_scitracktimes)})
+       rss_stats.update({'4. Instrument Acquisition': median(rss_instracqtimes)})
        hrs_stats = {}
        hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
        hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
        hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
-       hrs_stats.update({'5. HRS Instrument Acquisition': median(hrs_instracqtimes)})
-       #hrs_stats.update({'Science Track': median(hrs_scitracktimes)})
+       hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
