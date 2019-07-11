@@ -83,7 +83,7 @@ if __name__=='__main__':
        hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
        hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
        hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
-       hrs_stats.update({'4. HRS Instrument Acquisition': median(hrs_instracqtimes)})
+       hrs_stats.update({'5. HRS Instrument Acquisition': median(hrs_instracqtimes)})
        #hrs_stats.update({'Science Track': median(hrs_scitracktimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
