@@ -64,12 +64,10 @@ def getnightstats(sdb, obsdate):
        selcmd='INSTRUME'
        tabcmd='FileData'
        bv_instruments=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
-       print(bv_instruments)
-       bv_instruments=list(bv_instruments)
-       print(bv_instruments)
-       if 'RSS' in bv_instruments:
+       for i in bv_instruments:
+       if 'RSS' in i:
            instrument='RSS'
-       elif 'HRS' in bv_instruments:
+       elif 'HRS' in i:
            instrument='HRS'
        else:
            print('cant find instr')
