@@ -173,7 +173,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        #determine the acquisition time after being on target
        instr, primary_mode=getprimarymode(img_list, bvid)
        #print(instr, primary_mode)
-       scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
+       scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
        if scamstart is None:
            print("Did not find SCAM image")
            continue
@@ -182,16 +182,12 @@ def blockvisitstats(sdb, obsdate, update=True):
        acqtime=scamstart-ontarget
 
        #determine the time between acquisition and first science image
-       sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bvid)
+       sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
        if sciencestart is None:
            print("Did not find science image")
            continue
        #print(sciencestart)
        sciacqtime=sciencestart-scamstart
-
-       #determine the science tracking time
-       scitime=endtime-sciencestart
-
 
        #determine the block visit
        #bvid=getblockvisit(blocks_orig, bid)
@@ -204,7 +200,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            #sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
            inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-           inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
+           inscmd='InstrumentAcquisitionTime=%i' % (sciacqtime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
    print(bvs_updated)
@@ -287,6 +283,18 @@ def getblockvisit(blocks, bid, accept=1):
         if b[3]==bid and b[1]==accept: return b[0]
     return None
 
+def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
+    """Determine the first image of a list that has that
+       mode in use
+
+    """
+    stime=starttime-datetime.timedelta(seconds=2*3600.0)
+    for img in image_list:
+        #print(img[4], img[5],img[6],img[10])
+        #print(stime, instr, primary_mode, bid)
+        if img[4]>stime and img[5]==inst: #img[6]==primary_mode and img[10]==bid:
+           return img[4]+datetime.timedelta(seconds=2*3600.0)
+    return None
 
 def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
     """Determine the first image of a list that has that
