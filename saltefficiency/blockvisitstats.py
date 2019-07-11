@@ -143,7 +143,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            #determine the acquisition time after being on target
            instr, primary_mode=getprimarymode(img_list, bid)
            print(instr, primary_mode)
-           scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bid)
+           scamstart=getfirstimage(img_list, starttime, 'SCAM', 'IMAGING', bid)
            if scamstart is None:
                print("Did not find SCAM image")
                continue
@@ -165,8 +165,10 @@ def blockvisitstats(sdb, obsdate, update=True):
            bvid=getblockvisit(blocks_orig, bid)
            #print(bvid, starttime, endtime, propcode, target, bid, slewtime, acqtime, scitime, tottime)
 
+           bvs_updated=0
            #update results in sdb
            if bvid is not None and update:
+               bvs_updated+=1
                inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
                inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
@@ -184,7 +186,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        else:
            #otherwise ignore
            pass
-
+       print(bvs_updated)
    return block_list
 
 def removepropcode(blocks, propcode):
