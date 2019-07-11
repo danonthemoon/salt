@@ -54,6 +54,7 @@ def getnightstats(sdb, obsdate):
    hrs_trslew=[]
    hrs_targetacq=[]
    hrs_instracq=[]
+   instrument=''
    count=0
    for bvid in bvid_list:
        selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime'
@@ -65,13 +66,11 @@ def getnightstats(sdb, obsdate):
        tabcmd='FileData'
        bv_instruments=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        for i in bv_instruments:
-       if 'RSS' in i:
-           instrument='RSS'
-       elif 'HRS' in i:
-           instrument='HRS'
-       else:
-           print('cant find instr')
-           continue
+          if 'RSS' in i:
+              instrument='RSS'
+          elif 'HRS' in i:
+              instrument='HRS'
+          else: continue
        if instrument=='RSS':
           rss_slew.append(scistats[0][0])
           rss_trslew.append(scistats[0][1])
