@@ -177,9 +177,9 @@ def blockvisitstats(sdb, obsdate, update=True):
        if scamstart is None:
            print("Did not find SCAM image")
            continue
-       print("ot: " + ontarget, "scam": + scamstart)
+       print("ot: ", ontarget, "scam: ", scamstart)
        acqtime=scamstart-ontarget
-       print('acqt: ' + acqtime)
+       print('acqt: ',acqtime)
 
        #determine the time between acquisition and first science image
        sciencestart=getfirstimage(img_list, scamstart-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
@@ -187,8 +187,8 @@ def blockvisitstats(sdb, obsdate, update=True):
            print("Did not find science image")
            continue
        sciacqtime=sciencestart-scamstart
-       print("scam: " + scamstart, "sci: " + sciencestart)
-       print('sciacqti: ' + sciacqtime)
+       print("scam: ", scamstart, "sci: ", sciencestart)
+       print('sciacqti: ', sciacqtime)
 
        #determine the block visit
        #bvid=getblockvisit(blocks_orig, bid)
