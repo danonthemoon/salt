@@ -30,7 +30,7 @@ if __name__=='__main__':
 
 
 
-def blockvisitstats(sdb, obsdate):
+def resetstats(sdb, obsdate):
    #for a given obsdate get the night info
    nid=getnightinfo(sdb, obsdate)
 
