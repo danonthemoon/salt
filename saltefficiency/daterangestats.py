@@ -3,7 +3,7 @@ Created July 2019
 
 @author Danny Sallurday
 
-Script to generate plots for overhead stats averaged over a given range of dates.
+Script to generate a pdf plot of overhead stats over a given range of dates.
 
 """
 
@@ -38,6 +38,8 @@ if __name__=='__main__':
    startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))
    enddate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
    date = startdate
+
+   #accumulate all of the overhead stats over the given range of dates
    rss_slewtimes=[]
    rss_trslewtimes=[]
    rss_targetacqtimes=[]
@@ -78,18 +80,21 @@ if __name__=='__main__':
        rss_stats.update({'4. Instrument Acquisition': median(rss_instracqtimes)})
        #rss_stats.update({'Science Track': median(rss_scitracktimes)})
        hrs_stats = {}
-       hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
-       hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
-       hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
        hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
+       hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
+       hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
+       hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
        #hrs_stats.update({'Science Track': median(hrs_scitracktimes)})
 
-   #Produce a pdf with the relevant stats
+   #produce a pdf with the relevant stats, distinguished by instrument
    with PdfPages('blockoverheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+       #plot RSS and HRS stats as different bars
        stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
        df.index = ['RSS Stats', 'HRS Stats']
        ax = df.plot(kind="bar", stacked=True, colormap='cool', figsize=(8.27,11.69))
+
+       #label the bar splits and totals
        heights = []
        for patch in ax.patches:
            heights.insert(0, patch.get_height())
@@ -130,6 +135,8 @@ if __name__=='__main__':
        ax.text(1, sum(hrs_heights)+5, \
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
+
+       #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1550,50))
        ax.set_xticklabels(['RSS', 'HRS'], rotation='horizontal', fontweight='bold')

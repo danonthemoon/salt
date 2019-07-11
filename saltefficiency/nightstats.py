@@ -3,13 +3,15 @@ Created July 2019
 
 @author Danny Sallurday
 
-For a given observation date, calculate and return the mean values for:
+For a given observation date, calculate and return the median values of overhead stats for each instrument.
 
-0: Slew Time (Point Command - Track Start)
-1: Tracker Slew Time (Track Start - On Target)
-2: Target Acquisition Time (On Target - First Salticam Image)
-3: Instrument Acquisition Time (First Salticam Image - First Science Image)
-4: Science Track Time (First Science Image - Track End)
+These stats are:
+
+Slew Time (Point Command - Track Start)
+Tracker Slew Time (Track Start - On Target)
+Target Acquisition Time (On Target - First Salticam Image)
+Instrument Acquisition Time (First Acquisition Image - First Science Image)
+Science Track Time (First Science Image - Track End)
 
 """
 import os
@@ -39,7 +41,7 @@ def getnightstats(sdb, obsdate):
    blockvisits=sdb.select(selcmd, tabcmd, 'NightInfo_Id=%i' % nid)
    blockvisits=list(blockvisits)
 
-   # iterate through blockvisits to accumulate & average over the number of accepted blockvisits
+   # iterate through blockvisits to accumulate & obtain median over the number of accepted blockvisits
    rss_slew=[]
    rss_trslew=[]
    rss_targetacq=[]
@@ -59,15 +61,15 @@ def getnightstats(sdb, obsdate):
            continue
        selcmd='INSTRUME'
        tabcmd='FileData'
-       bv_ins=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       bv_inst=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        if len(bv_ins)==0: continue
-       if bv_ins[0][0]=='RSS':
+       if bv_inst[0][0]=='RSS':
           rss_slew.append(scistats[0][0])
           rss_trslew.append(scistats[0][1])
           rss_targetacq.append(scistats[0][2])
           rss_instracq.append(scistats[0][3])
           rss_scitrack.append(scistats[0][4])
-       elif bv_ins[0][0]=='HRS':
+      elif bv_inst[0][0]=='HRS':
           hrs_slew.append(scistats[0][0])
           hrs_trslew.append(scistats[0][1])
           hrs_targetacq.append(scistats[0][2])
