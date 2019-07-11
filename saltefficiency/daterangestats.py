@@ -133,13 +133,13 @@ if __name__=='__main__':
                         color='black', fontweight='bold')
 
        #charged lines
-       ax.text(0, 600, \
+       '''ax.text(0, 600, \
                    '600 --------------------', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
        ax.text(1, 500, \
                    '-------------------- 500', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
-
+       '''
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1050,50))
