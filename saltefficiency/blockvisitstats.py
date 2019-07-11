@@ -17,7 +17,6 @@ import time
 import datetime
 import string
 import numpy as np
-
 import mysql
 
 def getnightinfo(sdb, obsdate):
@@ -166,7 +165,7 @@ def blockvisitstats(sdb, obsdate, update=True):
 
            #determine the block visit
            bvid=getblockvisit(blocks_orig, bid)
-           #print(bvid, starttime, endtime, propcode, target, bid, slewtime, acqtime, scitime, tottime)
+           print(bvid, starttime, endtime, propcode, bid, slewtime, trackerslewtime, acqtime, sciacqtime, scitime)
 
            #update results in sdb
            if bvid is not None and update:
