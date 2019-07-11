@@ -77,13 +77,13 @@ if __name__=='__main__':
        rss_stats.update({'1. Slew' : median(rss_slewtimes)})
        rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
        rss_stats.update({'3. Target Acquisition': median(rss_targetacqtimes)})
-       rss_stats.update({'4. Instrument Acquisition': median(rss_instracqtimes)})
+       rss_stats.update({'4. RSS Instrument Acquisition': median(rss_instracqtimes)})
        #rss_stats.update({'Science Track': median(rss_scitracktimes)})
        hrs_stats = {}
        hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
        hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
        hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
-       hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
+       hrs_stats.update({'4. HRS Instrument Acquisition': median(hrs_instracqtimes)})
        #hrs_stats.update({'Science Track': median(hrs_scitracktimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
