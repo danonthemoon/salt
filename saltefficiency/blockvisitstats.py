@@ -182,7 +182,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        print('acqt: ' + acqtime)
 
        #determine the time between acquisition and first science image
-       sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
+       sciencestart=getfirstimage(img_list, scamstart-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
        if sciencestart is None:
            print("Did not find science image")
            continue
