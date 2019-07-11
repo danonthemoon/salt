@@ -71,6 +71,7 @@ if __name__=='__main__':
    if nights == 0:
        print("No valid observation nights within this range")
    else:
+       print('Data taken from %i blocks' % blocks)
        rss_stats = {}
        rss_stats.update({'1. Slew' : median(rss_slewtimes)})
        rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
