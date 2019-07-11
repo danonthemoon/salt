@@ -103,11 +103,13 @@ def blockvisitstats(sdb, obsdate, update=True):
        select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
        table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
        point_list=sdb.select(select_state, table_state, 'NightInfo_Id=%i' % nid)
+       point_list=list(point_list)
 
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
        if pointtime is None: continue
        starttime=pointtime
+       print(starttime)
        endtime=findguidingstop(starttime, event_list)
        if endtime is None: continue
 
@@ -348,7 +350,8 @@ def findguidingstop(starttime, event_list):
       in the event list
    """
    for r in event_list:
-       if r[0]==6 and r[1]>starttime: return r[1]
+       print(r[1], type(r[1]), starttime, type(starttime))
+       if r[0]==6 and r[1]+datetime.timedelta(seconds=0)>starttime: return r[1]
    return None
 
 def findontarget(starttime, event_list):
