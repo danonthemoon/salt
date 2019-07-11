@@ -129,61 +129,61 @@ def blockvisitstats(sdb, obsdate, update=True):
        #if propcode in pid_list and bid is not None:
        if bvid in bvid_list: """
    for bvid in bvid_list:
-           #print('in')
-           #deal with accepted blocks
-           pointcmd = findpointcommand(bvid, event_list)
-           starttime=pointcmd
-           endtime=findguidingstop(starttime, event_list)
+       #print('in')
+       #deal with accepted blocks
+       pointcmd = findpointcommand(bvid, event_list)
+       starttime=pointcmd
+       endtime=findguidingstop(starttime, event_list)
 
-           #determine total time
-           tottime=endtime-starttime
+       #determine total time
+       tottime=endtime-starttime
 
-           #determine the slew time
-           guidestart=findguidingstart(starttime, event_list)
-           slewtime=guidestart-starttime
+       #determine the slew time
+       guidestart=findguidingstart(starttime, event_list)
+       slewtime=guidestart-starttime
 
-           #determine the time between TrackStart and OnTarget
-           ontarget=findontarget(starttime, event_list)
-           trackerslewtime=ontarget-guidestart
-
-
-           #determine the acquisition time after being on target
-           instr, primary_mode=getprimarymode(img_list, bid)
-           #print(instr, primary_mode)
-           scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bid)
-           if scamstart is None:
-               #print("Did not find SCAM image")
-               continue
-           print(ontarget)
-           print(scamstart)
-           acqtime=scamstart-ontarget
-
-           #determine the time between acquisition and first science image
-           sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bid)
-           if sciencestart is None:
-               #print("Did not find science image")
-               continue
-           print(sciencestart)
-           sciacqtime=sciencestart-scamstart
-
-           #determine the science tracking time
-           guidestop=findguidingstop(starttime, event_list)
-           scitime=guidestop-sciencestart
+       #determine the time between TrackStart and OnTarget
+       ontarget=findontarget(starttime, event_list)
+       trackerslewtime=ontarget-guidestart
 
 
-           #determine the block visit
-           bvid=getblockvisit(blocks_orig, bid)
-           print(bvid, starttime, endtime, propcode, bid, slewtime, trackerslewtime, acqtime, sciacqtime, scitime)
+       #determine the acquisition time after being on target
+       instr, primary_mode=getprimarymode(img_list, bid)
+       #print(instr, primary_mode)
+       scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bid)
+       if scamstart is None:
+           #print("Did not find SCAM image")
+           continue
+       print(ontarget)
+       print(scamstart)
+       acqtime=scamstart-ontarget
 
-           #update results in sdb
-           if bvid is not None and update:
-               bvs_updated+=1
-               #inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
-               #sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-               inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
-               sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-               inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
-               sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+       #determine the time between acquisition and first science image
+       sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bid)
+       if sciencestart is None:
+           #print("Did not find science image")
+           continue
+       print(sciencestart)
+       sciacqtime=sciencestart-scamstart
+
+       #determine the science tracking time
+       guidestop=findguidingstop(starttime, event_list)
+       scitime=guidestop-sciencestart
+
+
+       #determine the block visit
+       bvid=getblockvisit(blocks_orig, bid)
+       print(bvid, starttime, endtime, propcode, bid, slewtime, trackerslewtime, acqtime, sciacqtime, scitime)
+
+       #update results in sdb
+       if bvid is not None and update:
+           bvs_updated+=1
+           #inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
+           #sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+           inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
+           sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+           inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
+           sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
 
        elif propcode is not None and bid is not None:
@@ -338,4 +338,3 @@ def findnextpoint(starttime, record, etime=None):
    for r in record:
        if r[0]==3 and r[1]>starttime: return r[1]
    return etime
-
