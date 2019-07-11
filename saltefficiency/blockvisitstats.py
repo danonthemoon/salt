@@ -147,8 +147,8 @@ def blockvisitstats(sdb, obsdate, update=True):
            if scamstart is None:
                #print("Did not find SCAM image")
                continue
-           print(ontarget)
-           print(scamstart)
+           #print(ontarget)
+           #print(scamstart)
            acqtime=scamstart-ontarget
 
            #determine the time between acquisition and first science image
