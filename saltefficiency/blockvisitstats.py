@@ -94,16 +94,26 @@ def blockvisitstats(sdb, obsdate, update=True):
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
+   #get a list of all point commands from the night
+   select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
+   table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
+   plist=sdb.select(select_state, table_state, 'NightInfo_Id=%i' % nid)
+   point_list=[]
+   for i in range(len(plist)):
+       p=plist[i]
+       if p[1].seconds>43200:
+          t=datetime.datetime(int(obsdate[0:4]), int(obsdate[5:7]), int(obsdate[8:10]), 0, 0, 0)+p[1]
+       else:
+          t=datetime.datetime(int(obsdate[0:4]), int(obsdate[5:7]), int(obsdate[8:10]), 0, 0, 0)+datetime.timedelta(days=1)+p[1]
+       point_list.append([p[0], t, p[2], p[3], p[4], p[5]])
+
 
    #deal with accepted blocks
    block_list=[]
    for bvid in bvid_list:
 
        #print('in')
-       select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
-       table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
-       point_list=sdb.select(select_state, table_state, 'NightInfo_Id=%i' % nid)
-       point_list=list(point_list)
+
 
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
