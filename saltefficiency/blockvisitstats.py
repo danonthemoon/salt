@@ -39,7 +39,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            observation date of interest
 
    """
-
+   bvs_updated = 0
    #for a given obsdate get the night info
    nid=getnightinfo(sdb, obsdate)
 
@@ -84,7 +84,7 @@ def blockvisitstats(sdb, obsdate, update=True):
    formatteddate = obsdate.replace('-','')
    logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
    img_list=sdb.select(select_state, table_state, logic_state)
-   img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1]]
+   img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
    #now create a list of all pointing commands
    point_list=[]
@@ -122,7 +122,7 @@ def blockvisitstats(sdb, obsdate, update=True):
                   block_list.append([bvid, starttime, endtime, status, propcode])
                   #blocks = removepropcode(blocks, propcode)
 
-
+      
        #determine statistics associated with accepted block
        if propcode in pid_list and bid is not None:
 
@@ -142,17 +142,17 @@ def blockvisitstats(sdb, obsdate, update=True):
 
            #determine the acquisition time after being on target
            instr, primary_mode=getprimarymode(img_list, bid)
-           print(instr, primary_mode)
-           scamstart=getfirstimage(img_list, starttime, 'SCAM', 'IMAGING', bid)
+           #print(instr, primary_mode)
+           scamstart=getfirstimage(img_list, starttime, 'SALTICAM', 'IMAGING', bid)
            if scamstart is None:
-               print("Did not find SCAM image")
+               #print("Did not find SCAM image")
                continue
            acqtime=scamstart-ontarget
 
            #determine the time between acquisition and first science image
            sciencestart=getfirstimage(img_list, starttime, instr, primary_mode, bid)
            if sciencestart is None:
-               print("Did not find science image")
+               #print("Did not find science image")
                continue
            sciacqtime=sciencestart-scamstart
 
@@ -165,7 +165,6 @@ def blockvisitstats(sdb, obsdate, update=True):
            bvid=getblockvisit(blocks_orig, bid)
            #print(bvid, starttime, endtime, propcode, target, bid, slewtime, acqtime, scitime, tottime)
 
-           bvs_updated=0
            #update results in sdb
            if bvid is not None and update:
                bvs_updated+=1
@@ -186,7 +185,8 @@ def blockvisitstats(sdb, obsdate, update=True):
        else:
            #otherwise ignore
            pass
-       print(bvs_updated)
+   #print(bvs_updated)
+   #print(len(pid_list))
    return block_list
 
 def removepropcode(blocks, propcode):
@@ -234,10 +234,12 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bid):
         for img in image_list:
            if img[10]==bid and img[5]=='SALTICAM':
               blockscams.append(img)
-        if len(blockscams)!=2:
+        if len(blockscams)<2:
            return None
     for img in image_list:
-        if img[4]>stime and img[5]==instr and img[6]==primary_mode and img[10]==bid:
+        #print(img[4], img[5],img[6],img[10])
+        #print(stime, instr, primary_mode, bid)
+        if img[4]>stime and img[5]==instr and img[10]==bid: #img[6]==primary_mode and img[10]==bid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
 
@@ -262,7 +264,7 @@ def getprimarymode(image_list, bid):
    elif 'HRS' in instr:
        instr='HRS'
    else:
-       instr='SCAM'
+       instr='SALTICAM'
 
    #set the mode
    if instr=='RSS':
@@ -274,7 +276,7 @@ def getprimarymode(image_list, bid):
          primary_mode='IMAGING'
    elif instr=='HRS':
       primary_mode = obsmode[0]
-   elif instr=='SCAM':
+   elif instr=='SALTICAM':
       if 'SLOTMODE' in detmode:
          primary_mode='SLOTMODE'
       else:
