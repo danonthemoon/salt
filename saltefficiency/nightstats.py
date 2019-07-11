@@ -62,14 +62,14 @@ def getnightstats(sdb, obsdate):
        selcmd='INSTRUME'
        tabcmd='FileData'
        bv_inst=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
-       if len(bv_ins)==0: continue
+       if len(bv_inst)==0: continue
        if bv_inst[0][0]=='RSS':
           rss_slew.append(scistats[0][0])
           rss_trslew.append(scistats[0][1])
           rss_targetacq.append(scistats[0][2])
           rss_instracq.append(scistats[0][3])
           rss_scitrack.append(scistats[0][4])
-      elif bv_inst[0][0]=='HRS':
+       elif bv_inst[0][0]=='HRS':
           hrs_slew.append(scistats[0][0])
           hrs_trslew.append(scistats[0][1])
           hrs_targetacq.append(scistats[0][2])

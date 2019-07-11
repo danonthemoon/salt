@@ -112,9 +112,6 @@ def blockvisitstats(sdb, obsdate, update=True):
    block_list=[]
    for bvid in bvid_list:
 
-       print('in')
-
-
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
        if pointtime is None:
@@ -158,7 +155,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            print('no trackstart')
            continue
        slewtime=guidestart-starttime
-       if slewtime.seconds > 600:
+       if slewtime.seconds > 1200:
            print('slew too long')
            continue
 
