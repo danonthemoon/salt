@@ -67,7 +67,7 @@ def blockvisitstats(sdb, obsdate, update=True):
    tabcmd='Block join BlockVisit using (Block_Id) join Proposal using (Proposal_Id) join ProposalCode on (Proposal.ProposalCode_Id = ProposalCode.ProposalCode_Id)'
    blocks=sdb.select(selcmd, tabcmd, 'NightInfo_Id=%i' % nid)
    blocks=list(blocks)
-   print(blocks)
+   #print(blocks)
 
    #list of accepted blocks
    bvid_list=[]
@@ -84,7 +84,7 @@ def blockvisitstats(sdb, obsdate, update=True):
       if b[1]==1:
          bvid_list.append(b[2])
       else:
-         rej_list.append(b[0])
+         rej_list.append(b[2])
 
    #get a list of all data from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
@@ -107,7 +107,7 @@ def blockvisitstats(sdb, obsdate, update=True):
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
        if pointtime is None: continue
-       starttime=pointcmd
+       starttime=pointtime
        endtime=findguidingstop(starttime, event_list)
        if endtime is None: continue
 
@@ -183,7 +183,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
            inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (sciacqtime.seconds, scitime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-           
+
    #print(bvs_updated)
    #print(len(pid_list))
    return block_list
