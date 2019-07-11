@@ -69,13 +69,8 @@ def blockvisitstats(sdb, obsdate, update=True):
    blocks=list(blocks)
    #print(blocks)
 
-   bvid_list=[]
-   rej_list=[]
-   for b in blocks:
-      bvid_list.append(b[0])
 
-   #HERE
-   """#list of accepted blocks
+   #list of accepted blocks
    bvid_list=[]
    rej_list=[]
    for b in blocks:
@@ -211,17 +206,7 @@ def blockvisitstats(sdb, obsdate, update=True):
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
    print(bvs_updated)
-   print(len(bvid_list))"""
-   #HWEW
-   for bvid in bvid_list:
-      inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (0, 0, 0)
-      sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-      inscmd='InstrumentAcquisitionTime=%i, ScienceTrackTime=%i' % (0, 0)
-      sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-
-
-
-
+   print(len(bvid_list))
    return block_list
 
 def removepropcode(blocks, propcode):
