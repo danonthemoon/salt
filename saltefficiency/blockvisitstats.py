@@ -69,13 +69,13 @@ def blockvisitstats(sdb, obsdate, update=True):
    blocks=list(blocks)
 
    #list of accepted blocks
-   pid_list=[]
+   bvid_list=[]
    rej_list=[]
    for b in blocks:
        if b[1]==1:
-          pid_list.append(b[2])
+          bvid_list.append(b[0])
        else:
-          rej_list.append(b[2])
+          rej_list.append(b[0])
 
    #get a list of all data from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, Block_Id'
@@ -95,7 +95,7 @@ def blockvisitstats(sdb, obsdate, update=True):
    blocks_orig = list(blocks)
    for point in point_list:
        starttime=point
-       endtime=findnextpointing(starttime, event_list, etime)
+       endtime=findguidingstop(starttime, event_list)
        #now find any date sets that might be associated with this date and time
        #and the data and times
        propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
@@ -103,27 +103,28 @@ def blockvisitstats(sdb, obsdate, update=True):
        if bvid==0: continue
        #print(propcode, target, bid, instr, obsmode, detmode, exptime, nexposure)
        #print(starttime, endtime, propcode, target)
-       if propcode in pid_list and not (propcode in rej_list):
-           blocks = removepropcode(blocks, propcode)
-           block_list.append([bvid, starttime, endtime, 0, propcode])
-       elif propcode in rej_list and not (propcode in pid_list):
-           status = getblockrejectreason(sdb, propcode, blocks)
-           block_list.append([bvid, starttime, endtime, status, propcode])
-       elif propcode in pid_list and propcode in rej_list:
+       #if propcode in pid_list and not (propcode in rej_list):
+           #blocks = removepropcode(blocks, propcode)
+           #block_list.append([bvid, starttime, endtime, 0, propcode])
+       #elif propcode in rej_list and not (propcode in pid_list):
+           #status = getblockrejectreason(sdb, propcode, blocks)
+           #block_list.append([bvid, starttime, endtime, status, propcode])
+       #elif propcode in pid_list and propcode in rej_list:
            #get the first block with the propcode
-           for b in blocks:
-               if b[0]==bvid:
-                  if b[1]==1:
-                     status=0
-                  else:
-                     status = getblockrejectreason(sdb, propcode, blocks)
+           #for b in blocks:
+               #if b[0]==bvid:
+                  #if b[1]==1:
+                     #status=0
+                  #else:
+                     #status = getblockrejectreason(sdb, propcode, blocks)
                   #print starttime, endtime, propcode, target, bid, status
-                  block_list.append([bvid, starttime, endtime, status, propcode])
+                  #block_list.append([bvid, starttime, endtime, status, propcode])
                   #blocks = removepropcode(blocks, propcode)
        #print(propcode, bid, pid_list)
 
        #determine statistics associated with accepted block
-       if propcode in pid_list and bid is not None:
+       #if propcode in pid_list and bid is not None:
+       if bvid in bvid_list:
            #print('in')
            #deal with accepted blocks
 
