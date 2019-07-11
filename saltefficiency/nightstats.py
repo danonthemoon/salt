@@ -64,12 +64,16 @@ def getnightstats(sdb, obsdate):
        selcmd='INSTRUME'
        tabcmd='FileData'
        bv_instruments=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
+       print(bv_instruments)
        bv_instruments=list(bv_instruments)
+       print(bv_instruments)
        if 'RSS' in bv_instruments:
            instrument='RSS'
        elif 'HRS' in bv_instruments:
            instrument='HRS'
-       else: continue
+       else:
+           print('cant find instr')
+           continue
        if instrument=='RSS':
           rss_slew.append(scistats[0][0])
           rss_trslew.append(scistats[0][1])
@@ -80,9 +84,6 @@ def getnightstats(sdb, obsdate):
           hrs_trslew.append(scistats[0][1])
           hrs_targetacq.append(scistats[0][2])
           hrs_instracq.append(scistats[0][3])
-       else:
-           print('cant find instr')
-           continue
        count+=1
    if count == 0:
        nightstats = []

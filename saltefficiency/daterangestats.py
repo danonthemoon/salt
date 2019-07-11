@@ -56,7 +56,6 @@ if __name__=='__main__':
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
        nightstats, numberofblocks = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
-       print(nightstats, numberofblocks)
        if len(nightstats) == 0 or numberofblocks == 0: continue
        else:
           rss_slewtimes.extend(nightstats[0])
