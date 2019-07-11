@@ -126,7 +126,7 @@ def blockvisitstats(sdb, obsdate, update=True):
        #determine total time
        tottime=endtime-starttime
        #some limit to avoid crazy stats
-       if tottime > 10000: continue
+       if tottime.seconds > 10000: continue
 
        propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
        if propcode in pid_list and not (propcode in rej_list):
@@ -150,13 +150,13 @@ def blockvisitstats(sdb, obsdate, update=True):
        guidestart=findguidingstart(starttime, event_list)
        if guidestart is None: continue
        slewtime=guidestart-starttime
-       if slewtime > 600: continue
+       if slewtime.seconds > 600: continue
 
        #determine the time between TrackStart and OnTarget
        ontarget=findontarget(starttime, event_list)
        if ontarget is None: continue
        trackerslewtime=ontarget-guidestart
-       if trackerslewtime > 300: continue
+       if trackerslewtime.seconds > 300: continue
 
 
        #determine the acquisition time after being on target
