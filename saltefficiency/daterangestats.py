@@ -134,10 +134,10 @@ if __name__=='__main__':
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
-       ax.set_yticks(np.arange(0,1550,50))
+       ax.set_yticks(np.arange(0,1250,50))
        ax.set_xticklabels(['RSS', 'HRS'], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
-       ax.legend(loc=0, fontsize=12)
+       ax.legend(loc=0, fontsize=10)
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
