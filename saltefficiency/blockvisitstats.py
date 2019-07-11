@@ -121,11 +121,11 @@ def blockvisitstats(sdb, obsdate, update=True):
                   #print starttime, endtime, propcode, target, bid, status
                   block_list.append([bvid, starttime, endtime, status, propcode])
                   #blocks = removepropcode(blocks, propcode)
-
+       #print(propcode, bid, pid_list)
 
        #determine statistics associated with accepted block
        if propcode in pid_list and bid is not None:
-
+           #print('in')
            #deal with accepted blocks
 
            #determine total time
