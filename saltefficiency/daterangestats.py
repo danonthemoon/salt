@@ -88,7 +88,7 @@ if __name__=='__main__':
        stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
        df.index = ['RSS Stats', 'HRS Stats']
-       ax = df.plot(kind="bar", stacked=True, colormap='Paired', figsize=(8.27,11.69))
+       ax = df.plot(kind="bar", stacked=True, colormap='YlOrRd', figsize=(8.27,11.69))
 
        #label the bar splits and totals
        heights = []
@@ -134,7 +134,7 @@ if __name__=='__main__':
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
-       ax.set_yticks(np.arange(0,1250,50))
+       ax.set_yticks(np.arange(0,1050,50))
        ax.set_xticklabels(['RSS', 'HRS'], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        ax.legend(loc=0, fontsize=10)
