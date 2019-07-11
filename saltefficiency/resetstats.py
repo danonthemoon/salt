@@ -16,6 +16,7 @@ def resetstats(sdb, obsdate):
    bvid_list=[]
    for b in blocks:
       bvid_list.append(b[0])
+   print(bvid_list)
    for bvid in bvid_list:
       inscmd='SlewTime=0, TrackerSlewTime=0, TargetAcquisitionTime=0'
       sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
@@ -24,14 +25,12 @@ def resetstats(sdb, obsdate):
    return bvid_list
 
 if __name__=='__main__':
-   """Determine the overhead statistics for a specific observation date.
-
-       Parameters
-       ----------
-       obsdate: string
-            observation date of interest
-
-   """
+   elshost='db2.suth.saao.ac.za'
+   elsname='els'
+  # elsuser=os.environ['ELSUSER']
+  # elspassword=os.environ['SDBPASS']
+   sdbhost='sdb.salt'
+   sdbname='sdb'
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
 
    sdate = sys.argv[1]
