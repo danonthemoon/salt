@@ -62,11 +62,12 @@ def blockvisitstats(sdb, obsdate, update=True):
    #sort the list by the datetimes
    event_list.sort(key=lambda e:e[1])
 
-   #get the list of accepted blocks
+   #get the night's list of blocks
    selcmd='BlockVisit_Id, BlockVisitStatus_Id, Proposal_Code, Block_Id'
    tabcmd='Block join BlockVisit using (Block_Id) join Proposal using (Proposal_Id) join ProposalCode on (Proposal.ProposalCode_Id = ProposalCode.ProposalCode_Id)'
    blocks=sdb.select(selcmd, tabcmd, 'NightInfo_Id=%i' % nid)
    blocks=list(blocks)
+   print(blocks)
 
    #list of accepted blocks
    bvid_list=[]
@@ -85,10 +86,12 @@ def blockvisitstats(sdb, obsdate, update=True):
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
-   #now create a list of all pointing commands
+
+
+"""   #now create a list of all pointing commands
    point_list=[]
    for r in event_list:
-       if r[0]==3: point_list.append(r[1])
+      if r[0]==3: point_list.append(r[1])
 
    #now loop through that list and associate each pointing with a block
    block_list=[]
@@ -124,9 +127,13 @@ def blockvisitstats(sdb, obsdate, update=True):
 
        #determine statistics associated with accepted block
        #if propcode in pid_list and bid is not None:
-       if bvid in bvid_list:
+       if bvid in bvid_list: """
+       for bvid in bvid_list:
            #print('in')
            #deal with accepted blocks
+           pointcmd = findpointcommand(bvid, event_list)
+           starttime=pointcmd
+           endtime=findguidingstop(starttime, event_list)
 
            #determine total time
            tottime=endtime-starttime
@@ -287,7 +294,6 @@ def getprimarymode(image_list, bid):
 
    return instr, primary_mode
 
-
 def findguidingstart(starttime, event_list):
    """Determine when guiding starts from the next guiding command
       in the event list
@@ -325,10 +331,10 @@ def finddata(img_list, starttime, endtime):
 
     return [None]*8
 
-def findnextpointing(starttime, record, etime=None):
+def findnextpoint(starttime, record, etime=None):
    """The next pointing occurs either when the next point to target
       command happens
    """
    for r in record:
-       if (r[0]==3 or r[0]==10) and r[1]>starttime: return r[1]
+       if r[0]==3 and r[1]>starttime: return r[1]
    return etime
