@@ -127,28 +127,28 @@ if __name__=='__main__':
        rtrsl = rss_stats.get("2. Tracker Slew")
        rtacq = rss_stats.get("3. Target Acquisition")
        riacq = rss_stats.get("4. Instrument Acquisition")
-       rslew_height = rslew - 10
-       rtrsl_height = rtrsl+rslew - 10
-       rtacq_height = rtacq+rtrsl_height - 10
-       riacq_height = riacq+rtacq_height - 10
+       rslew_height = rslew - 25
+       rtrsl_height = rtrsl+rslew_height
+       rtacq_height = rtacq+rtrsl_height
+       riacq_height = riacq+rtacq_height
 
        hslew = hrs_stats.get("1. Slew")
        htrsl = hrs_stats.get("2. Tracker Slew")
        htacq = hrs_stats.get("3. Target Acquisition")
        hiacq = hrs_stats.get("4. Instrument Acquisition")
-       hslew_height = hslew - 10
-       htrsl_height = htrsl+hslew - 10
-       htacq_height = htacq+htrsl_height - 10
-       hiacq_height = hiacq+htacq_height - 10
+       hslew_height = hslew - 25
+       htrsl_height = htrsl+hslew_height
+       htacq_height = htacq+htrsl_height
+       hiacq_height = hiacq+htacq_height
 
        mslew = mos_stats.get("1. Slew")
        mtrsl = mos_stats.get("2. Tracker Slew")
        mtacq = mos_stats.get("3. Target Acquisition")
        miacq = mos_stats.get("4. Instrument Acquisition")
-       mslew_height = mslew - 10
-       mtrsl_height = mtrsl+mslew - 10
-       mtacq_height = mtacq+mtrsl_height - 10
-       miacq_height = miacq+mtacq_height - 10
+       mslew_height = mslew - 25
+       mtrsl_height = mtrsl+mslew_height
+       mtacq_height = mtacq+mtrsl_height
+       miacq_height = miacq+mtacq_height
 
 
        ax.text(0, rslew_height, str(rslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
