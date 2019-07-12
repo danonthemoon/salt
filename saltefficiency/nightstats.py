@@ -84,11 +84,9 @@ def getnightstats(sdb, obsdate):
               logic_state='BlockVisit_Id=%i' % (bvid)
               bids=sdb.select(select_state, table_state, logic_state)
               if not bids:
-                  print("no bid for bvid")
                   continue
               else:
                   bid=bids[0]
-              print(bid)
               selcmd='Block_Id, Barcode'
               tabcmd='Block join Pointing using (Block_Id) join Observation using (Pointing_Id) '
               tabcmd+='join TelescopeConfigObsConfig using (Pointing_Id) join ObsConfig on (PlannedObsConfig_Id=ObsConfig_Id) '
@@ -96,9 +94,7 @@ def getnightstats(sdb, obsdate):
               tabcmd+='join RssConfig using (RssConfig_Id) join RssMask using (RssMask_Id)'
               logcmd='RssProcedureType_Id = \'7\' and Block_Id = %i group by Block_Id order by Block_Id' % bid
               mos=sdb.select(selcmd, tabcmd, logcmd)
-              print(mos)
               if mos:
-                  print("MOS: ", mos)
                   instrument='MOS'
               else: instrument='RSS'
               break
@@ -124,7 +120,7 @@ def getnightstats(sdb, obsdate):
           mos_targetacq.append(scistats[0][2])
           mos_instracq.append(scistats[0][3])
           mos_count+=1
-          
+
    if rss_count==0 and hrs_count==0 and mos_count==0:
        nightstats = []
    else:

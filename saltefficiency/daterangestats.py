@@ -136,7 +136,7 @@ if __name__=='__main__':
                     str(round(rss_heights[j],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            j+=1
-       ax.text(0, sum(rss_heights)+5, \
+       ax.text(0, sum(rss_heights)+10, \
                    str(round(sum(rss_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
 
@@ -152,7 +152,7 @@ if __name__=='__main__':
                     str(round(hrs_heights[k],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            k+=1
-       ax.text(1, sum(hrs_heights)+5, \
+       ax.text(1, sum(hrs_heights)+10, \
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
 
@@ -164,11 +164,11 @@ if __name__=='__main__':
                rest = sum(c)
            else:
                rest = 0
-           ax.text(1, mos_heights[m]+rest-25, \
+           ax.text(1.5, mos_heights[m]+rest-25, \
                     str(round(mos_heights[m],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            m+=1
-       ax.text(1, sum(mos_heights)+5, \
+       ax.text(1.5, sum(mos_heights)+10, \
                    str(round(sum(mos_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
 
