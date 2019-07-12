@@ -109,19 +109,13 @@ if __name__=='__main__':
 
        #label the bar splits and totals
        rsstotal = sum(rss_stats.values())
-       ax.text(0, rsstotal+20, \
-                str(rsstotal)+' (total)', fontsize=14, horizontalalignment='center',
-                    color='black', fontweight='bold')
+       ax.text(0, rsstotal+20, str(int(rsstotal))+' (total)', fontsize=14, horizontalalignment='center', color='black', fontweight='bold')
 
        hrstotal = sum(hrs_stats.values())
-       ax.text(1, hrstotal+20, \
-                str(hrstotal)+' (total)', fontsize=14, horizontalalignment='center',
-                    color='black', fontweight='bold')
+       ax.text(1, hrstotal+20, str(int(hrstotal))+' (total)', fontsize=14, horizontalalignment='center', color='black', fontweight='bold')
 
        mostotal = sum(mos_stats.values())
-       ax.text(2, mostotal+20, \
-                str(mostotal)+' (total)', fontsize=14, horizontalalignment='center',
-                    color='black', fontweight='bold')
+       ax.text(2, mostotal+20, str(int(mostotal))+' (total)', fontsize=14, horizontalalignment='center', color='black', fontweight='bold')
 
        rslew = rss_stats.get("1. Slew")
        rtrsl = rss_stats.get("2. Tracker Slew")
@@ -151,20 +145,20 @@ if __name__=='__main__':
        miacq_height = miacq+mtacq_height
 
 
-       ax.text(0, rslew_height, str(rslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(0, rtrsl_height, str(rtrsl), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(0, rtacq_height, str(rtacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(0, riacq_height, str(riacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, rslew_height, str(int(rslew)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, rtrsl_height, str(int(rtrsl)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, rtacq_height, str(int(rtacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, riacq_height, str(int(riacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
-       ax.text(1, hslew_height, str(hslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(1, htrsl_height, str(htrsl), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(1, htacq_height, str(htacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(1, hiacq_height, str(hiacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, hslew_height, str(int(hslew)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, htrsl_height, str(int(htrsl)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, htacq_height, str(int(htacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, hiacq_height, str(int(hiacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
-       ax.text(2, mslew_height, str(mslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(2, mtrsl_height, str(mtrsl), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(2, mtacq_height, str(mtacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(2, miacq_height, str(miacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, mslew_height, str(int(mslew)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, mtrsl_height, str(int(mtrsl)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, mtacq_height, str(int(mtacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, miacq_height, str(int(miacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
 
        #plot appearance
