@@ -114,18 +114,30 @@ if __name__=='__main__':
                     color='black', fontweight='bold')
 
        hrstotal = sum(hrs_stats.values())
-       ax.text(0, hrstotal+20, \
+       ax.text(1, hrstotal+20, \
                 str(hrstotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
        mostotal = sum(mos_stats.values())
-       ax.text(0, mostotal+20, \
+       ax.text(2, mostotal+20, \
                 str(mostotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
-       rss_heights=list(rss_stats.values())
-       hrs_heights=list(hrs_stats.values())
-       mos_heights=list(mos_stats.values())
+       heights = []
+       for patch in ax.patches:
+           heights.insert(0, patch.get_height())
+       rss_heights=[]
+       hrs_heights=[]
+       mos_heights=[]
+       i=0
+       while i < len(heights):
+           if (i % 3 == 0):
+               mos_heights.append(heights[i])
+           elif (i % 2 == 0):
+              hrs_heights.append(heights[i])
+           else:
+              rss_heights.append(heights[i])
+           i+=1
 
        #label rss values
        j=0
@@ -139,9 +151,6 @@ if __name__=='__main__':
                     str(round(rss_heights[j],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            j+=1
-       ax.text(0, sum(rss_heights)+15, \
-                   str(round(sum(rss_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
-                        color='black', fontweight='bold')
 
        #label hrs values
        k=0
@@ -155,9 +164,6 @@ if __name__=='__main__':
                     str(round(hrs_heights[k],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            k+=1
-       ax.text(1, sum(hrs_heights)+10, \
-                   str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
-                        color='black', fontweight='bold')
 
        #label mos values
        m=0
@@ -171,9 +177,6 @@ if __name__=='__main__':
                     str(round(mos_heights[m],1)), fontsize=12, horizontalalignment='center',
                         color='black', fontweight='bold')
            m+=1
-       ax.text(2, sum(mos_heights)+10, \
-                   str(round(sum(mos_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
-                        color='black', fontweight='bold')
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
