@@ -89,7 +89,7 @@ def getnightstats(sdb, obsdate):
               tabcmd+='join TelescopeConfigObsConfig using (Pointing_Id) join ObsConfig on (PlannedObsConfig_Id=ObsConfig_Id) '
               tabcmd+='join RssPatternDetail using (RssPattern_Id) join Rss using (Rss_Id) join RssProcedure using (RssProcedure_Id) '
               tabcmd+='join RssConfig using (RssConfig_Id) join RssMask using (RssMask_Id)'
-              logcmd='RssProcedureType_Id = 7 and Block_Id = %i' % bid
+              logcmd='RssProcedureType_Id = \'7\' and Block_Id = %i group by Block_Id order by Block_Id' % bid
               mos=sdb.select(selcmd, tabcmd, logcmd)
               print(mos)
               if mos:

@@ -96,7 +96,7 @@ if __name__=='__main__':
           hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
           hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
        if not mosblocks==0:
-          moss_stats.update({'1. Slew' : median(mos_slewtimes)})
+          mos_stats.update({'1. Slew' : median(mos_slewtimes)})
           mos_stats.update({'2. Tracker Slew' : median(mos_trslewtimes)})
           mos_stats.update({'3. Target Acquisition': median(mos_targetacqtimes)})
           mos_stats.update({'4. Instrument Acquisition': median(mos_instracqtimes)})
