@@ -62,6 +62,7 @@ def getnightstats(sdb, obsdate):
    rss_count=0
    hrs_count=0
    mos_count=0
+   bid=''
    for bvid in bvid_list:
        selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime'
        tabcmd='BlockVisit'
@@ -73,6 +74,15 @@ def getnightstats(sdb, obsdate):
        bv_instruments=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        for i in bv_instruments:
           if 'RSS' in i:
+              select_state= 'Block_Id'
+              table_state='BlockVisit'
+              logic_state='BlockVisit_Id=%i' % (bvid)
+              bids=sdb.select(select_state, table_state, logic_state)
+              if not bids:
+                  print("no bid for bvid")
+                  continue
+              else:
+                  bid=bids[0]
               selcmd='Block_Id, Barcode'
               tabcmd='Block join Pointing using (Block_Id) join Observation using (Pointing_Id) '
               tabcmd+='join TelescopeConfigObsConfig using (Pointing_Id) join ObsConfig on (PlannedObsConfig_Id=ObsConfig_Id) '
@@ -101,7 +111,7 @@ def getnightstats(sdb, obsdate):
           hrs_targetacq.append(scistats[0][2])
           hrs_instracq.append(scistats[0][3])
           hrs_count+=1
-      elif instrument=='MOS':
+       elif instrument=='MOS':
           mos_slew.append(scistats[0][0])
           mos_trslew.append(scistats[0][1])
           mos_targetacq.append(scistats[0][2])
