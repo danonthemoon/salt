@@ -86,7 +86,7 @@ if __name__=='__main__':
        hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
-   with PdfPages('n_overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+   with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
@@ -135,14 +135,7 @@ if __name__=='__main__':
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
 
-       #charged lines
-       '''ax.text(0, 600, \
-                   '600 --------------------', fontsize=14, horizontalalignment='center',
-                        color='black', fontweight='bold')
-       ax.text(1, 500, \
-                   '-------------------- 500', fontsize=14, horizontalalignment='center',
-                        color='black', fontweight='bold')
-       '''
+                        
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1050,50))
