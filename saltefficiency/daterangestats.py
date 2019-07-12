@@ -83,20 +83,23 @@ if __name__=='__main__':
    else:
        print('Data taken from %i RSS blocks, %i HRS blocks, %i MOS blocks' % (rssblocks, hrsblocks, mosblocks))
        rss_stats = {}
-       rss_stats.update({'1. Slew' : median(rss_slewtimes)})
-       rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
-       rss_stats.update({'3. Target Acquisition': median(rss_targetacqtimes)})
-       rss_stats.update({'4. Instrument Acquisition': median(rss_instracqtimes)})
        hrs_stats = {}
-       hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
-       hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
-       hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
-       hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
        mos_stats = {}
-       moss_stats.update({'1. Slew' : median(mos_slewtimes)})
-       mos_stats.update({'2. Tracker Slew' : median(mos_trslewtimes)})
-       mos_stats.update({'3. Target Acquisition': median(mos_targetacqtimes)})
-       mos_stats.update({'4. Instrument Acquisition': median(mos_instracqtimes)})
+       if not rssblocks==0:
+          rss_stats.update({'1. Slew' : median(rss_slewtimes)})
+          rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
+          rss_stats.update({'3. Target Acquisition': median(rss_targetacqtimes)})
+          rss_stats.update({'4. Instrument Acquisition': median(rss_instracqtimes)})
+       if not rssblocks==0:
+          hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
+          hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
+          hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
+          hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
+       if not mosblocks==0:
+          moss_stats.update({'1. Slew' : median(mos_slewtimes)})
+          mos_stats.update({'2. Tracker Slew' : median(mos_trslewtimes)})
+          mos_stats.update({'3. Target Acquisition': median(mos_targetacqtimes)})
+          mos_stats.update({'4. Instrument Acquisition': median(mos_instracqtimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
