@@ -22,14 +22,6 @@ import run_blockvisitstats
 from nightstats import getnightstats
 
 if __name__=='__main__':
-   elshost='db2.suth.saao.ac.za'
-   elsname='els'
-  # elsuser=os.environ['ELSUSER']
-  # elspassword=os.environ['SDBPASS']
-   sdbhost='sdb.salt'
-   sdbname='sdb'
-  # user=os.environ['SDBUSER']
-  # password=os.environ['SDBPASS']
 
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
 
@@ -39,7 +31,7 @@ if __name__=='__main__':
    enddate = datetime.datetime(int(edate[0:4]), int(edate[4:6]), int(edate[6:8]))
    date = startdate
 
-   #accumulate all of the overhead stats over the given range of dates
+   #accumulate all of the overhead stats and obtain median over the given range of dates
    rss_slewtimes=[]
    rss_trslewtimes=[]
    rss_targetacqtimes=[]
@@ -60,7 +52,7 @@ if __name__=='__main__':
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
        nightstats, rsscount, hrscount, moscount = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
-       if len(nightstats) == 0 or (rsscount==0 and hrscount==0): continue
+       if len(nightstats) == 0 or (rsscount==0 and hrscount==0 and moscount==0): continue
        else:
           rss_slewtimes.extend(nightstats[0])
           rss_trslewtimes.extend(nightstats[1])
@@ -79,7 +71,7 @@ if __name__=='__main__':
        mosblocks+=moscount
        nights+=1
    if nights == 0:
-       print("No valid observation nights within this range")
+       print("No valid observation nights within this range. Make sure format is yyyymmdd yyyymmdd.")
    else:
        print('Data taken from %i RSS blocks, %i HRS blocks, %i MOS blocks' % (rssblocks, hrsblocks, mosblocks))
        rss_stats = {}
@@ -100,8 +92,14 @@ if __name__=='__main__':
           mos_stats.update({'2. Tracker Slew' : median(mos_trslewtimes)})
           mos_stats.update({'3. Target Acquisition': median(mos_targetacqtimes)})
           mos_stats.update({'4. Instrument Acquisition': median(mos_instracqtimes)})
+       else:
+          mos_stats.update({'1. Slew' : 0})
+          mos_stats.update({'2. Tracker Slew' : 0})
+          mos_stats.update({'3. Target Acquisition': 0})
+          mos_stats.update({'4. Instrument Acquisition': 0})
 
-   #produce a pdf with the relevant stats, distinguished by instrument
+
+   #produce a pdf with the relevant stats, separated by instrument
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_stats, hrs_stats, mos_stats]
@@ -115,13 +113,18 @@ if __name__=='__main__':
            heights.insert(0, patch.get_height())
        rss_heights=[]
        hrs_heights=[]
+       mos_heights=[]
        i=0
        while i < len(heights):
-           if (i % 2 == 0):
+           if (i % 3 == 0):
+               mos_heights.append(heights[i])
+           elif (i % 2 == 0):
               hrs_heights.append(heights[i])
            else:
               rss_heights.append(heights[i])
            i+=1
+
+       #label rss values
        j=0
        while j < len(rss_heights):
            if j+1 < len(rss_heights):
@@ -136,6 +139,8 @@ if __name__=='__main__':
        ax.text(0, sum(rss_heights)+5, \
                    str(round(sum(rss_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
+
+       #label hrs values
        k=0
        while k < len(hrs_heights):
            if k+1 < len(hrs_heights):
@@ -151,11 +156,28 @@ if __name__=='__main__':
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
 
+       #label mos values
+       m=0
+       while m < len(mos_heights):
+           if m+1 < len(mos_heights):
+               c = mos_heights[m+1:]
+               rest = sum(c)
+           else:
+               rest = 0
+           ax.text(1, mos_heights[m]+rest-25, \
+                    str(round(mos_heights[m],1)), fontsize=12, horizontalalignment='center',
+                        color='black', fontweight='bold')
+           m+=1
+       ax.text(1, sum(mos_heights)+5, \
+                   str(round(sum(mos_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
+                        color='black', fontweight='bold')
+
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1050,50))
-       ax.set_xticklabels(['RSS\n (%i blocks)' % rssblocks, 'HRS\n (%i blocks)' % hrsblocks, 'MOS\n (%i blocks)' % mosblocks], rotation='horizontal', fontweight='bold')
+       ax.set_xticklabels(['RSS\n (%i blocks)' % rssblocks, 'HRS\n (%i blocks)' % hrsblocks, \
+                   'MOS\n (%i blocks)' % mosblocks], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        ax.legend(loc=0, fontsize=12)
        pdf.savefig() # saves the current figure into a pdf page
