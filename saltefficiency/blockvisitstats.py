@@ -86,6 +86,8 @@ def blockvisitstats(sdb, obsdate, update=True):
          pid_list.append(b[2])
       else:
          rej_list.append(b[2])
+   
+   #print('bvids: ', bvid_list)
 
    #get a list of all data from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
@@ -95,6 +97,7 @@ def blockvisitstats(sdb, obsdate, update=True):
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
+   #print("imgs: " , img_list)
    #get a list of all point commands from the night
    select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
    table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
@@ -108,7 +111,7 @@ def blockvisitstats(sdb, obsdate, update=True):
           t=datetime.datetime(int(obsdate[0:4]), int(obsdate[5:7]), int(obsdate[8:10]), 0, 0, 0)+datetime.timedelta(days=1)+p[1]
        point_list.append([p[0], t, p[2], p[3], p[4], p[5]])
 
-
+   #print("points: ", point_list)
    #deal with accepted blocks
    block_list=[]
    for bvid in bvid_list:
@@ -257,13 +260,15 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
 
     """
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
-    if instr=='RSS':
+    #print(stime, instr, bvid)
+    '''if instr=='RSS':
         blockscams=[]
         for img in image_list:
            if img[10]==bvid and img[5]=='SALTICAM':
               blockscams.append(img)
         if len(blockscams)<2:
-           return None
+           print('not enough scams')
+           return None'''
     for img in image_list:
         #print(img[4], img[5],img[6],img[10])
         #print(stime, instr, primary_mode, bid)
