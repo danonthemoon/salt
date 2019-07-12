@@ -130,7 +130,7 @@ if __name__=='__main__':
        rslew_height = rslew - 10
        rtrsl_height = rtrsl+rslew - 10
        rtacq_height = rtacq+rtrsl_height - 10
-       riacq_height = riacq+riacq_height - 10
+       riacq_height = riacq+rtacq_height - 10
 
        hslew = hrs_stats.get("1. Slew")
        htrsl = hrs_stats.get("2. Tracker Slew")
@@ -139,7 +139,7 @@ if __name__=='__main__':
        hslew_height = hslew - 10
        htrsl_height = htrsl+hslew - 10
        htacq_height = htacq+htrsl_height - 10
-       hiacq_height = hiacq+hiacq_height - 10
+       hiacq_height = hiacq+htacq_height - 10
 
        mslew = mos_stats.get("1. Slew")
        mtrsl = mos_stats.get("2. Tracker Slew")
@@ -148,7 +148,7 @@ if __name__=='__main__':
        mslew_height = mslew - 10
        mtrsl_height = mtrsl+mslew - 10
        mtacq_height = mtacq+mtrsl_height - 10
-       miacq_height = miacq+miacq_height - 10
+       miacq_height = miacq+mtacq_height - 10
 
 
        ax.text(0, rslew_height, str(rslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
