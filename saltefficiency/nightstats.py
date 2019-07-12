@@ -54,9 +54,14 @@ def getnightstats(sdb, obsdate):
    hrs_trslew=[]
    hrs_targetacq=[]
    hrs_instracq=[]
+   mos_slew=[]
+   mos_trslew=[]
+   mos_targetacq=[]
+   mos_instracq=[]
    instrument=''
    rss_count=0
    hrs_count=0
+   mos_count=0
    for bvid in bvid_list:
        selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime'
        tabcmd='BlockVisit'
@@ -68,7 +73,17 @@ def getnightstats(sdb, obsdate):
        bv_instruments=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        for i in bv_instruments:
           if 'RSS' in i:
-              instrument='RSS'
+              selcmd='Block_Id, Barcode'
+              tabcmd='Block join Pointing using (Block_Id) join Observation using (Pointing_Id) '
+              tabcmd+='join TelescopeConfigObsConfig using (Pointing_Id) join ObsConfig on (PlannedObsConfig_Id=ObsConfig_Id) '
+              tabcmd+='join RssPatternDetail using (RssPattern_Id) join Rss using (Rss_Id) join RssProcedure using (RssProcedure_Id) '
+              tabcmd+='join RssConfig using (RssConfig_Id) join RssMask using (RssMask_Id)'
+              logcmd='RssProcedureType_Id = 7 and Block_Id = %i' % bid
+              mos=sdb.select(selcmd, tabcmd, logcmd)
+              if mos:
+                  print("MOS: ", mos)
+                  instrument='MOS'
+              else: instrument='RSS'
               break
           elif 'HRS' in i:
               instrument='HRS'
@@ -86,8 +101,14 @@ def getnightstats(sdb, obsdate):
           hrs_targetacq.append(scistats[0][2])
           hrs_instracq.append(scistats[0][3])
           hrs_count+=1
-   if rss_count==0 and hrs_count==0:
+      elif instrument=='MOS':
+          mos_slew.append(scistats[0][0])
+          mos_trslew.append(scistats[0][1])
+          mos_targetacq.append(scistats[0][2])
+          mos_instracq.append(scistats[0][3])
+          mos_count+=1
+   if rss_count==0 and hrs_count==0 and mos_count==0:
        nightstats = []
    else:
-       nightstats = [rss_slew,rss_trslew,rss_targetacq,rss_instracq,hrs_slew,hrs_trslew,hrs_targetacq,hrs_instracq]
-   return nightstats, rss_count, hrs_count
+       nightstats = [rss_slew,rss_trslew,rss_targetacq,rss_instracq,hrs_slew,hrs_trslew,hrs_targetacq,hrs_instracq,mos_slew,mos_trslew,mos_targetacq,mos_instracq]
+   return nightstats, rss_count, hrs_count, mos_count

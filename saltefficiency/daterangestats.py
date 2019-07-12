@@ -44,18 +44,21 @@ if __name__=='__main__':
    rss_trslewtimes=[]
    rss_targetacqtimes=[]
    rss_instracqtimes=[]
-   rss_scitracktimes=[]
    hrs_slewtimes=[]
    hrs_trslewtimes=[]
    hrs_targetacqtimes=[]
    hrs_instracqtimes=[]
-   hrs_scitracktimes=[]
+   mos_slewtimes=[]
+   mos_trslewtimes=[]
+   mos_targetacqtimes=[]
+   mos_instracqtimes=[]
    nights=0
    rssblocks=0
    hrsblocks=0
+   mosblocks=0
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
-       nightstats, rsscount, hrscount = getnightstats(sdb, obsdate)
+       nightstats, rsscount, hrscount, moscount = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or (rsscount==0 and hrscount==0): continue
        else:
@@ -67,13 +70,18 @@ if __name__=='__main__':
           hrs_trslewtimes.extend(nightstats[5])
           hrs_targetacqtimes.extend(nightstats[6])
           hrs_instracqtimes.extend(nightstats[7])
+          mos_slewtimes.extend(nightstats[8])
+          mos_trslewtimes.extend(nightstats[9])
+          mos_targetacqtimes.extend(nightstats[10])
+          mos_instracqtimes.extend(nightstats[11])
        rssblocks+=rsscount
        hrsblocks+=hrscount
+       mosblocks+=moscount
        nights+=1
    if nights == 0:
        print("No valid observation nights within this range")
    else:
-       print('Data taken from %i RSS blocks and %i HRS blocks' % (rssblocks, hrsblocks))
+       print('Data taken from %i RSS blocks, %i HRS blocks, %i MOS blocks' % (rssblocks, hrsblocks, mosblocks))
        rss_stats = {}
        rss_stats.update({'1. Slew' : median(rss_slewtimes)})
        rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
@@ -84,13 +92,18 @@ if __name__=='__main__':
        hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
        hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
        hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
+       mos_stats = {}
+       moss_stats.update({'1. Slew' : median(mos_slewtimes)})
+       mos_stats.update({'2. Tracker Slew' : median(mos_trslewtimes)})
+       mos_stats.update({'3. Target Acquisition': median(mos_targetacqtimes)})
+       mos_stats.update({'4. Instrument Acquisition': median(mos_instracqtimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
-       stats = [rss_stats, hrs_stats]
+       stats = [rss_stats, hrs_stats, mos_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
-       df.index = ['RSS Stats', 'HRS Stats']
+       df.index = ['RSS Stats', 'HRS Stats', 'MOS Stats']
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
 
        #label the bar splits and totals
@@ -135,11 +148,11 @@ if __name__=='__main__':
                    str(round(sum(hrs_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
 
-                        
+
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1050,50))
-       ax.set_xticklabels(['RSS\n (%i blocks)' % rssblocks, 'HRS\n (%i blocks)' % hrsblocks], rotation='horizontal', fontweight='bold')
+       ax.set_xticklabels(['RSS\n (%i blocks)' % rssblocks, 'HRS\n (%i blocks)' % hrsblocks, 'MOS\n (%i blocks)' % mosblocks], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        ax.legend(loc=0, fontsize=12)
        pdf.savefig() # saves the current figure into a pdf page
