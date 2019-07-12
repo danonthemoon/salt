@@ -108,7 +108,34 @@ if __name__=='__main__':
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
 
        #label the bar splits and totals
-       heights = []
+       for r in rss_stats.values():
+           ax.text(0, r-25, \
+                    str(round(r,1)), fontsize=12, horizontalalignment='center',
+                        color='black', fontweight='bold')
+       rsstotal = sum(rss_stats.values())
+       ax.text(0, rsstotal+20, \
+                str(rsstotal), fontsize=14, horizontalalignment='center',
+                    color='black', fontweight='bold')
+
+       for h in hrs_stats.values():
+           ax.text(1, h-25, \
+                    str(round(h,1)), fontsize=12, horizontalalignment='center',
+                        color='black', fontweight='bold')
+       hrstotal = sum(hrs_stats.values())
+       ax.text(0, hrstotal+20, \
+                str(hrstotal), fontsize=14, horizontalalignment='center',
+                    color='black', fontweight='bold')
+
+       for m in mos_stats.values():
+           ax.text(2, m-25, \
+                    str(round(m,1)), fontsize=12, horizontalalignment='center',
+                        color='black', fontweight='bold')
+       mostotal = sum(mos_stats.values())
+       ax.text(0, mostotal+20, \
+                str(mostotal), fontsize=14, horizontalalignment='center',
+                    color='black', fontweight='bold')
+
+       """ heights = []
        for patch in ax.patches:
            heights.insert(0, patch.get_height())
        rss_heights=[]
@@ -171,7 +198,7 @@ if __name__=='__main__':
        ax.text(2, sum(mos_heights)+10, \
                    str(round(sum(mos_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
-
+"""
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
