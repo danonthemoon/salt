@@ -55,35 +55,39 @@ def getnightstats(sdb, obsdate):
    hrs_targetacq=[]
    hrs_instracq=[]
    instrument=''
-   count=0
+   rss_count=0
+   hrs_count=0
    for bvid in bvid_list:
        selcmd='SlewTime, TrackerSlewTime, TargetAcquisitionTime, InstrumentAcquisitionTime'
        tabcmd='BlockVisit'
        scistats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
-       if not all(scistats[0]):
-           continue
+       if not all(scistats[0]): continue
+
        selcmd='INSTRUME'
        tabcmd='FileData'
        bv_instruments=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
        for i in bv_instruments:
           if 'RSS' in i:
               instrument='RSS'
+              break
           elif 'HRS' in i:
               instrument='HRS'
-          else: continue
+              break
+
        if instrument=='RSS':
           rss_slew.append(scistats[0][0])
           rss_trslew.append(scistats[0][1])
           rss_targetacq.append(scistats[0][2])
           rss_instracq.append(scistats[0][3])
+          rss_count+=1
        elif instrument=='HRS':
           hrs_slew.append(scistats[0][0])
           hrs_trslew.append(scistats[0][1])
           hrs_targetacq.append(scistats[0][2])
           hrs_instracq.append(scistats[0][3])
-       count+=1
-   if count == 0:
+          hrs_count+=1
+   if rss_count==0 and hrs_count==0:
        nightstats = []
    else:
        nightstats = [rss_slew,rss_trslew,rss_targetacq,rss_instracq,hrs_slew,hrs_trslew,hrs_targetacq,hrs_instracq]
-   return nightstats, count
+   return nightstats, rss_count, hrs_count

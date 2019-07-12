@@ -51,12 +51,13 @@ if __name__=='__main__':
    hrs_instracqtimes=[]
    hrs_scitracktimes=[]
    nights=0
-   blocks=0
+   rssblocks=0
+   hrsblocks=0
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
-       nightstats, numberofblocks = getnightstats(sdb, obsdate)
+       nightstats, rsscount, hrscount = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
-       if len(nightstats) == 0 or numberofblocks == 0: continue
+       if len(nightstats) == 0 or (rsscount==0 and hrscount==0): continue
        else:
           rss_slewtimes.extend(nightstats[0])
           rss_trslewtimes.extend(nightstats[1])
@@ -66,12 +67,13 @@ if __name__=='__main__':
           hrs_trslewtimes.extend(nightstats[5])
           hrs_targetacqtimes.extend(nightstats[6])
           hrs_instracqtimes.extend(nightstats[7])
-       blocks+=numberofblocks
+       rssblocks+=rsscount
+       hrsblocks+=hrscount
        nights+=1
    if nights == 0:
        print("No valid observation nights within this range")
    else:
-       print('Data taken from %i blocks' % blocks)
+       print('Data taken from %i RSS blocks and %i HRS blocks' % (rssblocks, hrsblocks))
        rss_stats = {}
        rss_stats.update({'1. Slew' : median(rss_slewtimes)})
        rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
@@ -144,7 +146,7 @@ if __name__=='__main__':
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1050,50))
-       ax.set_xticklabels(['RSS', 'HRS'], rotation='horizontal', fontweight='bold')
+       ax.set_xticklabels(['RSS (%i blocks)' % rssblocks, 'HRS (%i blocks)' % hrsblocks], rotation='horizontal', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s \n Stats calculated from %i blocks' % (sdate,edate, blocks),fontweight='bold')
        ax.legend(loc=0, fontsize=12)
        pdf.savefig() # saves the current figure into a pdf page
