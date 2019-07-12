@@ -86,7 +86,7 @@ if __name__=='__main__':
        hrs_stats.update({'4. Instrument Acquisition': median(hrs_instracqtimes)})
 
    #produce a pdf with the relevant stats, distinguished by instrument
-   with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+   with PdfPages('n_overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_stats, hrs_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
