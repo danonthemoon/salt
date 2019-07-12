@@ -108,48 +108,24 @@ if __name__=='__main__':
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
 
        #label the bar splits and totals
-       for r in rss_stats.values():
-           ax.text(0, r-25, \
-                    str(round(r,1)), fontsize=12, horizontalalignment='center',
-                        color='black', fontweight='bold')
        rsstotal = sum(rss_stats.values())
        ax.text(0, rsstotal+20, \
-                str(rsstotal), fontsize=14, horizontalalignment='center',
+                str(rsstotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
-       for h in hrs_stats.values():
-           ax.text(1, h-25, \
-                    str(round(h,1)), fontsize=12, horizontalalignment='center',
-                        color='black', fontweight='bold')
        hrstotal = sum(hrs_stats.values())
        ax.text(0, hrstotal+20, \
-                str(hrstotal), fontsize=14, horizontalalignment='center',
+                str(hrstotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
-       for m in mos_stats.values():
-           ax.text(2, m-25, \
-                    str(round(m,1)), fontsize=12, horizontalalignment='center',
-                        color='black', fontweight='bold')
        mostotal = sum(mos_stats.values())
        ax.text(0, mostotal+20, \
-                str(mostotal), fontsize=14, horizontalalignment='center',
+                str(mostotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
-       """ heights = []
-       for patch in ax.patches:
-           heights.insert(0, patch.get_height())
-       rss_heights=[]
-       hrs_heights=[]
-       mos_heights=[]
-       i=0
-       while i < len(heights):
-           if (i % 3 == 0):
-               mos_heights.append(heights[i])
-           elif (i % 2 == 0):
-              hrs_heights.append(heights[i])
-           else:
-              rss_heights.append(heights[i])
-           i+=1
+       rss_heights=rss_stats.values()
+       hrs_heights=hrs_stats.values()
+       mos_heights=mos_stats.values()
 
        #label rss values
        j=0
