@@ -123,9 +123,9 @@ if __name__=='__main__':
                 str(mostotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
-       rss_heights=rss_stats.values()
-       hrs_heights=hrs_stats.values()
-       mos_heights=mos_stats.values()
+       rss_heights=list(rss_stats.values())
+       hrs_heights=list(hrs_stats.values())
+       mos_heights=list(mos_stats.values())
 
        #label rss values
        j=0
@@ -174,7 +174,6 @@ if __name__=='__main__':
        ax.text(2, sum(mos_heights)+10, \
                    str(round(sum(mos_heights),1))+' (total)', fontsize=14, horizontalalignment='center',
                         color='black', fontweight='bold')
-"""
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
