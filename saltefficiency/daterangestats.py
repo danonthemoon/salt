@@ -123,60 +123,49 @@ if __name__=='__main__':
                 str(mostotal)+' (total)', fontsize=14, horizontalalignment='center',
                     color='black', fontweight='bold')
 
-       heights = []
-       for patch in ax.patches:
-           heights.insert(0, patch.get_height())
-       rss_heights=[]
-       hrs_heights=[]
-       mos_heights=[]
-       i=0
-       while i < len(heights):
-           if (i % 3 == 0):
-               mos_heights.append(heights[i])
-           elif (i % 2 == 0):
-              hrs_heights.append(heights[i])
-           else:
-              rss_heights.append(heights[i])
-           i+=1
+       rslew = rss_stats.get("1. Slew")
+       rtrsl = rss_stats.get("2. Tracker Slew")
+       rtacq = rss_stats.get("3. Target Acquisition")
+       riacq = rss_stats.get("4. Instrument Acquisition")
+       rslew_height = rslew - 10
+       rtrsl_height = rtrsl+rslew - 10
+       rtacq_height = rtacq+rtrsl_height - 10
+       riacq_height = riacq+riacq_height - 10
 
-       #label rss values
-       j=0
-       while j < len(rss_heights):
-           if j+1 < len(rss_heights):
-               a = rss_heights[j+1:]
-               rest = sum(a)
-           else:
-               rest = 0
-           ax.text(0, rss_heights[j]+rest-25, \
-                    str(round(rss_heights[j],1)), fontsize=12, horizontalalignment='center',
-                        color='black', fontweight='bold')
-           j+=1
+       hslew = hrs_stats.get("1. Slew")
+       htrsl = hrs_stats.get("2. Tracker Slew")
+       htacq = hrs_stats.get("3. Target Acquisition")
+       hiacq = hrs_stats.get("4. Instrument Acquisition")
+       hslew_height = hslew - 10
+       htrsl_height = htrsl+hslew - 10
+       htacq_height = htacq+htrsl_height - 10
+       hiacq_height = hiacq+hiacq_height - 10
 
-       #label hrs values
-       k=0
-       while k < len(hrs_heights):
-           if k+1 < len(hrs_heights):
-               b = hrs_heights[k+1:]
-               rest = sum(b)
-           else:
-               rest = 0
-           ax.text(1, hrs_heights[k]+rest-25, \
-                    str(round(hrs_heights[k],1)), fontsize=12, horizontalalignment='center',
-                        color='black', fontweight='bold')
-           k+=1
+       mslew = mos_stats.get("1. Slew")
+       mtrsl = mos_stats.get("2. Tracker Slew")
+       mtacq = mos_stats.get("3. Target Acquisition")
+       miacq = mos_stats.get("4. Instrument Acquisition")
+       mslew_height = mslew - 10
+       mtrsl_height = mtrsl+mslew - 10
+       mtacq_height = mtacq+mtrsl_height - 10
+       miacq_height = miacq+miacq_height - 10
 
-       #label mos values
-       m=0
-       while m < len(mos_heights):
-           if m+1 < len(mos_heights):
-               c = mos_heights[m+1:]
-               rest = sum(c)
-           else:
-               rest = 0
-           ax.text(2, mos_heights[m]+rest-25, \
-                    str(round(mos_heights[m],1)), fontsize=12, horizontalalignment='center',
-                        color='black', fontweight='bold')
-           m+=1
+
+       ax.text(0, rslew_height, str(rslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, rtrsl_height, str(rtrsl), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, rtacq_height, str(rtacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(0, riacq_height, str(riacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+
+       ax.text(1, hslew_height, str(hslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, htrsl_height, str(htrsl), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, htacq_height, str(htacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(1, hiacq_height, str(hiacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+
+       ax.text(2, mslew_height, str(mslew), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, mtrsl_height, str(mtrsl), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, mtacq_height, str(mtacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+       ax.text(2, miacq_height, str(miacq), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
+
 
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
