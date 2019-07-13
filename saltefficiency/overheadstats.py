@@ -87,12 +87,10 @@ def overheadstats(sdb, obsdate, update=True):
          rej_list.append(b[2])
 
    #get a list of all images from the night
-   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
-   select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
-   table_state='FileData Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) '
-   table_state+='join FitsHeaderImage as h using (FileData_Id)'
+   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, Block_Id'
+   table_state='FileData  Join ProposalCode using (ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
-   logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
+   logic_state="FileName like '%"+formatteddate+"%' and h.INSTRUME='SALTICAM' order by UTSTART"
    imglist=sdb.select(select_state, table_state, logic_state)
    imglist[:] = [img for img in imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
