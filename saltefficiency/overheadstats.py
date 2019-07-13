@@ -87,14 +87,6 @@ def overheadstats(sdb, obsdate, update=True):
          rej_list.append(b[2])
 
    #get a list of all images from the night
-<<<<<<< HEAD
-   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, Block_Id'
-   table_state='FileData  Join ProposalCode using (ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
-   formatteddate = obsdate.replace('-','')
-   logic_state="FileName like '%"+formatteddate+"%' and h.INSTRUME='SALTICAM' order by UTSTART"
-   imglist=sdb.select(select_state, table_state, logic_state)
-   imglist[:] = [img for img in imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
-=======
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
@@ -102,7 +94,7 @@ def overheadstats(sdb, obsdate, update=True):
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
    print("imgs: " , img_list)
->>>>>>> 219333da2b3ab30c235ffbf557542a9fca93d669
+
 
    #get a list of all RSS images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
