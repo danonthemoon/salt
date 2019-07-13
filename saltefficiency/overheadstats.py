@@ -86,15 +86,25 @@ def overheadstats(sdb, obsdate, update=True):
       else:
          rej_list.append(b[2])
 
-   #get a list of all data from the night
+   #get a list of all RSS images from the night
+   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
+   select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
+   table_state='FileData Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) '
+   table_state+='join FitsHeaderImage as h using (FileData_Id)'
+   formatteddate = obsdate.replace('-','')
+   logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
+   imglist=sdb.select(select_state, table_state, logic_state)
+   imglist[:] = [img for img in imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
+
+   #get a list of all RSS images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
    select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id, r.GRATING, r.GR_STA, r.AR_STA'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) '
    table_state+='join FitsHeaderImage as h using (FileData_Id) join FitsHeaderRss as r using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
    logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
-   img_list=sdb.select(select_state, table_state, logic_state)
-   img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
+   rss_img_list=sdb.select(select_state, table_state, logic_state)
+   rss_imglist[:] = [img for img in rss_imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
    print("imgs: " , img_list)
    #get a list of all point commands from the night
@@ -194,7 +204,7 @@ def overheadstats(sdb, obsdate, update=True):
 
        if instr == 'MOS':
            #special case for MOS science acquisition
-           mosacq=getfirstimage(img_list, ontarget, instr, primary_mode, bvid)
+           mosacq=getfirstimage(rss_imglist, ontarget, instr, primary_mode, bvid)
            mosacqtime=mosacq-ontarget
            if mosacqtime.seconds > 1000: continue
        else:
