@@ -197,7 +197,7 @@ def blockvisitstats(sdb, obsdate, update=True):
                instr='MOS'
 
        if instr == 'MOS':
-           mosacq=getfirstimage(img_list, ontarget-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
+           mosacq=getfirstimage(img_list, ontarget, instr, primary_mode, bvid)
            mosacqtime=mosacq-ontarget
            if mosacqtime.seconds > 1000: continue
        else:
@@ -208,7 +208,7 @@ def blockvisitstats(sdb, obsdate, update=True):
           acqtime=scamstart-ontarget
           if acqtime.seconds > 1000: continue
           #determine the time between acquisition and first science image
-          sciencestart=getfirstimage(img_list, scamstart-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
+          sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
           if sciencestart is None:
              print("Did not find science image")
              continue
@@ -219,13 +219,13 @@ def blockvisitstats(sdb, obsdate, update=True):
 
        #update results in sdb
        if update:
-           bvs_updated+=1  
+           bvs_updated+=1
            inscmd='SlewTime=%i, TrackerSlewTime=%i' % (slewtime.seconds, trackerslewtime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
            if instr == 'MOS':
                inscmd='MOSAcquisitionTime=%i' % (mosacqtime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-           else: 
+           else:
                inscmd='TargetAcquisitionTime=%i, InstrumentAcquisitionTime=%i' % (acqtime.seconds, sciacqtime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
