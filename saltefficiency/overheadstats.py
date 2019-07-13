@@ -86,7 +86,7 @@ def overheadstats(sdb, obsdate, update=True):
       else:
          rej_list.append(b[2])
 
-   #get a list of all RSS images from the night
+   #get a list of all images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
    select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) '
@@ -106,7 +106,7 @@ def overheadstats(sdb, obsdate, update=True):
    rss_imglist=sdb.select(select_state, table_state, logic_state)
    rss_imglist[:] = [img for img in rss_imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
-   #print("imgs: " , imglist)
+   print("imgs: " , imglist)
    #get a list of all point commands from the night
    select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
    table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
