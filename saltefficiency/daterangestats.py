@@ -18,13 +18,11 @@ from statistics import median
 from matplotlib.backends.backend_pdf import PdfPages
 plt.switch_backend('agg')
 
-import run_blockvisitstats
+import run_overheadstats
 from nightstats import getnightstats
 
 if __name__=='__main__':
-
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
-
    sdate = sys.argv[1]
    edate = sys.argv[2]
    startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))

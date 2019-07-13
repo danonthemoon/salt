@@ -23,7 +23,7 @@ def getnightinfo(sdb, obsdate):
     return sdb.select('NightInfo_Id', 'NightInfo', 'Date=\'%s\'' % obsdate)[0][0]
 
 
-def blockvisitstats(sdb, obsdate, update=True):
+def overheadstats(sdb, obsdate, update=True):
    """Determine the block visit statistics for an observation date.  These
       statistics include slew time, acquisition time, and total science
       time for the block.   For rejected blocks, this includes the time
@@ -31,11 +31,10 @@ def blockvisitstats(sdb, obsdate, update=True):
 
       Parameters
       ----------
-
-      sdb: mysql-instance
-           sdb is a connection to the science data base
-      obsdate: string
-           observation date of interest
+      sdb: ~mysql.mysql
+         A connection to the sdb database
+      obsdate: str
+         Observing date in YYYYMMDD format
 
    """
    bvs_updated = 0
@@ -87,8 +86,6 @@ def blockvisitstats(sdb, obsdate, update=True):
       else:
          rej_list.append(b[2])
 
-   #print('bvids: ', bvid_list)
-
    #get a list of all data from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
@@ -111,7 +108,6 @@ def blockvisitstats(sdb, obsdate, update=True):
           t=datetime.datetime(int(obsdate[0:4]), int(obsdate[5:7]), int(obsdate[8:10]), 0, 0, 0)+datetime.timedelta(days=1)+p[1]
        point_list.append([p[0], t, p[2], p[3], p[4], p[5]])
 
-   #print("points: ", point_list)
    #deal with accepted blocks
    block_list=[]
    for bvid in bvid_list:
@@ -122,7 +118,6 @@ def blockvisitstats(sdb, obsdate, update=True):
            print('no point')
            continue
        starttime=pointtime
-       #print(starttime)
        endtime=findguidingstop(starttime, event_list)
        if endtime is None:
            print('no end')
@@ -174,9 +169,8 @@ def blockvisitstats(sdb, obsdate, update=True):
            continue
 
 
-       #determine the acquisition time after being on target
+       #get primary instrument, check if MOS
        instr, primary_mode=getprimarymode(img_list, bvid)
-       #print(instr, primary_mode)
 
        select_state= 'Block_Id'
        table_state='BlockVisit'
@@ -197,10 +191,12 @@ def blockvisitstats(sdb, obsdate, update=True):
                instr='MOS'
 
        if instr == 'MOS':
+           #special case for MOS science acquisition
            mosacq=getfirstimage(img_list, ontarget, instr, primary_mode, bvid)
            mosacqtime=mosacq-ontarget
            if mosacqtime.seconds > 1000: continue
        else:
+          #determine the Salticam acquisition time after being on target
           scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
           if scamstart is None:
              print("Did not find SCAM image")
@@ -214,8 +210,6 @@ def blockvisitstats(sdb, obsdate, update=True):
              continue
           sciacqtime=sciencestart-scamstart
           if sciacqtime.seconds > 1000: continue
-       #print("scam: ", scamstart, "sci: ", sciencestart)
-       #print('sciacqti: ', sciacqtime)
 
        #update results in sdb
        if update:
@@ -228,7 +222,6 @@ def blockvisitstats(sdb, obsdate, update=True):
            else:
                inscmd='TargetAcquisitionTime=%i, InstrumentAcquisitionTime=%i' % (acqtime.seconds, sciacqtime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-
 
    print(bvs_updated)
    print(len(bvid_list))
@@ -246,8 +239,6 @@ def get_blockvisitfrompointtime(sdb, starttime, propcode=None):
     logic = 'EventTime="{}"'.format(starttime)
     if propcode is not None and propcode!='JUNK' and not propcode.count("CAL_") and not propcode.count("ENG_"):
         logic += ' and Proposal_Code="{}"'.format(propcode)
-   # print sdb.select('BlockVisit_Id', table, logic)
-   # print starttime, propcode
     try:
         bvid = sdb.select('BlockVisit_Id', table, logic)[0][0]
     except IndexError:
@@ -274,9 +265,7 @@ def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
     """
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
     for img in image_list:
-        #print(img[4], img[5],img[6],img[10])
-        #print(stime, instr, primary_mode, bid)
-        if img[4]>stime and img[5]==instr: #img[6]==primary_mode and img[10]==bid:
+        if img[4]>stime and img[5]==instr: #and img[10]==bid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
 
@@ -371,7 +360,6 @@ def findguidingstop(starttime, event_list):
       in the event list
    """
    for r in event_list:
-       #print(r[1], type(r[1]), starttime, type(starttime))
        if r[0]==6 and r[1]+datetime.timedelta(seconds=0)>starttime: return r[1]
    return None
 

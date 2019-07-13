@@ -1,6 +1,8 @@
 """
 Updated July 2019 by Danny Sallurday
 
+@author ???
+
 """
 import mysql.connector as MySQLdb
 

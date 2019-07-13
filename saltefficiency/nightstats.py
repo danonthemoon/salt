@@ -22,17 +22,17 @@ import struct
 import numpy as np
 import sdb_mysql as mysql
 
-from blockvisitstats import getnightinfo
+from overheadstats import getnightinfo
 
 def getnightstats(sdb, obsdate):
    """Determine the overhead statistics for a specific observation date.
 
        Parameters
        ----------
-       sdb: mySQL database
-            database from which to obtain overhead stats
-       obsdate: string
-            observation date of interest
+       sdb: ~mysql.mysql
+          A connection to the sdb database
+       obsdate: str
+          Observing date in YYYYMMDD format
    """
 
    #get the NightInfo_Id for the given obsdate
