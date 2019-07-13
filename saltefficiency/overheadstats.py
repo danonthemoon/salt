@@ -90,7 +90,7 @@ def overheadstats(sdb, obsdate, update=True):
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
-   logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
+   logic_state="FileName like '%"+formatteddate+"%' and h.INSTRUME = 'SALTICAM' order by UTSTART"
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
    print("imgs: " , img_list)
@@ -142,7 +142,7 @@ def overheadstats(sdb, obsdate, update=True):
            print('total too long')
            continue
 
-       propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(imglist, starttime, endtime)
+       propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
        if propcode in pid_list and not (propcode in rej_list):
            blocks = removepropcode(blocks, propcode)
            block_list.append([bvid, starttime, endtime, 0, propcode])
@@ -182,7 +182,7 @@ def overheadstats(sdb, obsdate, update=True):
 
 
        #get primary instrument, check if MOS
-       instr, primary_mode=getprimarymode(imglist, bvid)
+       instr, primary_mode=getprimarymode(img_list, bvid)
        if instr == 'SALTICAM': continue
 
        select_state= 'Block_Id'
@@ -209,14 +209,14 @@ def overheadstats(sdb, obsdate, update=True):
            if mosacqtime.seconds > 1000: continue
        else:
           #determine the Salticam acquisition time after being on target
-          scamstart=getfirstscam(imglist, starttime, 'SALTICAM', 'IMAGING', bvid)
+          scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
           if scamstart is None:
              print("Did not find SCAM image")
              continue
           acqtime=scamstart-ontarget
           if acqtime.seconds > 1000: continue
           #determine the time between acquisition and first science image
-          sciencestart=getfirstimage(imglist, scamstart, instr, primary_mode, bvid)
+          sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
           if sciencestart is None:
              print("Did not find science image for BV %i using %s" % (bvid, instr))
              continue
