@@ -93,7 +93,7 @@ if __name__=='__main__':
           mos_stats.update({'1. Slew' : 0})
           mos_stats.update({'2. Tracker Slew' : 0})
           mos_stats.update({'3. Target Acquisition': 0})
-          mos_stats.update({'4. Instrument Acquisition': 0})
+          mos_stats.update({'5. MOS Acquisition': 0})
 
 
    #produce a pdf with the relevant stats, separated by instrument

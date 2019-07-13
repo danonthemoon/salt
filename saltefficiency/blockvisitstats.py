@@ -207,13 +207,11 @@ def blockvisitstats(sdb, obsdate, update=True):
              continue
           acqtime=scamstart-ontarget
           if acqtime.seconds > 1000: continue
-
-       #determine the time between acquisition and first science image
-       if not instr == 'MOS':
+          #determine the time between acquisition and first science image
           sciencestart=getfirstimage(img_list, scamstart-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
           if sciencestart is None:
-          print("Did not find science image")
-          continue
+             print("Did not find science image")
+             continue
           sciacqtime=sciencestart-scamstart
           if sciacqtime.seconds > 1000: continue
        #print("scam: ", scamstart, "sci: ", sciencestart)
@@ -221,15 +219,14 @@ def blockvisitstats(sdb, obsdate, update=True):
 
        #update results in sdb
        if update:
-           bvs_updated+=1
-           #inscmd='TotalSlewTime=%i, TotalAcquisitionTime=%i, TotalScienceTime=%i' % (slewtime.seconds+trackerslewtime.seconds, acqtime.seconds, scitime.seconds)
-           #sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-           inscmd='SlewTime=%i, TrackerSlewTime=%i, TargetAcquisitionTime=%i' % (slewtime.seconds, trackerslewtime.seconds, acqtime.seconds)
-           sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-           inscmd='InstrumentAcquisitionTime=%i' % (sciacqtime.seconds)
+           bvs_updated+=1  
+           inscmd='SlewTime=%i, TrackerSlewTime=%i' % (slewtime.seconds, trackerslewtime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
            if instr == 'MOS':
                inscmd='MOSAcquisitionTime=%i' % (mosacqtime.seconds)
+               sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+           else: 
+               inscmd='TargetAcquisitionTime=%i, InstrumentAcquisitionTime=%i' % (acqtime.seconds, sciacqtime.seconds)
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
 
