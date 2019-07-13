@@ -86,7 +86,7 @@ def blockvisitstats(sdb, obsdate, update=True):
          pid_list.append(b[2])
       else:
          rej_list.append(b[2])
-   
+
    #print('bvids: ', bvid_list)
 
    #get a list of all data from the night
@@ -177,20 +177,45 @@ def blockvisitstats(sdb, obsdate, update=True):
        #determine the acquisition time after being on target
        instr, primary_mode=getprimarymode(img_list, bvid)
        #print(instr, primary_mode)
-       scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
-       if scamstart is None:
-           print("Did not find SCAM image")
+
+       select_state= 'Block_Id'
+       table_state='BlockVisit'
+       logic_state='BlockVisit_Id=%i' % (bvid)
+       bids=sdb.select(select_state, table_state, logic_state)
+       if not bids:
            continue
-       acqtime=scamstart-ontarget
-       if acqtime.seconds > 1000: continue
+       else:
+           bid=bids[0]
+           selcmd='Block_Id, Barcode'
+           tabcmd='Block join Pointing using (Block_Id) join Observation using (Pointing_Id) '
+           tabcmd+='join TelescopeConfigObsConfig using (Pointing_Id) join ObsConfig on (PlannedObsConfig_Id=ObsConfig_Id) '
+           tabcmd+='join RssPatternDetail using (RssPattern_Id) join Rss using (Rss_Id) join RssProcedure using (RssProcedure_Id) '
+           tabcmd+='join RssConfig using (RssConfig_Id) join RssMask using (RssMask_Id)'
+           logcmd='RssProcedureType_Id = \'7\' and Block_Id = %i group by Block_Id order by Block_Id' % bid
+           mos=sdb.select(selcmd, tabcmd, logcmd)
+           if mos:
+               instr='MOS'
+
+       if instr == 'MOS':
+           mosacq=getfirstimage(img_list, ontarget-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
+           mosacqtime=mosacq-ontarget
+           if mosacqtime.seconds > 1000: continue
+       else:
+          scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
+          if scamstart is None:
+             print("Did not find SCAM image")
+             continue
+          acqtime=scamstart-ontarget
+          if acqtime.seconds > 1000: continue
 
        #determine the time between acquisition and first science image
-       sciencestart=getfirstimage(img_list, scamstart-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
-       if sciencestart is None:
-           print("Did not find science image")
-           continue
-       sciacqtime=sciencestart-scamstart
-       if sciacqtime.seconds > 1000: continue
+       if not instr == 'MOS':
+          sciencestart=getfirstimage(img_list, scamstart-datetime.timedelta(seconds=2*3600.0), instr, primary_mode, bvid)
+          if sciencestart is None:
+          print("Did not find science image")
+          continue
+          sciacqtime=sciencestart-scamstart
+          if sciacqtime.seconds > 1000: continue
        #print("scam: ", scamstart, "sci: ", sciencestart)
        #print('sciacqti: ', sciacqtime)
 
@@ -203,6 +228,10 @@ def blockvisitstats(sdb, obsdate, update=True):
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
            inscmd='InstrumentAcquisitionTime=%i' % (sciacqtime.seconds)
            sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+           if instr == 'MOS':
+               inscmd='MOSAcquisitionTime=%i' % (mosacqtime.seconds)
+               sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
+
 
    print(bvs_updated)
    print(len(bvid_list))
@@ -269,6 +298,12 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
         if len(blockscams)<2:
            print('not enough scams')
            return None'''
+    if instr == 'MOS':
+        for img in image_list:
+            if img[4]>stime and img[5]=='RSS' and img[10]==bvid:
+               return img[4]+datetime.timedelta(seconds=2*3600.0)
+
+
     for img in image_list:
         #print(img[4], img[5],img[6],img[10])
         #print(stime, instr, primary_mode, bid)

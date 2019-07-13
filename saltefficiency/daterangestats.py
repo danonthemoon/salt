@@ -42,8 +42,7 @@ if __name__=='__main__':
    hrs_instracqtimes=[]
    mos_slewtimes=[]
    mos_trslewtimes=[]
-   mos_targetacqtimes=[]
-   mos_instracqtimes=[]
+   mos_acqtimes=[]
    nights=0
    rssblocks=0
    hrsblocks=0
@@ -64,8 +63,7 @@ if __name__=='__main__':
           hrs_instracqtimes.extend(nightstats[7])
           mos_slewtimes.extend(nightstats[8])
           mos_trslewtimes.extend(nightstats[9])
-          mos_targetacqtimes.extend(nightstats[10])
-          mos_instracqtimes.extend(nightstats[11])
+          mos_acqtimes.extend(nightstats[10])
        rssblocks+=rsscount
        hrsblocks+=hrscount
        mosblocks+=moscount
@@ -90,8 +88,7 @@ if __name__=='__main__':
        if not mosblocks==0:
           mos_stats.update({'1. Slew' : median(mos_slewtimes)})
           mos_stats.update({'2. Tracker Slew' : median(mos_trslewtimes)})
-          mos_stats.update({'3. Target Acquisition': median(mos_targetacqtimes)})
-          mos_stats.update({'4. Instrument Acquisition': median(mos_instracqtimes)})
+          mos_stats.update({'5. MOS Acquisition': median(mos_acqtimes)})
        else:
           mos_stats.update({'1. Slew' : 0})
           mos_stats.update({'2. Tracker Slew' : 0})
@@ -137,12 +134,10 @@ if __name__=='__main__':
 
        mslew = mos_stats.get("1. Slew")
        mtrsl = mos_stats.get("2. Tracker Slew")
-       mtacq = mos_stats.get("3. Target Acquisition")
-       miacq = mos_stats.get("4. Instrument Acquisition")
+       miacq = mos_stats.get("5. MOS Acquisition")
        mslew_height = mslew - 25
        mtrsl_height = mtrsl+mslew_height
-       mtacq_height = mtacq+mtrsl_height
-       miacq_height = miacq+mtacq_height
+       miacq_height = miacq+mtrsl_height
 
 
        ax.text(0, rslew_height, str(int(rslew)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
@@ -157,7 +152,6 @@ if __name__=='__main__':
 
        ax.text(2, mslew_height, str(int(mslew)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
        ax.text(2, mtrsl_height, str(int(mtrsl)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
-       ax.text(2, mtacq_height, str(int(mtacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
        ax.text(2, miacq_height, str(int(miacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
 
