@@ -106,7 +106,7 @@ def overheadstats(sdb, obsdate, update=True):
    rss_imglist=sdb.select(select_state, table_state, logic_state)
    rss_imglist[:] = [img for img in rss_imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
-   print("imgs: " , img_list)
+   #print("imgs: " , imglist)
    #get a list of all point commands from the night
    select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
    table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
@@ -142,7 +142,7 @@ def overheadstats(sdb, obsdate, update=True):
            print('total too long')
            continue
 
-       propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
+       propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(imglist, starttime, endtime)
        if propcode in pid_list and not (propcode in rej_list):
            blocks = removepropcode(blocks, propcode)
            block_list.append([bvid, starttime, endtime, 0, propcode])
@@ -182,7 +182,7 @@ def overheadstats(sdb, obsdate, update=True):
 
 
        #get primary instrument, check if MOS
-       instr, primary_mode=getprimarymode(img_list, bvid)
+       instr, primary_mode=getprimarymode(imglist, bvid)
        if instr == 'SALTICAM': continue
 
        select_state= 'Block_Id'
@@ -209,14 +209,14 @@ def overheadstats(sdb, obsdate, update=True):
            if mosacqtime.seconds > 1000: continue
        else:
           #determine the Salticam acquisition time after being on target
-          scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
+          scamstart=getfirstscam(imglist, starttime, 'SALTICAM', 'IMAGING', bvid)
           if scamstart is None:
              print("Did not find SCAM image")
              continue
           acqtime=scamstart-ontarget
           if acqtime.seconds > 1000: continue
           #determine the time between acquisition and first science image
-          sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
+          sciencestart=getfirstimage(imglist, scamstart, instr, primary_mode, bvid)
           if sciencestart is None:
              print("Did not find science image for BV %i using %s" % (bvid, instr))
              continue

@@ -1,0 +1,26 @@
+
+*** These modified files were found in JOE when it aborted on Sun Jul 14 00:24:00 2019
+*** JOE was aborted because the terminal closed
+
+*** File '/home/danny/salteff/.git/MERGE_MSG'
+Merge branch 'master' of https://github.com/danonthemoon/saltoverheads
+
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
+.#get a list of all RSS images from the night
+   select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
+   select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id, r.GRATING, r.GR-STA, r.AR-STA'
+   table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) '
+   table_state+='join FitsHeaderImage as h using (FileData_Id) join FitsHeaderRss as r using (FileData_Id)'
+   formatteddate = obsdate.replace('-','')
+   logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
+   rss_img_list=sdb.select(select_state, table_state, logic_state)
+   rss_imglist[:] = [img for img in img_list if not "CAL_" in im
+
+z
+*** File '(Unnamed)'
+/home/danny/salteff/.git/MERGE_MSG
+/home/danny/salteff/.git/MERGE_MSG
