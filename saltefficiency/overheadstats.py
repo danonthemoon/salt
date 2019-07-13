@@ -180,15 +180,17 @@ def overheadstats(sdb, obsdate, update=True):
        if not bids: continue
        else:
            bid=bids[0]
-           selcmd='Block_Id, Barcode'
+           selcmd='Block_Id, Barcode, Grating'
            tabcmd='Block join Pointing using (Block_Id) join Observation using (Pointing_Id) '
            tabcmd+='join TelescopeConfigObsConfig using (Pointing_Id) join ObsConfig on (PlannedObsConfig_Id=ObsConfig_Id) '
            tabcmd+='join RssPatternDetail using (RssPattern_Id) join Rss using (Rss_Id) join RssProcedure using (RssProcedure_Id) '
-           tabcmd+='join RssConfig using (RssConfig_Id) join RssMask using (RssMask_Id)'
+           tabcmd+='join RssConfig using (RssConfig_Id) join RssMask using (RssMask_Id) '
+           tabcmd+='join RssSpectroscopy using (RssSpectroscopy_Id) join RssGrating using (RssGrating_Id) '
            logcmd='RssProcedureType_Id = \'7\' and Block_Id = %i group by Block_Id order by Block_Id' % bid
            mos=sdb.select(selcmd, tabcmd, logcmd)
            if mos:
-               instr='MOS'
+               if not mos[2] == 'N/A':
+                   instr='MOS'
 
        if instr == 'MOS':
            #special case for MOS science acquisition
@@ -289,7 +291,7 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
             # we have FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART,
             # h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id
 
-            # need to
+            # need to GRATING not equal to ’N/A’ , GR-STA not equal to ‘0 - N/A’ and AR-STA not equal to ‘0 - HOME’.
             if img[4]>stime and img[5]=='RSS' and img[10]==bvid:
                return img[4]+datetime.timedelta(seconds=2*3600.0)
 
