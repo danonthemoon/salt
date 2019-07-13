@@ -19,8 +19,8 @@ def resetstats(sdb, obsdate):
       bvid_list.append(b[0])
    #print(bvid_list)
    for bvid in bvid_list:
-      inscmd='SlewTime=0, TrackerSlewTime=0, TargetAcquisitionTime=0'
+      inscmd='SlewTime=None, TrackerSlewTime=None, TargetAcquisitionTime=None'
       sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
-      inscmd='InstrumentAcquisitionTime=0'
+      inscmd='InstrumentAcquisitionTime=None, MOSAcquisitionTime=None'
       sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
    return bvid_list
