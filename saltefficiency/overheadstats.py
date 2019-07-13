@@ -286,6 +286,10 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
            return None'''
     if instr == 'MOS':
         for img in image_list:
+            # we have FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART,
+            # h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id
+
+            # need to
             if img[4]>stime and img[5]=='RSS' and img[10]==bvid:
                return img[4]+datetime.timedelta(seconds=2*3600.0)
 
