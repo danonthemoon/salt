@@ -171,13 +171,13 @@ def overheadstats(sdb, obsdate, update=True):
 
        #get primary instrument, check if MOS
        instr, primary_mode=getprimarymode(img_list, bvid)
+       if instr == 'SALTICAM': continue
 
        select_state= 'Block_Id'
        table_state='BlockVisit'
        logic_state='BlockVisit_Id=%i' % (bvid)
        bids=sdb.select(select_state, table_state, logic_state)
-       if not bids:
-           continue
+       if not bids: continue
        else:
            bid=bids[0]
            selcmd='Block_Id, Barcode'
@@ -206,7 +206,7 @@ def overheadstats(sdb, obsdate, update=True):
           #determine the time between acquisition and first science image
           sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
           if sciencestart is None:
-             print("Did not find science image")
+             print("Did not find science image for BV %i using %s" % (bvid, instr))
              continue
           sciacqtime=sciencestart-scamstart
           if sciacqtime.seconds > 1000: continue
