@@ -88,7 +88,7 @@ def overheadstats(sdb, obsdate, update=True):
 
    #get a list of all data from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
-   select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id, r.GRATING, r.GR-STA, r.AR-STA'
+   select_state+='h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id, r.GRATING, r.GR_STA, r.AR_STA'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) '
    table_state+='join FitsHeaderImage as h using (FileData_Id) join FitsHeaderRss as r using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
@@ -96,7 +96,7 @@ def overheadstats(sdb, obsdate, update=True):
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
-   #print("imgs: " , img_list)
+   print("imgs: " , img_list)
    #get a list of all point commands from the night
    select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
    table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
