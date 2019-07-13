@@ -103,7 +103,7 @@ def overheadstats(sdb, obsdate, update=True):
    table_state+='join FitsHeaderImage as h using (FileData_Id) join FitsHeaderRss as r using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
    logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
-   rss_img_list=sdb.select(select_state, table_state, logic_state)
+   rss_imglist=sdb.select(select_state, table_state, logic_state)
    rss_imglist[:] = [img for img in rss_imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
    print("imgs: " , img_list)
