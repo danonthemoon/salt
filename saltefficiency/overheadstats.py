@@ -86,15 +86,13 @@ def overheadstats(sdb, obsdate, update=True):
       else:
          rej_list.append(b[2])
 
-   #get a list of all images from the night
+   #get a list of all scam images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
-   logic_state="FileName like '%"+formatteddate+"%' and h.INSTRUME = 'SALTICAM' order by UTSTART"
+   logic_state="FileName like '%"+formatteddate+"%' order by UTSTART"
    img_list=sdb.select(select_state, table_state, logic_state)
    img_list[:] = [img for img in img_list if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
-   print("imgs: " , img_list)
-
 
    #get a list of all RSS images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, '
@@ -106,7 +104,6 @@ def overheadstats(sdb, obsdate, update=True):
    rss_imglist=sdb.select(select_state, table_state, logic_state)
    rss_imglist[:] = [img for img in rss_imglist if not "CAL_" in img[1] and not "ENG_" in img[1] and not "JUNK" in img[1]]
 
-   print("imgs: " , img_list)
    #get a list of all point commands from the night
    select_state= 'BlockVisit_Id, EventTime, Block_Id, Target_Name, NightInfo_Id, EventData'
    table_state='PointEvent join SoLogEvent using (SoLogEvent_Id)'
