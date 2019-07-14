@@ -22,7 +22,6 @@ import mysql
 def getnightinfo(sdb, obsdate):
     return sdb.select('NightInfo_Id', 'NightInfo', 'Date=\'%s\'' % obsdate)[0][0]
 
-
 def overheadstats(sdb, obsdate, update=True):
    """Determine the block visit statistics for an observation date.  These
       statistics include slew time, acquisition time, and total science
@@ -309,7 +308,6 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
         if img[4]>stime and img[5]==instr and img[10]==bvid: #img[6]==primary_mode and img[10]==bid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
-
 
 def getprimarymode(image_list, bvid):
    """Determine the primary mode of the science frame for the block

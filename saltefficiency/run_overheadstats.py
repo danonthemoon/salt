@@ -3,7 +3,7 @@ Created July 2019
 
 @author Danny Sallurday
 
-Script to obtain database overhead stats for a given range of observation dates.
+Script to obtain database overhead stats for a given range of observation dates
 
 """
 

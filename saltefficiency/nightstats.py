@@ -62,10 +62,10 @@ def getnightstats(sdb, obsdate):
    mos_slew=[]
    mos_trslew=[]
    mos_acq=[]
-   instrument=''
    rss_count=0
    hrs_count=0
    mos_count=0
+   instrument=''
    bid=''
    for bvid in bvid_list:
        selcmd='INSTRUME'

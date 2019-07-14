@@ -3,7 +3,7 @@ Created July 2019
 
 @author Danny Sallurday
 
-Script to reset database overhead stats to 0 for a given range of observation dates.
+Script to reset database overhead stats to 0 for a given range of observation dates
 
 """
 

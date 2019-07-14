@@ -109,7 +109,6 @@ class mysql:
        cursor.execute(exec_command)
        cursor.execute("COMMIT")
 
-
    def insert(self, insertion, table):
        """Select a record from a table
 
@@ -120,14 +119,12 @@ class mysql:
        table: string
            table or group of tables to select from
 
-
        """
 
        #build the command
        exec_command    =""
        exec_command   +="INSERT INTO "+table
        exec_command   +=" SET  "+insertion
-
 
        #execute the command
        cursor = self.db.cursor()

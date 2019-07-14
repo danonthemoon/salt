@@ -3,7 +3,7 @@ Created July 2019
 
 @author Danny Sallurday
 
-For a given observation date, reset database overhead stats to 0.
+For a given observation date, reset database overhead stats to 0
 
 """
 import sys
