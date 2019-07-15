@@ -100,7 +100,7 @@ def overheadstats(sdb, obsdate, update=True):
 
    #deal with accepted blocks
    for bvid in bvid_list:
-      
+
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
        if pointtime is None:
@@ -116,7 +116,7 @@ def overheadstats(sdb, obsdate, update=True):
        tottime=endtime-starttime
        #some limit to avoid crazy stats
        if tottime.seconds > 10000:
-           print('total too long')
+           print('total too long, took %i s'%tottime.seconds)
            continue
 
        #determine the slew time
@@ -126,7 +126,7 @@ def overheadstats(sdb, obsdate, update=True):
            continue
        slewtime=guidestart-starttime
        if slewtime.seconds > 400:
-           print('slew too long')
+           print('slew too long, took %i s'%slewtime.seconds)
            continue
 
        #determine the time between TrackStart and OnTarget
@@ -136,7 +136,7 @@ def overheadstats(sdb, obsdate, update=True):
            continue
        trackerslewtime=ontarget-guidestart
        if trackerslewtime.seconds > 300:
-           print('trackslew too long')
+           print('trackslew too long, took %i s'%trackerslewtime.seconds)
            continue
 
 
@@ -172,7 +172,7 @@ def overheadstats(sdb, obsdate, update=True):
            mosacq=getfirstimage(rss_imglist, ontarget, instr, primary_mode, bvid)
            mosacqtime=mosacq-ontarget
            if mosacqtime.seconds > 1000:
-               print("MOS Acquisition too long")
+               print("MOS Acquisition too long, took %i s"%mosacqtime.seconds)
                continue
        else:
           #determine the Salticam acquisition time after being on target
@@ -191,7 +191,7 @@ def overheadstats(sdb, obsdate, update=True):
              continue
           sciacqtime=sciencestart-scamstart
           if sciacqtime.seconds > 1000:
-              print("Science Acquisition too long")
+              print("Science Acquisition too long, took %i s"%sciacqtime.seconds)
               continue
 
        #update results in sdb
