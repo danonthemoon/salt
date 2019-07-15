@@ -56,7 +56,6 @@ def overheadstats(sdb, obsdate, update=True):
        else:
           t=datetime.datetime(int(obsdate[0:4]), int(obsdate[5:7]), int(obsdate[8:10]), 0, 0, 0)+datetime.timedelta(days=1)+r[1]
        event_list.append([r[0], t])
-
    #sort the list by the datetimes
    event_list.sort(key=lambda e:e[1])
 
@@ -65,8 +64,6 @@ def overheadstats(sdb, obsdate, update=True):
    tabcmd='Block join BlockVisit using (Block_Id) join Proposal using (Proposal_Id) join ProposalCode on (Proposal.ProposalCode_Id = ProposalCode.ProposalCode_Id)'
    blocks=sdb.select(selcmd, tabcmd, 'NightInfo_Id=%i' % nid)
    blocks=list(blocks)
-   #print(blocks)
-
 
    #list of accepted blocks
    bvid_list=[]
@@ -77,15 +74,15 @@ def overheadstats(sdb, obsdate, update=True):
        else:
           rej_list.append(b[0])
     #list of accepted blocks
-   pid_list=[]
+   """pid_list=[]
    rej_list=[]
    for b in blocks:
       if b[1]==1:
          pid_list.append(b[2])
       else:
          rej_list.append(b[2])
-
-   #get a list of all scam images from the night
+"""
+   #get a list of all images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
    formatteddate = obsdate.replace('-','')
@@ -138,7 +135,7 @@ def overheadstats(sdb, obsdate, update=True):
            print('total too long')
            continue
 
-       propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
+       """propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
        if propcode in pid_list and not (propcode in rej_list):
            blocks = removepropcode(blocks, propcode)
            block_list.append([bvid, starttime, endtime, 0, propcode])
@@ -155,6 +152,7 @@ def overheadstats(sdb, obsdate, update=True):
                      status = getblockrejectreason(sdb, propcode, blocks)
                   block_list.append([bvid, starttime, endtime, status, propcode])
                   blocks = removepropcode(blocks, propcode)
+        """
 
        #determine the slew time
        guidestart=findguidingstart(starttime, event_list)
@@ -234,15 +232,15 @@ def overheadstats(sdb, obsdate, update=True):
    print(bvs_updated)
    print(len(bvid_list))
    return block_list
-
+"""
 def removepropcode(blocks, propcode):
     for b in blocks:
         if b[2]==propcode:
            blocks.remove(b)
            return blocks
     return blocks
-
-def get_blockvisitfrompointtime(sdb, starttime, propcode=None):
+"""
+"""def get_blockvisitfrompointtime(sdb, starttime, propcode=None):
     table = 'PointEvent join SoLogEvent using (SoLogEvent_Id)'
     logic = 'EventTime="{}"'.format(starttime)
     if propcode is not None and propcode!='JUNK' and not propcode.count("CAL_") and not propcode.count("ENG_"):
@@ -252,15 +250,15 @@ def get_blockvisitfrompointtime(sdb, starttime, propcode=None):
     except IndexError:
         bvid = 0
     return bvid
-
-def getblockrejectreason(sdb, propcode, blocks):
-    """Get the reason for the block rejection"""
+"""
+"""def getblockrejectreason(sdb, propcode, blocks):
+    """"""Get the reason for the block rejection""""""
     for b in blocks:
         if propcode == b[2]:
            record = sdb.select('BlockRejectedReason_Id', 'BlockVisit', 'BlockVisit_Id=%i' % b[0])[0][0]
            return record
     return 0
-
+"""
 def getblockvisit(blocks, bid, accept=1):
     for b in blocks:
         if b[3]==bid and b[1]==accept: return b[0]
@@ -273,7 +271,7 @@ def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
     """
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
     for img in image_list:
-        if img[4]>stime and img[5]==instr: #and img[10]==bid:
+        if img[4]>stime and img[5]==instr:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
 
@@ -283,29 +281,13 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
 
     """
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
-    #print(stime, instr, bvid)
-    '''if instr=='RSS':
-        blockscams=[]
-        for img in image_list:
-           if img[10]==bvid and img[5]=='SALTICAM':
-              blockscams.append(img)
-        if len(blockscams)<2:
-           print('not enough scams')
-           return None'''
     if instr == 'MOS':
         for img in image_list:
-            # we have FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART,
-            # h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id
-            # need to GRATING not equal to ’N/A’ , GR-STA not equal to ‘0 - N/A’ and AR-STA not equal to ‘0 - HOME’.
             if img[4]>stime and img[5]=='RSS' and img[10]==bvid:
                 if not img[11]=='N/A' and not img[12]=='0 - N/A' and not img[13]=='0 - HOME':
                     return img[4]+datetime.timedelta(seconds=2*3600.0)
-
-
     for img in image_list:
-        #print(img[4], img[5],img[6],img[10])
-        #print(stime, instr, primary_mode, bid)
-        if img[4]>stime and img[5]==instr and img[10]==bvid: #img[6]==primary_mode and img[10]==bid:
+        if img[4]>stime and img[5]==instr and img[10]==bvid:
            return img[4]+datetime.timedelta(seconds=2*3600.0)
     return None
 
@@ -381,10 +363,10 @@ def findontarget(starttime, event_list):
        if r[0]==18 and r[1]>starttime: return r[1]
    return None
 
-def finddata(img_list, starttime, endtime):
-    """Determine if any data were taken between
+"""def finddata(img_list, starttime, endtime):
+    """"""Determine if any data were taken between
        start time and endtime
-    """
+    """""""
     #convert to UT
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
     etime=endtime-datetime.timedelta(seconds=2*3600.0)
@@ -394,6 +376,7 @@ def finddata(img_list, starttime, endtime):
                return img[1], img[2], img[10], img[5], img[6], img[7], img[3], img[9]
 
     return [None]*8
+    """
 
 def findnextpoint(starttime, record, etime=None):
    """The next pointing occurs either when the next point to target

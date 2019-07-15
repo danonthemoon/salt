@@ -19,7 +19,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 plt.switch_backend('agg')
 
 import run_overheadstats
-from nightstats import getnightstats
+from nightstats import nightstats
 
 if __name__=='__main__':
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
@@ -59,7 +59,7 @@ if __name__=='__main__':
 
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
-       nightstats, rsscount, hrscount, moscount = getnightstats(sdb, obsdate)
+       nightstats, rsscount, hrscount, moscount = nightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or (rsscount==0 and hrscount==0 and moscount==0): continue
        else:
@@ -130,7 +130,7 @@ if __name__=='__main__':
        ax = df.plot(kind="line", stacked=True, figsize=(20,12))
         #plot appearance
        #sum(list(stats[3].values()))/len(stats[3]
-       ax.plot(y=800, color ='black',  label='Mean', linestyle='--') 
+       ax.plot(y=800, color ='black',  label='Mean', linestyle='--')
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1250,50))
        ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
