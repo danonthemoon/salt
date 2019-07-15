@@ -24,7 +24,7 @@ import sdb_mysql as mysql
 
 from overheadstats import getnightinfo
 
-def nightstats(sdb, obsdate):
+def getnightstats(sdb, obsdate):
    """Determine the overhead statistics for a specific observation date.
 
        Parameters
@@ -39,11 +39,11 @@ def nightstats(sdb, obsdate):
    nid=getnightinfo(sdb, obsdate)
 
    #get the list of all block visits on obsdate
-   selcmd='BlockVisit_Id, BlockVisitStatus_Id'
+   selcmd='BlockVisit_Id'
    tabcmd='BlockVisit'
    logcmd='NightInfo_Id=%i and BlockVisitStatus_Id=%i' % (nid, 1)
    blockvisits=sdb.select(selcmd, tabcmd,logcmd)
-   blockvisits=list(blockvisits)
+   blockvisits[:]=[bv[0] for bv in blockvisits]
 
    #iterate through blockvisits to accumulate & obtain median over the accepted blockvisits
    rss_slew=[]

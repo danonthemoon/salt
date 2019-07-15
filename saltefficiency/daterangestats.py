@@ -19,7 +19,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 plt.switch_backend('agg')
 
 import run_overheadstats
-from nightstats import nightstats
+from nightstats import getnightstats
 
 if __name__=='__main__':
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
@@ -59,7 +59,7 @@ if __name__=='__main__':
 
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
-       nightstats, rsscount, hrscount, moscount = nightstats(sdb, obsdate)
+       nightstats, rsscount, hrscount, moscount = getnightstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
        if len(nightstats) == 0 or (rsscount==0 and hrscount==0 and moscount==0): continue
        else:
