@@ -37,6 +37,7 @@ def overheadstats(sdb, obsdate, update=True):
 
    """
    bvs_updated = 0
+   scams=0
    #for a given obsdate get the night info
    nid=getnightinfo(sdb, obsdate)
 
@@ -60,19 +61,11 @@ def overheadstats(sdb, obsdate, update=True):
    event_list.sort(key=lambda e:e[1])
 
    #get the night's list of blocks
-   selcmd='BlockVisit_Id, BlockVisitStatus_Id, Proposal_Code, Block_Id'
-   tabcmd='Block join BlockVisit using (Block_Id) join Proposal using (Proposal_Id) join ProposalCode on (Proposal.ProposalCode_Id = ProposalCode.ProposalCode_Id)'
-   blocks=sdb.select(selcmd, tabcmd, 'NightInfo_Id=%i' % nid)
-   blocks=list(blocks)
-
-   #list of accepted blocks
-   bvid_list=[]
-   rej_list=[]
-   for b in blocks:
-       if b[1]==1:
-          bvid_list.append(b[0])
-       else:
-          rej_list.append(b[0])
+   selcmd='BlockVisit_Id'
+   tabcmd='BlockVisit'
+   logcmd='NightInfo_Id=%i and BlockVisitStatus_Id=%i' % (nid, 1)
+   bvid_list=sdb.select(selcmd, tabcmd, logcmd)
+   bvid_list[:]=[bvid[0] for bvid in bvid_list]
 
    #get a list of all images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
@@ -106,9 +99,8 @@ def overheadstats(sdb, obsdate, update=True):
        point_list.append([p[0], t, p[2], p[3], p[4], p[5]])
 
    #deal with accepted blocks
-   block_list=[]
    for bvid in bvid_list:
-
+      
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
        if pointtime is None:
@@ -153,7 +145,7 @@ def overheadstats(sdb, obsdate, update=True):
        instr, primary_mode=getprimarymode(img_list, bvid)
        if instr == 'SALTICAM':
            print('its a scam!')
-           scam+=1
+           scams+=1
            continue
 
        select_state= 'Block_Id'
@@ -190,7 +182,7 @@ def overheadstats(sdb, obsdate, update=True):
              continue
           acqtime=scamstart-ontarget
           if acqtime.seconds > 1000:
-              print("Target Acquisition too long")
+              print("Target Acquisition too long, took %i s"%acqtime.seconds)
               continue
           #determine the time between acquisition and first science image
           sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
@@ -216,7 +208,7 @@ def overheadstats(sdb, obsdate, update=True):
 
    print(bvs_updated)
    print(len(bvid_list)-scams)
-   return block_list
+   return bvid_list
 
 def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
     """Determine the first image of a list that has that
