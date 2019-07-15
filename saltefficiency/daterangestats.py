@@ -127,7 +127,7 @@ if __name__=='__main__':
        stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
        #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
-       ax = df.plot(kind="line", stacked=True, figsize=(8.27,11.69))
+       ax = df.plot(kind="line", stacked=True, figsize=(20,12))
         #plot appearance 
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1250,50))
