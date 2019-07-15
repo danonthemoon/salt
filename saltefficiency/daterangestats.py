@@ -128,7 +128,8 @@ if __name__=='__main__':
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
        #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
        ax = df.plot(kind="kde", stacked=True, figsize=(20,12))
-        #plot appearance 
+        #plot appearance
+       mean_line = ax.plot(y=sum(list(stats[3].values()))/len(stats[0]), label='Mean', linestyle='--') 
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1250,50))
        ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
