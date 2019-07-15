@@ -129,7 +129,8 @@ if __name__=='__main__':
        #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
        ax = df.plot(kind="line", stacked=True, figsize=(20,12))
         #plot appearance
-       ax.plot(y=sum(list(stats[3].values()))/len(stats[3]), color ='black',  label='Mean', linestyle='--') 
+       #sum(list(stats[3].values()))/len(stats[3]
+       ax.plot(y=800, color ='black',  label='Mean', linestyle='--') 
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1250,50))
        ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
