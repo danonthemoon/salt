@@ -41,6 +41,7 @@ if __name__=='__main__':
    mos_slewtimes=[]
    mos_trslewtimes=[]
    mos_acqtimes=[]
+   """
    rss_slewavgs={}
    rss_trslewavgs={}
    rss_tacqavgs={}
@@ -52,6 +53,7 @@ if __name__=='__main__':
    mos_slewavgs={}
    mos_trslewavgs={}
    mos_acqavgs={}
+   """
    nights=0
    rssblocks=0
    hrsblocks=0
@@ -67,32 +69,32 @@ if __name__=='__main__':
           rss_trslewtimes.extend(nightstats[1])
           rss_targetacqtimes.extend(nightstats[2])
           rss_instracqtimes.extend(nightstats[3])
-          if not rsscount == 0:
+          """if not rsscount == 0:
               rss_slewavgs.update({'%s' % obsdate : sum(nightstats[0])/rsscount})
               rss_trslewavgs.update({'%s' % obsdate : sum(nightstats[1])/rsscount})
               rss_tacqavgs.update({'%s' % obsdate : sum(nightstats[2])/rsscount})
               rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})
-              rssblocks+=rsscount
+              rssblocks+=rsscount"""
 
           hrs_slewtimes.extend(nightstats[4])
           hrs_trslewtimes.extend(nightstats[5])
           hrs_targetacqtimes.extend(nightstats[6])
           hrs_instracqtimes.extend(nightstats[7])
-          if not hrscount == 0:
+          """if not hrscount == 0:
               hrs_slewavgs.update({'%s' % obsdate : sum(nightstats[4])/hrscount})
               hrs_trslewavgs.update({'%s' % obsdate : sum(nightstats[5])/hrscount})
               hrs_tacqavgs.update({'%s' % obsdate : sum(nightstats[6])/hrscount})
               hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})
-              hrsblocks+=hrscount
+              hrsblocks+=hrscount"""
 
           mos_slewtimes.extend(nightstats[8])
           mos_trslewtimes.extend(nightstats[9])
           mos_acqtimes.extend(nightstats[10])
-          if not moscount == 0:
+          """if not moscount == 0:
               mos_slewavgs.update({'%s' % obsdate : sum(nightstats[8])/moscount})
               mos_trslewavgs.update({'%s' % obsdate : sum(nightstats[9])/moscount})
               mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})
-              mosblocks+=moscount
+              mosblocks+=moscount"""
           nights+=1
 
    if nights == 0:
@@ -122,7 +124,7 @@ if __name__=='__main__':
           mos_stats.update({'3. Target Acquisition': 0})
           mos_stats.update({'5. MOS Acquisition': 0})
 
-   with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+   """with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
@@ -139,9 +141,10 @@ if __name__=='__main__':
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
+       """
 
    #produce a pdf with the relevant stats, separated by instrument
-   """with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+   with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_stats, hrs_stats, mos_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
@@ -209,5 +212,3 @@ if __name__=='__main__':
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
-
-       """

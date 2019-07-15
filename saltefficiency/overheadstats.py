@@ -139,7 +139,6 @@ def overheadstats(sdb, obsdate, update=True):
            print('trackslew too long, took %i s'%trackerslewtime.seconds)
            continue
 
-
        #get primary instrument, check if MOS
        scams=0
        instr, primary_mode=getprimarymode(img_list, bvid)
