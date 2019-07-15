@@ -64,41 +64,35 @@ if __name__=='__main__':
        if len(nightstats) == 0 or (rsscount==0 and hrscount==0 and moscount==0): continue
        else:
           rss_slewtimes.extend(nightstats[0])
-          rss_slewavgs.update({'%s' % obsdate : sum(nightstats[0])/rsscount})
-
           rss_trslewtimes.extend(nightstats[1])
-          rss_trslewavgs.update({'%s' % obsdate : sum(nightstats[1])/rsscount})
-
           rss_targetacqtimes.extend(nightstats[2])
-          rss_tacqavgs.update({'%s' % obsdate : sum(nightstats[2])/rsscount})
-
           rss_instracqtimes.extend(nightstats[3])
-          rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})
+          if not rsscount == 0:
+              rss_slewavgs.update({'%s' % obsdate : sum(nightstats[0])/rsscount})
+              rss_trslewavgs.update({'%s' % obsdate : sum(nightstats[1])/rsscount})
+              rss_tacqavgs.update({'%s' % obsdate : sum(nightstats[2])/rsscount})
+              rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})
+              rssblocks+=rsscount
 
           hrs_slewtimes.extend(nightstats[4])
-          hrs_slewavgs.update({'%s' % obsdate : sum(nightstats[4])/hrscount})
-
           hrs_trslewtimes.extend(nightstats[5])
-          hrs_trslewavgs.update({'%s' % obsdate : sum(nightstats[5])/hrscount})
-
           hrs_targetacqtimes.extend(nightstats[6])
-          hrs_tacqavgs.update({'%s' % obsdate : sum(nightstats[6])/hrscount})
-
           hrs_instracqtimes.extend(nightstats[7])
-          hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})
+          if not hrscount == 0:
+              hrs_slewavgs.update({'%s' % obsdate : sum(nightstats[4])/hrscount})
+              hrs_trslewavgs.update({'%s' % obsdate : sum(nightstats[5])/hrscount})
+              hrs_tacqavgs.update({'%s' % obsdate : sum(nightstats[6])/hrscount})
+              hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})
+              hrsblocks+=hrscount
 
           mos_slewtimes.extend(nightstats[8])
-          mos_slewavgs.update({'%s' % obsdate : sum(nightstats[8])/moscount})
-
           mos_trslewtimes.extend(nightstats[9])
-          mos_trslewavgs.update({'%s' % obsdate : sum(nightstats[9])/moscount})
-
           mos_acqtimes.extend(nightstats[10])
-          mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})
-
-          rssblocks+=rsscount
-          hrsblocks+=hrscount
-          mosblocks+=moscount
+          if not moscount == 0:
+              mos_slewavgs.update({'%s' % obsdate : sum(nightstats[8])/moscount})
+              mos_trslewavgs.update({'%s' % obsdate : sum(nightstats[9])/moscount})
+              mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})
+              mosblocks+=moscount
           nights+=1
 
    if nights == 0:
