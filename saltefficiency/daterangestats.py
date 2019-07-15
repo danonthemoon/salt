@@ -74,7 +74,8 @@ if __name__=='__main__':
               rss_trslewavgs.update({'%s' % obsdate : sum(nightstats[1])/rsscount})
               rss_tacqavgs.update({'%s' % obsdate : sum(nightstats[2])/rsscount})
               rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})
-              rssblocks+=rsscount"""
+          """
+          rssblocks+=rsscount
 
           hrs_slewtimes.extend(nightstats[4])
           hrs_trslewtimes.extend(nightstats[5])
@@ -85,7 +86,8 @@ if __name__=='__main__':
               hrs_trslewavgs.update({'%s' % obsdate : sum(nightstats[5])/hrscount})
               hrs_tacqavgs.update({'%s' % obsdate : sum(nightstats[6])/hrscount})
               hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})
-              hrsblocks+=hrscount"""
+          """
+          hrsblocks+=hrscount
 
           mos_slewtimes.extend(nightstats[8])
           mos_trslewtimes.extend(nightstats[9])
@@ -94,7 +96,8 @@ if __name__=='__main__':
               mos_slewavgs.update({'%s' % obsdate : sum(nightstats[8])/moscount})
               mos_trslewavgs.update({'%s' % obsdate : sum(nightstats[9])/moscount})
               mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})
-              mosblocks+=moscount"""
+          """
+          mosblocks+=moscount
           nights+=1
 
    if nights == 0:
