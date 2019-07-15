@@ -73,15 +73,7 @@ def overheadstats(sdb, obsdate, update=True):
           bvid_list.append(b[0])
        else:
           rej_list.append(b[0])
-    #list of accepted blocks
-   """pid_list=[]
-   rej_list=[]
-   for b in blocks:
-      if b[1]==1:
-         pid_list.append(b[2])
-      else:
-         rej_list.append(b[2])
-"""
+
    #get a list of all images from the night
    select_state='FileName, Proposal_Code, Target_Name, ExposureTime, UTSTART, h.INSTRUME, h.OBSMODE, h.DETMODE, h.CCDTYPE, NExposures, BlockVisit_Id'
    table_state='FileData  Join ProposalCode on (FileData.ProposalCode_Id = ProposalCode.ProposalCode_Id) join FitsHeaderImage as h using (FileData_Id)'
@@ -135,39 +127,20 @@ def overheadstats(sdb, obsdate, update=True):
            print('total too long')
            continue
 
-       """propcode, target, bid, instr, obsmode, detmode, exptime, nexposure = finddata(img_list, starttime, endtime)
-       if propcode in pid_list and not (propcode in rej_list):
-           blocks = removepropcode(blocks, propcode)
-           block_list.append([bvid, starttime, endtime, 0, propcode])
-       elif propcode in rej_list and not (propcode in pid_list):
-           status = getblockrejectreason(sdb, propcode, blocks)
-           block_list.append([bvid, starttime, endtime, status, propcode])
-       elif propcode in pid_list and propcode in rej_list:
-           #get the first block with the propcode
-           for b in blocks:
-               if b[0]==bvid:
-                  if b[1]==1:
-                     status=0
-                  else:
-                     status = getblockrejectreason(sdb, propcode, blocks)
-                  block_list.append([bvid, starttime, endtime, status, propcode])
-                  blocks = removepropcode(blocks, propcode)
-        """
-
        #determine the slew time
        guidestart=findguidingstart(starttime, event_list)
        if guidestart is None:
            print('no trackstart')
            continue
        slewtime=guidestart-starttime
-       if slewtime.seconds > 1200:
+       if slewtime.seconds > 400:
            print('slew too long')
            continue
 
        #determine the time between TrackStart and OnTarget
        ontarget=findontarget(starttime, event_list)
        if ontarget is None:
-           print('no acq')
+           print('no on target?')
            continue
        trackerslewtime=ontarget-guidestart
        if trackerslewtime.seconds > 300:
@@ -177,13 +150,17 @@ def overheadstats(sdb, obsdate, update=True):
 
        #get primary instrument, check if MOS
        instr, primary_mode=getprimarymode(img_list, bvid)
-       if instr == 'SALTICAM': continue
+       if instr == 'SALTICAM':
+           print('its a scam!')
+           continue
 
        select_state= 'Block_Id'
        table_state='BlockVisit'
        logic_state='BlockVisit_Id=%i' % (bvid)
        bids=sdb.select(select_state, table_state, logic_state)
-       if not bids: continue
+       if not bids:
+           print("no bid!")
+           continue
        else:
            bid=bids[0]
            selcmd='Block_Id, Barcode'
@@ -200,7 +177,9 @@ def overheadstats(sdb, obsdate, update=True):
            #special case for MOS science acquisition
            mosacq=getfirstimage(rss_imglist, ontarget, instr, primary_mode, bvid)
            mosacqtime=mosacq-ontarget
-           if mosacqtime.seconds > 1000: continue
+           if mosacqtime.seconds > 1000:
+               print("MOS Acquisition too long")
+               continue
        else:
           #determine the Salticam acquisition time after being on target
           scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
@@ -208,14 +187,18 @@ def overheadstats(sdb, obsdate, update=True):
              print("Did not find SCAM image")
              continue
           acqtime=scamstart-ontarget
-          if acqtime.seconds > 1000: continue
+          if acqtime.seconds > 1000:
+              print("Target Acquisition too long")
+              continue
           #determine the time between acquisition and first science image
           sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
           if sciencestart is None:
              print("Did not find science image for BV %i using %s" % (bvid, instr))
              continue
           sciacqtime=sciencestart-scamstart
-          if sciacqtime.seconds > 1000: continue
+          if sciacqtime.seconds > 1000:
+              print("Science Acquisition too long")
+              continue
 
        #update results in sdb
        if update:
@@ -232,37 +215,6 @@ def overheadstats(sdb, obsdate, update=True):
    print(bvs_updated)
    print(len(bvid_list))
    return block_list
-"""
-def removepropcode(blocks, propcode):
-    for b in blocks:
-        if b[2]==propcode:
-           blocks.remove(b)
-           return blocks
-    return blocks
-"""
-"""def get_blockvisitfrompointtime(sdb, starttime, propcode=None):
-    table = 'PointEvent join SoLogEvent using (SoLogEvent_Id)'
-    logic = 'EventTime="{}"'.format(starttime)
-    if propcode is not None and propcode!='JUNK' and not propcode.count("CAL_") and not propcode.count("ENG_"):
-        logic += ' and Proposal_Code="{}"'.format(propcode)
-    try:
-        bvid = sdb.select('BlockVisit_Id', table, logic)[0][0]
-    except IndexError:
-        bvid = 0
-    return bvid
-"""
-"""def getblockrejectreason(sdb, propcode, blocks):
-    """"""Get the reason for the block rejection""""""
-    for b in blocks:
-        if propcode == b[2]:
-           record = sdb.select('BlockRejectedReason_Id', 'BlockVisit', 'BlockVisit_Id=%i' % b[0])[0][0]
-           return record
-    return 0
-"""
-def getblockvisit(blocks, bid, accept=1):
-    for b in blocks:
-        if b[3]==bid and b[1]==accept: return b[0]
-    return None
 
 def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
     """Determine the first image of a list that has that
@@ -348,14 +300,6 @@ def findguidingstart(starttime, event_list):
        if r[0]==5 and r[1]>starttime: return r[1]
    return None
 
-def findguidingstop(starttime, event_list):
-   """Determine when guiding stops from the next guiding command
-      in the event list
-   """
-   for r in event_list:
-       if r[0]==6 and r[1]+datetime.timedelta(seconds=0)>starttime: return r[1]
-   return None
-
 def findontarget(starttime, event_list):
    """Determine when the guider first gets on target
    """
@@ -363,25 +307,10 @@ def findontarget(starttime, event_list):
        if r[0]==18 and r[1]>starttime: return r[1]
    return None
 
-"""def finddata(img_list, starttime, endtime):
-    """"""Determine if any data were taken between
-       start time and endtime
-    """""""
-    #convert to UT
-    stime=starttime-datetime.timedelta(seconds=2*3600.0)
-    etime=endtime-datetime.timedelta(seconds=2*3600.0)
-    for img in img_list:
-       if img[4] is not None:
-           if img[4]>stime and img[4]<etime and img[2] not in ['ARC', 'FLAT']:
-               return img[1], img[2], img[10], img[5], img[6], img[7], img[3], img[9]
-
-    return [None]*8
-    """
-
-def findnextpoint(starttime, record, etime=None):
-   """The next pointing occurs either when the next point to target
-      command happens
+def findguidingstop(starttime, event_list):
+   """Determine when guiding stops from the next guiding command
+      in the event list
    """
-   for r in record:
-       if r[0]==3 and r[1]>starttime: return r[1]
-   return etime
+   for r in event_list:
+       if r[0]==6 and r[1]+datetime.timedelta(seconds=0)>starttime: return r[1]
+   return None
