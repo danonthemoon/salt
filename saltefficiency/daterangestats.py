@@ -125,7 +125,7 @@ if __name__=='__main__':
    with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
-       df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
+       df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
        #df.index = ['obsdate']
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
         #plot appearance
