@@ -126,9 +126,9 @@ if __name__=='__main__':
        #plot RSS and HRS stats as different bars
        stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
-       #df.index = ['obsdate']
-       ax = df.plot(kind="hist", stacked=True, figsize=(8.27,11.69))
-        #plot appearance
+       #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
+       ax = df.plot(kind="line", stacked=True, figsize=(8.27,11.69))
+        #plot appearance 
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1250,50))
        ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
