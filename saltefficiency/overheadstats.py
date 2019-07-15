@@ -149,9 +149,11 @@ def overheadstats(sdb, obsdate, update=True):
 
 
        #get primary instrument, check if MOS
+       scams=0
        instr, primary_mode=getprimarymode(img_list, bvid)
        if instr == 'SALTICAM':
            print('its a scam!')
+           scam+=1
            continue
 
        select_state= 'Block_Id'
@@ -213,7 +215,7 @@ def overheadstats(sdb, obsdate, update=True):
                sdb.update(inscmd, 'BlockVisit', 'BlockVisit_Id=%i' % bvid)
 
    print(bvs_updated)
-   print(len(bvid_list))
+   print(len(bvid_list)-scams)
    return block_list
 
 def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
