@@ -41,10 +41,22 @@ if __name__=='__main__':
    mos_slewtimes=[]
    mos_trslewtimes=[]
    mos_acqtimes=[]
+   rss_slewavgs={}
+   rss_trslewavgs={}
+   rss_tacqavgs={}
+   rss_iacqavgs={}
+   hrs_slewavgs={}
+   hrs_trslewavgs={}
+   hrs_tacqavgs={}
+   hrs_iacqavgs={}
+   mos_slewavgs={}
+   mos_trslewavgs={}
+   mos_acqavgs={}
    nights=0
    rssblocks=0
    hrsblocks=0
    mosblocks=0
+
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
        nightstats, rsscount, hrscount, moscount = getnightstats(sdb, obsdate)
@@ -52,24 +64,47 @@ if __name__=='__main__':
        if len(nightstats) == 0 or (rsscount==0 and hrscount==0 and moscount==0): continue
        else:
           rss_slewtimes.extend(nightstats[0])
+          rss_slewavgs.update(obsdate : sum(nightstats[0])/rsscount)
+
           rss_trslewtimes.extend(nightstats[1])
+          rss_trslewavgs.update(obsdate : sum(nightstats[1])/rsscount)
+
           rss_targetacqtimes.extend(nightstats[2])
+          rss_tacqavgs.update(obsdate : sum(nightstats[2])/rsscount)
+
           rss_instracqtimes.extend(nightstats[3])
+          rss_iacqavgs.update(obsdate : sum(nightstats[3])/rsscount)
+
           hrs_slewtimes.extend(nightstats[4])
+          hrs_slewavgs.update(obsdate : sum(nightstats[4])/hrscount)
+
           hrs_trslewtimes.extend(nightstats[5])
+          hrs_trslewavgs.update(obsdate : sum(nightstats[5])/hrscount)
+
           hrs_targetacqtimes.extend(nightstats[6])
+          hrs_tacqavgs.update(obsdate : sum(nightstats[6])/hrscount)
+
           hrs_instracqtimes.extend(nightstats[7])
+          hrs_iacqavgs.update(obsdate : sum(nightstats[7])/hrscount)
+
           mos_slewtimes.extend(nightstats[8])
+          mos_slewavgs.update(obsdate : sum(nightstats[8])/moscount)
+
           mos_trslewtimes.extend(nightstats[9])
+          mos_trslewavgs.update(obsdate : sum(nightstats[9])/moscount)
+
           mos_acqtimes.extend(nightstats[10])
-       rssblocks+=rsscount
-       hrsblocks+=hrscount
-       mosblocks+=moscount
-       nights+=1
+          mos_acqavgs.update(obsdate : sum(nightstats[10])/moscount)
+
+          rssblocks+=rsscount
+          hrsblocks+=hrscount
+          mosblocks+=moscount
+          nights+=1
+
    if nights == 0:
        print("No valid observation nights within this range. Make sure format is yyyymmdd yyyymmdd.")
    else:
-       print('Data taken from %i RSS blocks, %i HRS blocks, %i MOS blocks' % (rssblocks, hrsblocks, mosblocks))
+       print('Data taken from %i RSS blocks, %i HRS blocks, %i MOS blocks over %i observation nights' % (rssblocks, hrsblocks, mosblocks, nights))
        rss_stats = {}
        hrs_stats = {}
        mos_stats = {}
@@ -78,7 +113,7 @@ if __name__=='__main__':
           rss_stats.update({'2. Tracker Slew' : median(rss_trslewtimes)})
           rss_stats.update({'3. Target Acquisition': median(rss_targetacqtimes)})
           rss_stats.update({'4. Instrument Acquisition': median(rss_instracqtimes)})
-       if not rssblocks==0:
+       if not hrsblocks==0:
           hrs_stats.update({'1. Slew' : median(hrs_slewtimes)})
           hrs_stats.update({'2. Tracker Slew' : median(hrs_trslewtimes)})
           hrs_stats.update({'3. Target Acquisition': median(hrs_targetacqtimes)})
@@ -93,9 +128,24 @@ if __name__=='__main__':
           mos_stats.update({'3. Target Acquisition': 0})
           mos_stats.update({'5. MOS Acquisition': 0})
 
+   with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+       #plot RSS and HRS stats as different bars
+       stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
+       df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
+       df.index = ['obsdate']
+       ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
+        #plot appearance
+       ax.set_ylabel("Time (s)", fontweight='bold')
+       ax.set_yticks(np.arange(0,1250,50))
+       ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
+       ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
+       ax.legend(loc=2, fontsize=12)
+       pdf.savefig() # saves the current figure into a pdf page
+       plt.show()
+       plt.close()
 
    #produce a pdf with the relevant stats, separated by instrument
-   with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+   """with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        stats = [rss_stats, hrs_stats, mos_stats]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0).T
@@ -163,3 +213,5 @@ if __name__=='__main__':
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
+
+       """
