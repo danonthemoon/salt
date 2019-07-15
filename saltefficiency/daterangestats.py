@@ -127,7 +127,7 @@ if __name__=='__main__':
        stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
        #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
-       ax = df.plot(kind="kde", stacked=True, figsize=(20,12))
+       ax = df.plot(kind="line", stacked=True, figsize=(20,12))
         #plot appearance
        mean_line = ax.plot(y=sum(list(stats[3].values()))/len(stats[0]), label='Mean', linestyle='--') 
        ax.set_ylabel("Time (s)", fontweight='bold')
