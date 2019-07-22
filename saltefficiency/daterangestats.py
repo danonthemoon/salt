@@ -130,7 +130,22 @@ if __name__=='__main__':
    with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
        #print(rss_tacqavgs.values())
-       plt.hist(list(rss_tacqavgs.values()),20)
+       subplot(2,2,1)
+       plt.hist(list(rss_tacqavgs.values()),25,'-r')
+       plt.set_title("RSS Target Acquisition")
+
+       subplot(2,2,2)
+       plt.hist(list(rss_iacqavgs.values()),25)
+       plt.set_title("RSS Instrument Acquisition")
+
+
+       subplot(2,2,3)
+       plt.hist(list(hrs_tacqavgs.values()),25,'-r')
+       plt.set_title("HRS Target Acquisition")
+
+       subplot(2,2,4)
+       plt.hist(list(hrs_iacqavgs.values()),25)
+       plt.set_title("HRS Instrument Acquisition")
 
 
        """
