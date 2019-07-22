@@ -129,10 +129,12 @@ if __name__=='__main__':
 
    with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot RSS and HRS stats as different bars
-       plt.hist(rss_tacqavgs,20)
+       #print(rss_tacqavgs.values())
+       plt.hist(list(rss_tacqavgs.values()),20)
 
 
-    """stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
+       """
+       stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
        df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
        #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
        ax = df.plot(kind="line", stacked=True, figsize=(20,12))
@@ -144,7 +146,7 @@ if __name__=='__main__':
        ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
        ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        ax.legend(loc=2, fontsize=12)
-    """
+       """
 
 
        pdf.savefig() # saves the current figure into a pdf page
