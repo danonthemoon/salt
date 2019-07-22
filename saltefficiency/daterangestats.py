@@ -16,6 +16,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statistics import median
 from matplotlib.backends.backend_pdf import PdfPages
+from pylab import *
 plt.switch_backend('agg')
 
 import run_overheadstats
@@ -131,21 +132,21 @@ if __name__=='__main__':
        #plot RSS and HRS stats as different bars
        #print(rss_tacqavgs.values())
        subplot(2,2,1)
-       plt.hist(list(rss_tacqavgs.values()),25,'-r')
-       plt.set_title("RSS Target Acquisition")
+       plt.hist(list(rss_tacqavgs.values()),25)
+       title("RSS Target Acquisition")
 
        subplot(2,2,2)
        plt.hist(list(rss_iacqavgs.values()),25)
-       plt.set_title("RSS Instrument Acquisition")
+       title("RSS Instrument Acquisition")
 
 
        subplot(2,2,3)
-       plt.hist(list(hrs_tacqavgs.values()),25,'-r')
-       plt.set_title("HRS Target Acquisition")
+       plt.hist(list(hrs_tacqavgs.values()),25)
+       title("HRS Target Acquisition")
 
        subplot(2,2,4)
        plt.hist(list(hrs_iacqavgs.values()),25)
-       plt.set_title("HRS Instrument Acquisition")
+       title("HRS Instrument Acquisition")
 
 
        """
@@ -178,7 +179,7 @@ if __name__=='__main__':
        ax = df.plot(kind="bar", stacked=True, figsize=(8.27,11.69))
 
        #label the bar splits and totals
-       rsstotal = sum(rss_stats.values())
+       rsstotal = sum(list(rss_stats.values()))
        ax.text(0, rsstotal+20, str(int(rsstotal))+' (total)', fontsize=14, horizontalalignment='center', color='black', fontweight='bold')
        rslew = rss_stats.get("1. Slew")
        rtrsl = rss_stats.get("2. Tracker Slew")
@@ -193,7 +194,7 @@ if __name__=='__main__':
        ax.text(0, rtacq_height, str(int(rtacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
        ax.text(0, riacq_height, str(int(riacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
-       hrstotal = sum(hrs_stats.values())
+       hrstotal = sum(list(hrs_stats.values()))
        ax.text(1, hrstotal+20, str(int(hrstotal))+' (total)', fontsize=14, horizontalalignment='center', color='black', fontweight='bold')
        hslew = hrs_stats.get("1. Slew")
        htrsl = hrs_stats.get("2. Tracker Slew")
@@ -209,7 +210,7 @@ if __name__=='__main__':
        ax.text(1, hiacq_height, str(int(hiacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
        if not mosblocks==0:
-           mostotal = sum(mos_stats.values())
+           mostotal = sum(list(mos_stats.values()))
            ax.text(2, mostotal+20, str(int(mostotal))+' (total)', fontsize=14, horizontalalignment='center', color='black', fontweight='bold')
            mslew = mos_stats.get("1. Slew")
            mtrsl = mos_stats.get("2. Tracker Slew")
