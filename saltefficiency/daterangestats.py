@@ -132,19 +132,27 @@ if __name__=='__main__':
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
        plt.hist(list(rss_tacqavgs.values()),25,range=(0,700),color='r')
-       title("RSS Target Acquisition",fontsize=12)
+       xticks(fontsize=12)
+       yticks(fontsize=12)
+       title("RSS Target Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,2)
        plt.hist(list(rss_iacqavgs.values()),25,range=(0,700),color='c')
-       title("RSS Instrument Acquisition")
+       xticks(fontsize=12)
+       yticks(fontsize=12)
+       title("RSS Instrument Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,3)
        plt.hist(list(hrs_tacqavgs.values()),25,range=(0,700),color='r')
-       title("HRS Target Acquisition",fontsize=12)
+       xticks(fontsize=12)
+       yticks(fontsize=12)
+       title("HRS Target Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,4)
        plt.hist(list(hrs_iacqavgs.values()),25,range=(0,700),color='c')
-       title("HRS Instrument Acquisition")
+       xticks(fontsize=12)
+       yticks(fontsize=12)
+       title("HRS Instrument Acquisition",fontsize=12,fontweight='bold')
 
        plt.suptitle('Acquisition Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        pdf.savefig() # saves the current figure into a pdf page
