@@ -128,43 +128,25 @@ if __name__=='__main__':
           mos_stats.update({'3. Target Acquisition': 0})
           mos_stats.update({'5. MOS Acquisition': 0})
 
-   with PdfPages('rssstats-%s-%s.pdf' % (sdate, edate)) as pdf:
-       #plot RSS and HRS stats as different bars
-       #print(rss_tacqavgs.values())
+   with PdfPages('acqstats-%s-%s.pdf' % (sdate, edate)) as pdf:
+       #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
-       plt.hist(list(rss_tacqavgs.values()),25)
-       title("RSS Target Acquisition")
+       plt.hist(list(rss_tacqavgs.values()),25,range=(0,700),color='r')
+       title("RSS Target Acquisition",fontsize=12)
 
        subplot(2,2,2)
-       plt.hist(list(rss_iacqavgs.values()),25)
+       plt.hist(list(rss_iacqavgs.values()),25,range=(0,700),color='c')
        title("RSS Instrument Acquisition")
 
-
        subplot(2,2,3)
-       plt.hist(list(hrs_tacqavgs.values()),25)
-       title("HRS Target Acquisition")
+       plt.hist(list(hrs_tacqavgs.values()),25,range=(0,700),color='r')
+       title("HRS Target Acquisition",fontsize=12)
 
        subplot(2,2,4)
-       plt.hist(list(hrs_iacqavgs.values()),25)
+       plt.hist(list(hrs_iacqavgs.values()),25,range=(0,700),color='c')
        title("HRS Instrument Acquisition")
 
-
-       """
-       stats = [rss_slewavgs, rss_trslewavgs, rss_tacqavgs, rss_iacqavgs]
-       df = pd.concat([pd.Series(d) for d in stats], axis=1).fillna(0)
-       #df.index = ['Slew', 'Tracker Slew','Target Acquisition', 'Instrument Acquisition']
-       ax = df.plot(kind="line", stacked=True, figsize=(20,12))
-        #plot appearance
-       #sum(list(stats[3].values()))/len(stats[3]
-       ax.plot(y=800, color ='black',  label='Mean', linestyle='--')
-       ax.set_ylabel("Time (s)", fontweight='bold')
-       ax.set_yticks(np.arange(0,1250,50))
-       ax.set_xticklabels('obs', rotation='vertical', fontweight='bold')
-       ax.set_title('Overhead Statistics for %s to %s' % (sdate,edate),fontweight='bold')
-       ax.legend(loc=2, fontsize=12)
-       """
-
-
+       plt.suptitle('Acquisition Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
