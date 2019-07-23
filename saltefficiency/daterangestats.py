@@ -137,7 +137,7 @@ if __name__=='__main__':
        text(median(rss_targetacqtimes)+30, ymax - ymax/8, 'Median: %i' % median(rss_targetacqtimes), fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
-       title("RSS Target Acquisition",fontsize=12,fontweight='bold')
+       title("RSS Target Acquisition (%i blocks)" % rssblocks,fontsize=12,fontweight='bold')
 
        subplot(2,2,2)
        plt.hist(rss_instracqtimes,30,range=(0,700),color='c')
@@ -146,7 +146,7 @@ if __name__=='__main__':
        text(median(rss_instracqtimes)+30, ymax - ymax/8, 'Median: %i' % median(rss_instracqtimes), fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
-       title("RSS Instrument Acquisition",fontsize=12,fontweight='bold')
+       title("RSS Instrument Acquisition (%i blocks)" % rssblocks,fontsize=12,fontweight='bold')
 
        subplot(2,2,3)
        plt.hist(hrs_targetacqtimes,30,range=(0,700),color='r')
@@ -155,7 +155,7 @@ if __name__=='__main__':
        text(median(hrs_targetacqtimes)+30, ymax - ymax/8, 'Median: %i' % median(hrs_targetacqtimes),fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
-       title("HRS Target Acquisition",fontsize=12,fontweight='bold')
+       title("HRS Target Acquisition (%i blocks)" % hrsblocks,fontsize=12,fontweight='bold')
 
        subplot(2,2,4)
        plt.hist(hrs_instracqtimes,30,range=(0,700),color='c')
@@ -164,7 +164,7 @@ if __name__=='__main__':
        text(median(hrs_instracqtimes)+30, ymax - ymax/8, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
-       title("HRS Instrument Acquisition",fontsize=12,fontweight='bold')
+       title("HRS Instrument Acquisition (%i blocks)" % hrsblocks,fontsize=12,fontweight='bold')
 
        plt.suptitle('Acquisition Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        pdf.savefig() # saves the current figure into a pdf page
