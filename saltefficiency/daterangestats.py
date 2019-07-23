@@ -43,7 +43,7 @@ if __name__=='__main__':
    mos_trslewtimes=[]
    mos_acqtimes=[]
 
-   rss_slewavgs={}
+   """rss_slewavgs={}
    rss_trslewavgs={}
    rss_tacqavgs={}
    rss_iacqavgs={}
@@ -53,7 +53,7 @@ if __name__=='__main__':
    hrs_iacqavgs={}
    mos_slewavgs={}
    mos_trslewavgs={}
-   mos_acqavgs={}
+   mos_acqavgs={}"""
 
    nights=0
    rssblocks=0
@@ -131,29 +131,37 @@ if __name__=='__main__':
    with PdfPages('acqstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
-       plt.hist(rss_targetacqtimes,25,range=(0,700),color='r')
+       plt.hist(rss_targetacqtimes,30,range=(0,700),color='r')
        axvline(median(rss_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(rss_targetacqtimes)+50, ymax - (ymax/10), 'Median: %i' % median(rss_targetacqtimes))
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("RSS Target Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,2)
-       plt.hist(rss_instracqtimes,25,range=(0,700),color='c')
+       plt.hist(rss_instracqtimes,30,range=(0,700),color='c')
        axvline(median(rss_instracqtimes), color='k', linestyle='dashed', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(rss_instracqtimes)+50, ymax - (ymax/10), 'Median: %i' % median(rss_targetacqtimes))
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("RSS Instrument Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,3)
-       plt.hist(hrs_targetacqtimes,25,range=(0,700),color='r')
+       plt.hist(hrs_targetacqtimes,30,range=(0,700),color='r')
        axvline(median(hrs_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(hrs_targetacqtimes)+50, ymax - (ymax/10), 'Median: %i' % median(rss_targetacqtimes))
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("HRS Target Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,4)
-       plt.hist(hrs_instracqtimes,25,range=(0,700),color='c')
+       plt.hist(hrs_instracqtimes,30,range=(0,700),color='c')
        axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(hrs_instracqtimes)+50, ymax - (ymax/10), 'Median: %i' % median(rss_targetacqtimes))
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("HRS Instrument Acquisition",fontsize=12,fontweight='bold')
