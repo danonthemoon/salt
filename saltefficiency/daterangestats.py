@@ -70,11 +70,11 @@ if __name__=='__main__':
           rss_trslewtimes.extend(nightstats[1])
           rss_targetacqtimes.extend(nightstats[2])
           rss_instracqtimes.extend(nightstats[3])
-          if not rsscount == 0:
+          """if not rsscount == 0:
               rss_slewavgs.update({'%s' % obsdate : sum(nightstats[0])/rsscount})
               rss_trslewavgs.update({'%s' % obsdate : sum(nightstats[1])/rsscount})
               rss_tacqavgs.update({'%s' % obsdate : sum(nightstats[2])/rsscount})
-              rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})
+              rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})"""
 
           rssblocks+=rsscount
 
@@ -82,21 +82,21 @@ if __name__=='__main__':
           hrs_trslewtimes.extend(nightstats[5])
           hrs_targetacqtimes.extend(nightstats[6])
           hrs_instracqtimes.extend(nightstats[7])
-          if not hrscount == 0:
+          """if not hrscount == 0:
               hrs_slewavgs.update({'%s' % obsdate : sum(nightstats[4])/hrscount})
               hrs_trslewavgs.update({'%s' % obsdate : sum(nightstats[5])/hrscount})
               hrs_tacqavgs.update({'%s' % obsdate : sum(nightstats[6])/hrscount})
-              hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})
+              hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})"""
 
           hrsblocks+=hrscount
 
           mos_slewtimes.extend(nightstats[8])
           mos_trslewtimes.extend(nightstats[9])
           mos_acqtimes.extend(nightstats[10])
-          if not moscount == 0:
+          """if not moscount == 0:
               mos_slewavgs.update({'%s' % obsdate : sum(nightstats[8])/moscount})
               mos_trslewavgs.update({'%s' % obsdate : sum(nightstats[9])/moscount})
-              mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})
+              mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})"""
 
           mosblocks+=moscount
           nights+=1
@@ -131,25 +131,29 @@ if __name__=='__main__':
    with PdfPages('acqstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
-       plt.hist(list(rss_tacqavgs.values()),25,range=(0,700),color='r')
+       plt.hist(rss_targetacqtimes,25,range=(0,700),color='r')
+       axvline(median(rss_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("RSS Target Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,2)
-       plt.hist(list(rss_iacqavgs.values()),25,range=(0,700),color='c')
+       plt.hist(rss_instracqtimes,25,range=(0,700),color='c')
+       axvline(median(rss_instracqtimes), color='k', linestyle='dashed', linewidth=1)
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("RSS Instrument Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,3)
-       plt.hist(list(hrs_tacqavgs.values()),25,range=(0,700),color='r')
+       plt.hist(hrs_targetacqtimes,25,range=(0,700),color='r')
+       axvline(median(hrs_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("HRS Target Acquisition",fontsize=12,fontweight='bold')
 
        subplot(2,2,4)
-       plt.hist(list(hrs_iacqavgs.values()),25,range=(0,700),color='c')
+       plt.hist(hrs_instracqtimes,25,range=(0,700),color='c')
+       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
        xticks(fontsize=12)
        yticks(fontsize=12)
        title("HRS Instrument Acquisition",fontsize=12,fontweight='bold')
