@@ -132,8 +132,8 @@ if __name__=='__main__':
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
        entries, edges, _ = plt.hist(rss_targetacqtimes,30,range=(0,700),color='r')
-       #bin_centers = 0.5 * (edges[:-1] + edges[1:])
-       #errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
+       bin_centers = 0.5 * (edges[:-1] + edges[1:])
+       errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
        axvline(median(rss_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
        ymin, ymax = ylim()
        text(median(rss_targetacqtimes)+30, ymax - ymax/8, 'Median: %i' % median(rss_targetacqtimes), fontsize=10)
@@ -148,7 +148,9 @@ if __name__=='__main__':
 
 
        subplot(2,2,2)
-       plt.hist(rss_instracqtimes,30,range=(0,700),color='c')
+       entries, edges, _ = plt.hist(rss_instracqtimes,30,range=(0,700),color='c')
+       bin_centers = 0.5 * (edges[:-1] + edges[1:])
+       errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
        axvline(median(rss_instracqtimes), color='k', linestyle='dashed', linewidth=1)
        ymin, ymax = ylim()
        text(median(rss_instracqtimes)+30, ymax - ymax/8, 'Median: %i' % median(rss_instracqtimes), fontsize=10)
@@ -159,7 +161,9 @@ if __name__=='__main__':
        title("RSS Science Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
 
        subplot(2,2,3)
-       plt.hist(hrs_targetacqtimes,30,range=(0,700),color='r')
+       entries, edges, _ = plt.hist(hrs_targetacqtimes,30,range=(0,700),color='r')
+       bin_centers = 0.5 * (edges[:-1] + edges[1:])
+       errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
        axvline(median(hrs_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
        ymin, ymax = ylim()
        text(median(hrs_targetacqtimes)+30, ymax - ymax/8, 'Median: %i' % median(hrs_targetacqtimes),fontsize=10)
@@ -170,7 +174,9 @@ if __name__=='__main__':
        title("HRS Target Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
 
        subplot(2,2,4)
-       plt.hist(hrs_instracqtimes,30,range=(0,700),color='c')
+       entries, edges, _ = plt.hist(hrs_instracqtimes,30,range=(0,700),color='c')
+       bin_centers = 0.5 * (edges[:-1] + edges[1:])
+       errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
        axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
        ymin, ymax = ylim()
        text(median(hrs_instracqtimes)+30, ymax - ymax/8, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
