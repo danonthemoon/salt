@@ -125,7 +125,7 @@ def overheadstats(sdb, obsdate, update=True):
            print('no trackstart')
            continue
        slewtime=guidestart-starttime
-       if slewtime.seconds > 400:
+       if slewtime.seconds > 1000:
            print('slew too long, took %i s'%slewtime.seconds)
            continue
 
@@ -135,7 +135,7 @@ def overheadstats(sdb, obsdate, update=True):
            print('no on target?')
            continue
        trackerslewtime=ontarget-guidestart
-       if trackerslewtime.seconds > 300:
+       if trackerslewtime.seconds > 500:
            print('trackslew too long, took %i s'%trackerslewtime.seconds)
            continue
 
