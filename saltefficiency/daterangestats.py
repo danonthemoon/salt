@@ -131,13 +131,19 @@ if __name__=='__main__':
    with PdfPages('acqstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
-       plt.hist(rss_targetacqtimes,30,range=(0,700),color='r')
+       entries, edges, _ = plt.hist(rss_targetacqtimes,30,range=(0,700),color='r')
+       bin_centers = 0.5 * (edges[:-1] + edges[1:])
+       errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
        axvline(median(rss_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
        ymin, ymax = ylim()
        text(median(rss_targetacqtimes)+30, ymax - ymax/8, 'Median: %i' % median(rss_targetacqtimes), fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
        title("RSS Target Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
+
+# draw errobars, use the sqrt error. You can use what you want there
+# poissonian 1 sigma intervals would make more sense
+
 
        subplot(2,2,2)
        plt.hist(rss_instracqtimes,30,range=(0,700),color='c')
@@ -146,7 +152,7 @@ if __name__=='__main__':
        text(median(rss_instracqtimes)+30, ymax - ymax/8, 'Median: %i' % median(rss_instracqtimes), fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
-       title("RSS Instrument Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
+       title("RSS Science Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
 
        subplot(2,2,3)
        plt.hist(hrs_targetacqtimes,30,range=(0,700),color='r')
@@ -164,7 +170,7 @@ if __name__=='__main__':
        text(median(hrs_instracqtimes)+30, ymax - ymax/8, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
        xticks(np.arange(0, 700, step=50),fontsize=6)
        yticks(fontsize=10)
-       title("HRS Instrument Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
+       title("HRS Science Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
 
        plt.suptitle('Acquisition Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        pdf.savefig() # saves the current figure into a pdf page
