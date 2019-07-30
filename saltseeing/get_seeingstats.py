@@ -32,5 +32,5 @@ if __name__=='__main__':
 
    while date <= enddate:
        obsdate = '%4i-%2s-%2s' % (date.year, str(date.month).zfill(2), str(date.day).zfill(2))
-       nightseeing = getseeingstats(sdb, obsdate)
+       nightdeltas = getseeingstats(sdb, obsdate)
        date += datetime.timedelta(days=1)
