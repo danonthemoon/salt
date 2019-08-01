@@ -93,5 +93,5 @@ def getseeingstats(sdb, obsdate):
 
        seeingstart=0
        seeingend=0
-       seeingdelta = seeingend-seeingstart
+       delta = seeingend-seeingstart
        nightdeltas.append(seeingdelta)

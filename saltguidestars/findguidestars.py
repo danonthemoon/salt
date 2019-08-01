@@ -25,21 +25,24 @@ def getseeingstats(sdb, obsdate):
        obsdate: str
           Observing date in YYYYMMDD format
    """
+   selcmd='Target_Id, Target_Name, RaH, RaM, RaS, DecSign, DecD, DecM, DecS'
+   tabcmd='Target join TargetCoordinates using (TargetCoordinates_Id)'
+   targets=sdb.select(selcmd, tabcmd, '')
 
-   #get the NightInfo_Id for the given obsdate
-   nid=getnightinfo(sdb, obsdate)
+   for target in targets:
+       target_rah=target[2]
+       target_ram=target[3]
+       target_ras=target[4]
+
+       target_decsign=target[5]
+       target_decd=target[6]
+       target_decm=target[7]
+       target_decs=target[8 ]
 
 
 
 
 
-target_rah
-target_ram
-target_ras
-
-target_decsign
-target_decm
-target_decs
 
 #find rectangle for probe range and ring between RSS and SCAM. Stars must be within both, at a theta > 45 deg
 #between each other. Preferable to have them directly opposite. magnitude above 21 and below 9. no binaries.
