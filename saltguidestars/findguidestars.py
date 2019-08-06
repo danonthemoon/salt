@@ -42,11 +42,16 @@ def getguidestars(sdb, obsdate):
        target_radeg=(target_rah + (target_ram/60) + (target_ras/3600))*15
        target_dedeg = (target_decd + (target_decm/60) + (target_decs/3600))*target_decsign
 
+       x_max=target_radeg+(4/60)
+       x_min=target_radeg-(4/60)
+       y_max=target_dedeg+(4.5/60)
+       y_min=target_dedeg-(4.5/60)
+
 
        selcmd='VT, RADeg, DEDeg'
        tabcmd='TYCHO2'
        logcmd='VT > 17 and VT < 15'
-       logcmd+=' and RADeg>=target_radeg-4 and RADeg<=target_radeg+4 and DEDeg>=target_radeg-4.5 and RADeg<=target_radeg+4.5'
+       logcmd+=' and RADeg between target_radeg-4 and target_radeg+4 and DEDeg between target_radeg-4.5 and target_radeg+4.5'
        logcmd+=' order by VT'
        stars=stardb.select(selcmd,tabcmd,logcmd)
 

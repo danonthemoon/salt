@@ -43,18 +43,6 @@ if __name__=='__main__':
    mos_trslewtimes=[]
    mos_acqtimes=[]
 
-   """rss_slewavgs={}
-   rss_trslewavgs={}
-   rss_tacqavgs={}
-   rss_iacqavgs={}
-   hrs_slewavgs={}
-   hrs_trslewavgs={}
-   hrs_tacqavgs={}
-   hrs_iacqavgs={}
-   mos_slewavgs={}
-   mos_trslewavgs={}
-   mos_acqavgs={}"""
-
    nights=0
    rssblocks=0
    hrsblocks=0
@@ -70,35 +58,19 @@ if __name__=='__main__':
           rss_trslewtimes.extend(nightstats[1])
           rss_targetacqtimes.extend(nightstats[2])
           rss_instracqtimes.extend(nightstats[3])
-          """if not rsscount == 0:
-              rss_slewavgs.update({'%s' % obsdate : sum(nightstats[0])/rsscount})
-              rss_trslewavgs.update({'%s' % obsdate : sum(nightstats[1])/rsscount})
-              rss_tacqavgs.update({'%s' % obsdate : sum(nightstats[2])/rsscount})
-              rss_iacqavgs.update({'%s' % obsdate : sum(nightstats[3])/rsscount})"""
-
           rssblocks+=rsscount
 
           hrs_slewtimes.extend(nightstats[4])
           hrs_trslewtimes.extend(nightstats[5])
           hrs_targetacqtimes.extend(nightstats[6])
           hrs_instracqtimes.extend(nightstats[7])
-          """if not hrscount == 0:
-              hrs_slewavgs.update({'%s' % obsdate : sum(nightstats[4])/hrscount})
-              hrs_trslewavgs.update({'%s' % obsdate : sum(nightstats[5])/hrscount})
-              hrs_tacqavgs.update({'%s' % obsdate : sum(nightstats[6])/hrscount})
-              hrs_iacqavgs.update({'%s' % obsdate : sum(nightstats[7])/hrscount})"""
-
           hrsblocks+=hrscount
 
           mos_slewtimes.extend(nightstats[8])
           mos_trslewtimes.extend(nightstats[9])
           mos_acqtimes.extend(nightstats[10])
-          """if not moscount == 0:
-              mos_slewavgs.update({'%s' % obsdate : sum(nightstats[8])/moscount})
-              mos_trslewavgs.update({'%s' % obsdate : sum(nightstats[9])/moscount})
-              mos_acqavgs.update({'%s' % obsdate : sum(nightstats[10])/moscount})"""
-
           mosblocks+=moscount
+
           nights+=1
 
    if nights == 0:
@@ -128,66 +100,61 @@ if __name__=='__main__':
           mos_stats.update({'3. Target Acquisition': 0})
           mos_stats.update({'5. MOS Acquisition': 0})
 
+
    with PdfPages('acqstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
-       entries, edges, _ = plt.hist(rss_targetacqtimes,30,range=(0,700),color='r')
-       #bin_centers = 0.5 * (edges[:-1] + edges[1:])
-       #errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
-       axvline(median(rss_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(rss_targetacqtimes)+30, ymax - ymax/6, 'Median: %i' % median(rss_targetacqtimes), fontsize=10)
-       text(400, ymax - ymax/4, 'Mean: %i' % mean(rss_targetacqtimes), fontsize=10)
-       #text(400, ymax - ymax/4, 'Sigma: %i' % np.std(rss_targetacqtimes), fontsize=10)
-       xticks(np.arange(0, 700, step=50),fontsize=6)
-       yticks(fontsize=10)
-       title("RSS Target Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
-
-       subplot(2,2,2)
-       entries, edges, _ = plt.hist(rss_instracqtimes,30,range=(0,700),color='c')
-       #bin_centers = 0.5 * (edges[:-1] + edges[1:])
-       #errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
-       axvline(median(rss_instracqtimes), color='k', linestyle='dashed', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(rss_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(rss_instracqtimes), fontsize=10)
-       text(400, ymax - ymax/4, 'Mean: %i' % mean(rss_instracqtimes), fontsize=10)
-       #text(400, ymax - ymax/4, 'Sigma: %i' % np.std(rss_instracqtimes), fontsize=10)
-       xticks(np.arange(0, 700, step=50),fontsize=6)
-       yticks(fontsize=10)
-       title("RSS Science Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
-
-       subplot(2,2,3)
-       entries, edges, _ = plt.hist(hrs_targetacqtimes,30,range=(0,700),color='r')
-       #bin_centers = 0.5 * (edges[:-1] + edges[1:])
-       #errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
-       axvline(median(hrs_targetacqtimes), color='k', linestyle='dashed', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(hrs_targetacqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_targetacqtimes),fontsize=10)
-       text(400, ymax - ymax/4, 'Mean: %i' % mean(hrs_targetacqtimes), fontsize=10)
-       #text(400, ymax - ymax/4, 'Sigma: %i' % np.std(hrs_targetacqtimes), fontsize=10)
-       xticks(np.arange(0, 700, step=50),fontsize=6)
-       yticks(fontsize=10)
-       title("HRS Target Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
-
-       subplot(2,2,4)
-       entries, edges, _ = plt.hist(hrs_instracqtimes,30,range=(0,700),color='c')
-       #bin_centers = 0.5 * (edges[:-1] + edges[1:])
-       #errorbar(bin_centers, entries, yerr=np.std(entries), fmt='r.')
+       """plt.hist(rss_targetacqtimes,26,range=(0,780),color='r')
        axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
        axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
        ymin, ymax = ylim()
        text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
-       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), fontsize=10)
-       #text(400, ymax - ymax/4, 'Sigma: %i' % np.std(hrs_instracqtimes), fontsize=10)
-       xticks(np.arange(0, 720, step=30),fontsize=6)
-       yticks(fontsize=10)
+       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
+       xticks(np.arange(0, 780, step=60),fontsize=6)
+       yticks(fontsize=10)"""
+       subplotter(rss_targetacqtimes)
+       title("RSS Target Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
+
+       subplot(2,2,2)
+       """plt.hist(rss_instracqtimes,26,range=(0,780),color='c')
+       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
+       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
+       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
+       xticks(np.arange(0, 780, step=60),fontsize=6)
+       yticks(fontsize=10)"""
+       subplotter(rss_instracqtimes)
+       title("RSS Science Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
+
+       subplot(2,2,3)
+       """plt.hist(hrs_targetacqtimes,26,range=(0,780),color='r')
+       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
+       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
+       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
+       xticks(np.arange(0, 780, step=60),fontsize=6)
+       yticks(fontsize=10)"""
+       subplotter(hrs_targetacqtimes)
+       title("HRS Target Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
+
+       subplot(2,2,4)
+       """plt.hist(hrs_instracqtimes,26,range=(0,780),color='c')
+       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
+       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
+       ymin, ymax = ylim()
+       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
+       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
+       xticks(np.arange(0, 780, step=60),fontsize=6)
+       yticks(fontsize=10)"""
+       subplotter(hrs_instracqtimes)
        title("HRS Science Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
 
        plt.suptitle('Acquisition Statistics for %s to %s' % (sdate,edate),fontweight='bold')
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
-
 
    #produce a pdf with the relevant stats, separated by instrument
    with PdfPages('overheadstats-%s-%s.pdf' % (sdate, edate)) as pdf:
@@ -252,3 +219,15 @@ if __name__=='__main__':
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
+
+
+
+def subplotter(stat):
+    plt.hist(stat,26,range=(0,780),color='c')
+    axvline(median(stat), color='k', linestyle='dashed', linewidth=1)
+    axvline(mean(stat), color='b', linestyle='dashdot', linewidth=1)
+    ymin, ymax = ylim()
+    text(median(stat)+30, ymax - ymax/6, 'Median: %i' % median(stat), fontsize=10)
+    text(mean(stat)+30, ymax - ymax/4, 'Mean: %i' % mean(stat), color='b', fontsize=10)
+    xticks(np.arange(0, 780, step=60),fontsize=6)
+    yticks(fontsize=10)
