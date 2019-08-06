@@ -21,6 +21,16 @@ plt.switch_backend('agg')
 
 import run_overheadstats
 from nightstats import getnightstats
+def subplotter(stat):
+    plt.hist(stat,26,range=(0,780),color='c')
+    axvline(median(stat), color='k', linestyle='dashed', linewidth=1)
+    axvline(mean(stat), color='b', linestyle='dashdot', linewidth=1)
+    ymin, ymax = ylim()
+    text(median(stat)+30, ymax - ymax/6, 'Median: %i' % median(stat), fontsize=10)
+    text(mean(stat)+30, ymax - ymax/4, 'Mean: %i' % mean(stat), color='b', fontsize=10)
+    xticks(np.arange(0, 780, step=60),fontsize=6)
+    yticks(fontsize=10)
+    return None
 
 if __name__=='__main__':
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
@@ -222,12 +232,4 @@ if __name__=='__main__':
 
 
 
-def subplotter(stat):
-    plt.hist(stat,26,range=(0,780),color='c')
-    axvline(median(stat), color='k', linestyle='dashed', linewidth=1)
-    axvline(mean(stat), color='b', linestyle='dashdot', linewidth=1)
-    ymin, ymax = ylim()
-    text(median(stat)+30, ymax - ymax/6, 'Median: %i' % median(stat), fontsize=10)
-    text(mean(stat)+30, ymax - ymax/4, 'Mean: %i' % mean(stat), color='b', fontsize=10)
-    xticks(np.arange(0, 780, step=60),fontsize=6)
-    yticks(fontsize=10)
+
