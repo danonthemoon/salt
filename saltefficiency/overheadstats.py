@@ -212,7 +212,6 @@ def overheadstats(sdb, obsdate, update=True):
 def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
     """Determine the first image of a list that has that
        mode in use
-
     """
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
     for img in image_list:
@@ -223,7 +222,6 @@ def getfirstscam(image_list, starttime, instr, primary_mode, bvid):
 def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
     """Determine the first image of a list that has that
        mode in use
-
     """
     stime=starttime-datetime.timedelta(seconds=2*3600.0)
     if instr == 'MOS':
@@ -238,7 +236,6 @@ def getfirstimage(image_list, starttime, instr, primary_mode, bvid):
 
 def getprimarymode(image_list, bvid):
    """Determine the primary mode of the science frame for the block
-
    """
    primary_mode=None
    instr=[]

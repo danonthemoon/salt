@@ -21,13 +21,16 @@ plt.switch_backend('agg')
 
 import run_overheadstats
 from nightstats import getnightstats
+
 def subplotter(stat):
-    plt.hist(stat,26,range=(0,780),color='c')
+    """Plot the histograms of stat 
+    """
+    plt.hist(stat,26,range=(0,780),color='r')
     axvline(median(stat), color='k', linestyle='dashed', linewidth=1)
     axvline(mean(stat), color='b', linestyle='dashdot', linewidth=1)
     ymin, ymax = ylim()
-    text(median(stat)+30, ymax - ymax/6, 'Median: %i' % median(stat), fontsize=10)
-    text(mean(stat)+30, ymax - ymax/4, 'Mean: %i' % mean(stat), color='b', fontsize=10)
+    text(500, ymax - ymax/6, 'Median: %i' % median(stat), fontsize=10)
+    text(500, ymax - ymax/4, 'Mean: %i' % mean(stat), color='b', fontsize=10)
     xticks(np.arange(0, 780, step=60),fontsize=6)
     yticks(fontsize=10)
     return None
@@ -114,50 +117,18 @@ if __name__=='__main__':
    with PdfPages('acqstats-%s-%s.pdf' % (sdate, edate)) as pdf:
        #plot histograms of RSS and HRS acquisition stats
        subplot(2,2,1)
-       """plt.hist(rss_targetacqtimes,26,range=(0,780),color='r')
-       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
-       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
-       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
-       xticks(np.arange(0, 780, step=60),fontsize=6)
-       yticks(fontsize=10)"""
        subplotter(rss_targetacqtimes)
        title("RSS Target Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
 
        subplot(2,2,2)
-       """plt.hist(rss_instracqtimes,26,range=(0,780),color='c')
-       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
-       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
-       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
-       xticks(np.arange(0, 780, step=60),fontsize=6)
-       yticks(fontsize=10)"""
        subplotter(rss_instracqtimes)
        title("RSS Science Acquisition (%i blocks)" % rssblocks,fontsize=10,fontweight='bold')
 
        subplot(2,2,3)
-       """plt.hist(hrs_targetacqtimes,26,range=(0,780),color='r')
-       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
-       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
-       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
-       xticks(np.arange(0, 780, step=60),fontsize=6)
-       yticks(fontsize=10)"""
        subplotter(hrs_targetacqtimes)
        title("HRS Target Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
 
        subplot(2,2,4)
-       """plt.hist(hrs_instracqtimes,26,range=(0,780),color='c')
-       axvline(median(hrs_instracqtimes), color='k', linestyle='dashed', linewidth=1)
-       axvline(mean(hrs_instracqtimes), color='b', linestyle='dashdot', linewidth=1)
-       ymin, ymax = ylim()
-       text(median(hrs_instracqtimes)+30, ymax - ymax/6, 'Median: %i' % median(hrs_instracqtimes), fontsize=10)
-       text(mean(hrs_instracqtimes)+30, ymax - ymax/4, 'Mean: %i' % mean(hrs_instracqtimes), color='b', fontsize=10)
-       xticks(np.arange(0, 780, step=60),fontsize=6)
-       yticks(fontsize=10)"""
        subplotter(hrs_instracqtimes)
        title("HRS Science Acquisition (%i blocks)" % hrsblocks,fontsize=10,fontweight='bold')
 
@@ -218,7 +189,6 @@ if __name__=='__main__':
            ax.text(2, mtrsl_height, str(int(mtrsl)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
            ax.text(2, miacq_height, str(int(miacq)), fontsize=12, horizontalalignment='center', color='black', fontweight='bold')
 
-
        #plot appearance
        ax.set_ylabel("Time (s)", fontweight='bold')
        ax.set_yticks(np.arange(0,1250,50))
@@ -229,7 +199,3 @@ if __name__=='__main__':
        pdf.savefig() # saves the current figure into a pdf page
        plt.show()
        plt.close()
-
-
-
-
