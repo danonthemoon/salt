@@ -4,6 +4,8 @@ import struct
 import numpy as np
 import sdb_mysql as mysql
 
+from findguidestars import getguidestars
+
 if __name__=='__main__':
    sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
    sdate = sys.argv[1]
