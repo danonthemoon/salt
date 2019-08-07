@@ -104,46 +104,46 @@ def overheadstats(sdb, obsdate, update=True):
       #determine start time (point) and end time (track end)
        pointtime = findpointcommand(bvid, point_list)
        if pointtime is None:
-           print('no point')
+           #print('no point')
            continue
        starttime=pointtime
        endtime=findguidingstop(starttime, event_list)
        if endtime is None:
-           print('no end')
+           #print('no end')
            continue
 
        #determine total time
        tottime=endtime-starttime
        #some limit to avoid crazy stats
        if tottime.seconds > 10000:
-           print('total too long, took %i s'%tottime.seconds)
+           #print('total too long, took %i s'%tottime.seconds)
            continue
 
        #determine the slew time
        guidestart=findguidingstart(starttime, event_list)
        if guidestart is None:
-           print('no trackstart')
+           #print('no trackstart')
            continue
        slewtime=guidestart-starttime
        if slewtime.seconds > 1000:
-           print('slew too long, took %i s'%slewtime.seconds)
+           #print('slew too long, took %i s'%slewtime.seconds)
            continue
 
        #determine the time between TrackStart and OnTarget
        ontarget=findontarget(starttime, event_list)
        if ontarget is None:
-           print('no on target?')
+           #print('no on target?')
            continue
        trackerslewtime=ontarget-guidestart
        if trackerslewtime.seconds > 500:
-           print('trackslew too long, took %i s'%trackerslewtime.seconds)
+           #print('trackslew too long, took %i s'%trackerslewtime.seconds)
            continue
 
        #get primary instrument, check if MOS
        scams=0
        instr, primary_mode=getprimarymode(img_list, bvid)
        if instr == 'SALTICAM':
-           print('its a scam!')
+           #print('its a scam!')
            scams+=1
            continue
 
@@ -152,7 +152,7 @@ def overheadstats(sdb, obsdate, update=True):
        logic_state='BlockVisit_Id=%i' % (bvid)
        bids=sdb.select(select_state, table_state, logic_state)
        if not bids:
-           print("no bid!")
+           #print("no bid!")
            continue
        else:
            bid=bids[0]
@@ -171,26 +171,26 @@ def overheadstats(sdb, obsdate, update=True):
            mosacq=getfirstimage(rss_imglist, ontarget, instr, primary_mode, bvid)
            mosacqtime=mosacq-ontarget
            if mosacqtime.seconds > 1000:
-               print("MOS Acquisition too long, took %i s"%mosacqtime.seconds)
+               #print("MOS Acquisition too long, took %i s"%mosacqtime.seconds)
                continue
        else:
           #determine the Salticam acquisition time after being on target
           scamstart=getfirstscam(img_list, starttime, 'SALTICAM', 'IMAGING', bvid)
           if scamstart is None:
-             print("Did not find SCAM image")
+             #print("Did not find SCAM image")
              continue
           acqtime=scamstart-ontarget
           if acqtime.seconds > 1000:
-              print("Target Acquisition too long, took %i s"%acqtime.seconds)
+              #print("Target Acquisition too long, took %i s"%acqtime.seconds)
               continue
           #determine the time between acquisition and first science image
           sciencestart=getfirstimage(img_list, scamstart, instr, primary_mode, bvid)
           if sciencestart is None:
-             print("Did not find science image for BV %i using %s" % (bvid, instr))
+             #print("Did not find science image for BV %i using %s" % (bvid, instr))
              continue
           sciacqtime=sciencestart-scamstart
           if sciacqtime.seconds > 1000:
-              print("Science Acquisition too long, took %i s"%sciacqtime.seconds)
+              #print("Science Acquisition too long, took %i s"%sciacqtime.seconds)
               continue
 
        #update results in sdb

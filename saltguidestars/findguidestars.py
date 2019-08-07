@@ -31,19 +31,44 @@ if __name__=='__main__':
    target_radeg=(target_rah + (target_ram/60) + (target_ras/3600))*15
    target_dedeg = (target_decd + (target_decm/60) + (target_decs/3600))*target_decsign
 
-   x_max=target_radeg+(4/60)
-   x_min=target_radeg-(4/60)
-   y_max=target_dedeg+(4.5/60)
-   y_min=target_dedeg-(4.5/60)
 
-   stardb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'TYCHO2', 'danny', 'lemmein!', port=3306)
+   # limit to the rectangle
+   ra_max=target_radeg+(4/60)
+   ra_min=target_radeg-(4/60)
+   dec_max=target_dedeg+(4/60)
+   dec_min=target_dedeg-(4/60)
+
+   stardb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'Catalogues', 'danny', 'lemmein!', port=3306)
    selcmd='VT, RADeg, DEDeg'
    tabcmd='TYCHO2'
-   logcmd='VT > 17 and VT < 15'
-   logcmd+=' and RADeg between target_radeg-4 and target_radeg+4 and DEDeg between target_radeg-4.5 and target_radeg+4.5'
+   logcmd='VT between 17 and 15'
+   logcmd+=' and RADeg between %i and %i and DEDeg between %i and %i' % (ra_min, ra_max, dec_min, dec_max)
    logcmd+=' order by VT'
    stars=stardb.select(selcmd,tabcmd,logcmd)
    print(size(stars))
+
+   starRAdeg=0
+   starDEdeg=0
+   starVT=0
+   VT_max=starVT+2.5
+   VT_min=starVT-2.5
+   proberadius=0
+   probe_ra_max=target_radeg+(proberadius/60)
+   probe_ra_min=target_radeg-(proberadius/60)
+   probe_dec_max=target_dedeg+(proberadius/60)
+   probe_dec_min=target_dedeg-(proberadius/60)
+   selcmd='VT, RADeg, DEDeg'
+   tabcmd='TYCHO2'
+   logcmd='VT between %i and %i' % (VT_max, VT_min)
+   logcmd+=' and RADeg between %i and %i and DEDeg between %i and %i' % (probe_ra_min, probe_ra_max, probe_dec_min, probe_dec_max)
+   neighborstars=stardb.select(selcmd,tabcmd,logcmd)
+   if not len(neighborstars) == 0: print("double : bright star too close")
+
+
+
+
+
+
 
 #find rectangle for probe range and ring between RSS and SCAM. Stars must be within both, at a theta > 45 deg
 #between each other. Preferable to have them directly opposite. magnitude above 21 and below 9. no binaries.

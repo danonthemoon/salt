@@ -3,7 +3,7 @@ Created July 2019
 
 @author Danny Sallurday
 
-Script to generate a pdf plot of overhead stats over a given range of dates.
+Script to generate pdf plots of overhead stats for a given range of dates.
 
 """
 
@@ -23,7 +23,7 @@ import run_overheadstats
 from nightstats import getnightstats
 
 def subplotter(stat):
-    """Plot the histograms of stat 
+    """Plot a histogram of the given stat
     """
     plt.hist(stat,26,range=(0,780),color='r')
     axvline(median(stat), color='k', linestyle='dashed', linewidth=1)
