@@ -36,7 +36,11 @@ def subplotter(stat):
     return None
 
 if __name__=='__main__':
-   sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
+   host='sdbsandbox.cape.saao.ac.za'
+   sdbname='sdb_v7'
+   user='danny'
+   password='lemmein!'
+   sdb=mysql.mysql(host, sdbname, user, password, port=3306)
    sdate = sys.argv[1]
    edate = sys.argv[2]
    startdate = datetime.datetime(int(sdate[0:4]), int(sdate[4:6]), int(sdate[6:8]))

@@ -14,7 +14,11 @@ import sdb_mysql as mysql
 
 
 if __name__=='__main__':
-   sdb=mysql.mysql('sdbsandbox.cape.saao.ac.za', 'sdb_v7', 'danny', 'lemmein!', port=3306)
+   host='sdbsandbox.cape.saao.ac.za'
+   sdbname='sdb_v7'
+   user='danny'
+   password='lemmein!'
+   sdb=mysql.mysql(host, sdbname, user, password, port=3306)
    targetname = sys.argv[1]
    selcmd='Target_Id, Target_Name, RaH, RaM, RaS, DecSign, DecD, DecM, DecS'
    tabcmd='Target join TargetCoordinates using (TargetCoordinates_Id)'
