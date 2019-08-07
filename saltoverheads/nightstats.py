@@ -102,7 +102,7 @@ def getnightstats(sdb, obsdate):
           tabcmd='BlockVisit'
           scistats=sdb.select(selcmd, tabcmd, 'BlockVisit_Id=%i' % bvid)
           if not all(scistats[0]): continue
-          if (scistats[0][0]==0 or scistats[0][1]==0 or scistats[0][2]==0) or scistats[0][3]==0): continue
+          if (scistats[0][0]==0 or scistats[0][1]==0 or scistats[0][2]==0 or scistats[0][3]==0): continue
 
        if instrument=='RSS':
           rss_slew.append(scistats[0][0])
